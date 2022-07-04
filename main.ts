@@ -1,5 +1,6 @@
 import express from "express";
-// import type { Request, Response, NextFunction } from "express";
+//@ts-ignore
+import type { Request, Response, NextFunction } from "express";
 import expressSession from "express-session";
 import path from "path";
 
@@ -30,13 +31,18 @@ app.get("/c", (req, res) => {
   }
 });
 
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "Public", "index.html"));
+});
+
+app.use(express.static(path.join(__dirname, "Public")));
+
 // !!!404 Not Fund Page, must be the last handler !!!
 app.use((req, res) => {
   res.redirect("404.html");
 });
 
 // express Static
-app.use(express.static(path.join(__dirname, "Public")));
 
 // set the port number
 const port = 8080;
