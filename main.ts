@@ -22,12 +22,6 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// print the access massage
-app.use((req, res, next) => {
-  console.log(`ip: ${req.ip} accessed the path: ${req.path} by method: ${req.method}`);
-  next();
-});
-
 // setup Cookies to User
 app.use(
   expressSession({
@@ -37,6 +31,11 @@ app.use(
     name: "Cookie for Pixel Farm",
   })
 );
+// print the access massage
+app.use((req, res, next) => {
+  console.log(`ip: ${req.ip} accessed the path: ${req.path} by method: ${req.method}`);
+  next();
+});
 
 app.get("/c", (req, res) => {
   if (req.session["name"]) {
@@ -47,14 +46,19 @@ app.get("/c", (req, res) => {
   }
 });
 
+// Router handler
+import { loginRoutes } from "./routers/loginRoutes";
+app.use(loginRoutes);
+
 // express Static
 app.use(express.static(path.join(__dirname, "Public")));
 // logic for check login but some error that can not load the 404 page anymore.
-// app.use(isLoggedInStatic, express.static(path.join(__dirname, "Private")));
+// problem in guards.ts line 8
+app.use(isLoggedInStatic, express.static(path.join(__dirname, "Private")));
 
 // !!!404 Not Fund Page, must be the last handler !!!
 app.use((req, res) => {
-  res.sendFile(path.join(__dirname, "public", "404.html"));
+  res.sendFile(path.join(__dirname, "Public", "404.html"));
 });
 
 // set the port number
@@ -62,5 +66,5 @@ const port = 8080;
 
 // set up listener
 app.listen(port, () => {
-  console.log(`server started, Port: ${port}`);
+  console.log(`server started, http://localhost:${port}`);
 });
