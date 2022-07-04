@@ -7,13 +7,13 @@ body{
 }
 
 .gameContainer{
-    background-color: rgb(157, 235, 245);
+    background-color: rgb(96, 160, 168);
     border: solid 1px rgb(200, 0, 0);
     height: 320px; /* 16*20*/
-    width: 608px; /* 16*38*/
+    width: 720px; /* 16*45*/
     margin: 0 auto;
 
-    transform: scale(3) translateY(35%);
+    transform: scale(2) translateY(25%);
     image-rendering: pixelated;
 }
 
