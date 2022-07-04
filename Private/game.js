@@ -1,4 +1,5 @@
 const mapTileSize = 16
+let mapTileList =[]
 
 let mapIsLoaded = false;
 let treesIsLoaded = false;
@@ -17,16 +18,31 @@ const trees = new Image();
 
 
 
-
-class mapTile{
-    constructor(status,cutLocationX, cutLocationY,displayLocationX,displayLocationY) {
+class cutTile{
+    constructor(status,cutLocationX, cutLocationY) {
         this.status = status;
         this.cutLocationX = cutLocationX;
-        this.cutLocationY = cutLocationY;
-        this.displayLocationX = displayLocationX;
-        this.displayLocationY = displayLocationY;
+        this.cutLocationY = cutLocationY;        
       }
 }
+
+const sea = new cutTile('sea',12 ,1)
+const ground = new cutTile('ground',1 ,1)
+
+const outerCornerLT  = new cutTile('outerCornerLT',0 ,0)
+const outerCornerLB  = new cutTile('outerCornerLB',0 ,2)
+const outerCornerRT  = new cutTile('outerCornerRT',2 ,0)
+const outerCornerRB  = new cutTile('outerCornerRB',2 ,2)
+
+const innerCornerLT  = new cutTile('outerCornerLT',4 ,2)
+const innerCornerLB  = new cutTile('outerCornerLB',4 ,1)
+const innerCornerRT  = new cutTile('outerCornerRT',3 ,2)
+const innerCornerRB  = new cutTile('outerCornerRB',3 ,1)
+
+const topEdge  = new cutTile('topEdge',1 ,0)
+const bottomEdge  = new cutTile('bottomEdge',1 ,2)
+const leftEdge  = new cutTile('leftEdge',0 ,1)
+const rightEdge  = new cutTile('rightEdge',2 ,1)
 
 
 // BUG: images onload order not correct sometime.<======need to solve
@@ -47,12 +63,15 @@ trees.src = './gameImages/trees/tree.png';
 // function updateUI(){
 //     if(mapIsLoaded && treesIsLoaded){
 //         drawMap();
-//         drawtrees();
+//         drawTrees();
 //     }
 // }
 
-
-
+// Input displayX,displayY number to grid number. Not actual X,Y.
+function drawMapTile(tileType,displayX,displayY){
+    // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+    ctx.drawImage(map,tileType.cutLocationX*mapTileSize, tileType.cutLocationY*mapTileSize, mapTileSize, mapTileSize, displayX*mapTileSize, displayY*mapTileSize, mapTileSize, mapTileSize);
+}
 
 
 function drawMap() {  
@@ -74,9 +93,17 @@ function drawMap() {
         ctx.strokeRect(mapTileSize*i, 0, mapTileSize, mapTileSize)
         ctx.strokeRect(mapTileSize*i, 16, mapTileSize, mapTileSize)
         ctx.strokeRect(mapTileSize*i, 32, mapTileSize, mapTileSize)
-    }    
+    }
 
-    // ctx.drawImage(trees, 0, 128, 32, 32, 8, 64, 32, 32);
+    ctx.drawImage(map,leftEdge.cutLocationX*mapTileSize, leftEdge.cutLocationY*mapTileSize, mapTileSize, mapTileSize, 284, 168, mapTileSize, mapTileSize);
+    ctx.drawImage(map,leftEdge.cutLocationX*mapTileSize, leftEdge.cutLocationY*mapTileSize, mapTileSize, mapTileSize, 284, 184, mapTileSize, mapTileSize);
+    ctx.drawImage(map, outerCornerLB.cutLocationX*mapTileSize, outerCornerLB.cutLocationY*mapTileSize, mapTileSize, mapTileSize, 284, 200, mapTileSize, mapTileSize);
+    ctx.drawImage(map, innerCornerLB.cutLocationX*mapTileSize, innerCornerLB.cutLocationY*mapTileSize, mapTileSize, mapTileSize, 300, 200, mapTileSize, mapTileSize);
+    ctx.drawImage(map, outerCornerLB.cutLocationX*mapTileSize, outerCornerLB.cutLocationY*mapTileSize, mapTileSize, mapTileSize, 300, 216, mapTileSize, mapTileSize);
+    ctx.drawImage(map,bottomEdge.cutLocationX*mapTileSize, bottomEdge.cutLocationY*mapTileSize, mapTileSize, mapTileSize, 316, 216, mapTileSize, mapTileSize);
+    ctx.drawImage(map,bottomEdge.cutLocationX*mapTileSize, bottomEdge.cutLocationY*mapTileSize, mapTileSize, mapTileSize, 332, 216, mapTileSize, mapTileSize);
+
+
 }
 
 
