@@ -388,7 +388,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="Qzjzcl9aiFE4IQkGEI-d-253" value="Player Table" style="shape=table;startSize=30;container=1;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;pointerEvents=1;" vertex="1" parent="bg_3YFi4MX8aTfjCKNi9-1">
+                <mxCell id="Qzjzcl9aiFE4IQkGEI-d-253" value="Player Table (F)" style="shape=table;startSize=30;container=1;collapsible=0;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;pointerEvents=1;" vertex="1" parent="bg_3YFi4MX8aTfjCKNi9-1">
                     <mxGeometry x="870" y="600" width="180" height="210" as="geometry"/>
                 </mxCell>
                 <mxCell id="Qzjzcl9aiFE4IQkGEI-d-254" value="" style="shape=partialRectangle;html=1;whiteSpace=wrap;collapsible=0;dropTarget=0;pointerEvents=1;fillColor=none;top=0;left=0;bottom=1;right=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="Qzjzcl9aiFE4IQkGEI-d-253">
