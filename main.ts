@@ -3,8 +3,24 @@ import express from "express";
 import type { Request, Response, NextFunction } from "express";
 import expressSession from "express-session";
 import path from "path";
+//@ts-ignore
+import { isLoggedInStatic } from "./guards";
+import pg from "pg";
+import dotenv from "dotenv";
+dotenv.config();
+
+// SQL Client
+export const dbClient = new pg.Client({
+  database: process.env.DB_NAME,
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+});
+dbClient.connect();
 
 const app = express();
+// For json
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // print the access massage
 app.use((req, res, next) => {
@@ -31,18 +47,15 @@ app.get("/c", (req, res) => {
   }
 });
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "Public", "index.html"));
-});
-
+// express Static
 app.use(express.static(path.join(__dirname, "Public")));
+// logic for check login but some error that can not load the 404 page anymore.
+// app.use(isLoggedInStatic, express.static(path.join(__dirname, "Private")));
 
 // !!!404 Not Fund Page, must be the last handler !!!
 app.use((req, res) => {
-  res.redirect("404.html");
+  res.sendFile(path.join(__dirname, "public", "404.html"));
 });
-
-// express Static
 
 // set the port number
 const port = 8080;
