@@ -51,6 +51,23 @@ map.src = './gameImages/map/island.png';
 trees.onload = drawTrees; // Draw when image has loaded
 trees.src = './gameImages/trees/tree.png';
 
+
+function mapInit(){
+    for (let x = 0; i < mapTileList.length-2; x++){
+        for (let y = 0; i < mapTileList[x+1].length-2; y++){
+            if (mapTileList[x+1][y+1].status === 'ground'){
+                if(mapTileList[x][y].status !== 'ground'){      //check left top
+                    mapTileList[x][y].status = outerCornerLT
+                }
+
+            }
+
+        }
+    }
+
+}
+
+
 // map.onload = ()=>{ mapIsLoaded = true}; // Draw when image has loaded
 // map.src = './gameImages/map/island.png';
 // trees.onload = ()=>{ treesIsLoaded = true}; // Draw when image has loaded
