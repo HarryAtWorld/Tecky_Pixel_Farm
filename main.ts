@@ -44,8 +44,8 @@ app.use(loginRoutes);
 // express Static
 app.use(express.static(path.join(__dirname, "Public")));
 // logic for check login but some error that can not load the 404 page anymore.
-// problem in guards.ts line 8
-app.use(isLoggedInStatic, express.static(path.join(__dirname, "Private")));
+// problem in guards.ts line 8 redirect to "/",  temporary solution is using res.sendFile(404);
+app.use(express.static(path.join(__dirname, "Private")));
 
 // !!!404 Not Fund Page, must be the last handler !!!
 app.use((req, res) => {
