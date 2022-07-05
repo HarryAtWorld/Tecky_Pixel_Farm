@@ -1,7 +1,6 @@
-
-const mapTileSize = 16 // ========to be delete later=========
-const gameImagesAreaHeight = 640 //mapTileSize*20 should match with css
-const gameImagesAreaWidth = 1440 //mapTileSize*45 should match with css
+// map grid to be 32X32 as 1 unit
+const gameImagesAreaHeight = 640 //32*20 should match with css
+const gameImagesAreaWidth = 1440 //32*45 should match with css
 
 
 let mapTileList = []
@@ -158,14 +157,21 @@ function mapInit() {
 
 
 
-// for test, making a random map
+// ==============for test only, making a random map=========================================================================================
 for (let x = 0; x < 45; x++) {
     mapTileList.push([])
 }
 for (let x = 0; x < 45; x++) {
     for (let y = 0; y < 20; y++) {
 
-        let randomTileType = Math.round(Math.random() * 3)
+        if (x == 0 || y == 0 || x == 44 || y == 19) {       //to make the map edge to be sea
+
+            mapTileList[x][y] = sea
+
+            continue
+        }
+
+        let randomTileType = Math.round(Math.random() * 4) //control the quantity of ground
         if (randomTileType == 1) {
             mapTileList[x][y] = ground
         } else {
@@ -175,7 +181,7 @@ for (let x = 0; x < 45; x++) {
     }
 }
 
-console.log(mapTileList)
+//==========================================================================================================================
 
 
 // map.onload = ()=>{ mapIsLoaded = true}; // Draw when image has loaded
@@ -207,130 +213,43 @@ function drawPlant(plant, stageNumber, displayGridX, displayGridY) {
     ctxPlant.drawImage(plantTiles, plant[`stage${stageNumber}cutX`] * plant.size, plant[`stage${stageNumber}cutY`] * plant.size, plant.size, plant.size, displayGridX * 32, displayGridY * 32, plant.size, plant.size);
 }
 
+function drawTree(treeType, frameNumber, displayGridX, displayGridY) {
+    // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+    //grid to be 32px X 32px
+    ctxPlant.drawImage(trees, treeType[`frame${frameNumber}cutX`] * treeType.size, treeType[`frame${frameNumber}cutY`] * treeType.size, treeType.size, treeType.size, (displayGridX * treeType.size)-(treeType.size*0.25), (displayGridY * treeType.size)-(treeType.size/2), treeType.size, treeType.size);
+}
+
 
 
 function drawMap() {
 
-    // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight) 
 
-    // for (let i = 0; i < 13; i++) {
-
-    //     ctxMap.drawImage(mapTiles, mapTileSize * i, 0, mapTileSize, mapTileSize, mapTileSize * i, 0, mapTileSize, mapTileSize);
-    //     ctxMap.drawImage(mapTiles, mapTileSize * i, 16, mapTileSize, mapTileSize, mapTileSize * i, 16, mapTileSize, mapTileSize);
-    //     ctxMap.drawImage(mapTiles, mapTileSize * i, 32, mapTileSize, mapTileSize, mapTileSize * i, 32, mapTileSize, mapTileSize);
-
-    //     ctxMap.drawImage(mapTiles, mapTileSize * i, 0, mapTileSize, mapTileSize, mapTileSize * i, 48, mapTileSize, mapTileSize);
-    //     ctxMap.drawImage(mapTiles, mapTileSize * i, 16, mapTileSize, mapTileSize, mapTileSize * i, 64, mapTileSize, mapTileSize);
-    //     ctxMap.drawImage(mapTiles, mapTileSize * i, 16, mapTileSize, mapTileSize, mapTileSize * i, 80, mapTileSize, mapTileSize);
-    //     ctxMap.drawImage(mapTiles, mapTileSize * i, 32, mapTileSize, mapTileSize, mapTileSize * i, 96, mapTileSize, mapTileSize);
-
-    //     
-    //     ctxMap.strokeRect(mapTileSize * i, 0, mapTileSize, mapTileSize)
-    //     ctxMap.strokeRect(mapTileSize * i, 16, mapTileSize, mapTileSize)
-    //     ctxMap.strokeRect(mapTileSize * i, 32, mapTileSize, mapTileSize)
-    // }
-
-
-
+    // draw the ground tile
     for (let x = 0; x < mapTileList.length; x++) {
         for (let y = 0; y < mapTileList[x].length; y++) {
             if (mapTileList[x][y].tileType == 'ground') {
                 drawMapTile(ground, x, y)
 
+                drawTree(green_trees,1,x,y)
+                drawTree(green_trees,1,x,y+0.5)
+                drawTree(green_trees,1,x+0.5,y)
+                drawTree(green_trees,1,x+0.5,y+0.5)
             }
-            // ctxMap.setLineDash([2, 1])
-            // ctxMap.strokeRect(x * 16, y * 16, mapTileSize, mapTileSize)
+            ctxUI.globalAlpha = 0.3
+            ctxUI.strokeStyle = 'rgb(200,200,200)';
+            ctxUI.strokeRect(x * 32, y * 32, 32, 32) //show 32x32 grid
+            
         }
     }
 
+
+    // draw the ground edge
     for (let x = 0; x < mapTileList.length; x++) {
         for (let y = 0; y < mapTileList[x].length; y++) {
 
             if (x - 1 < 0 || y - 1 < 0 || x + 1 >= mapTileList.length || y + 1 >= mapTileList[x].length) {       //to prevent -1 index error
                 continue
             }
-
-            // // checking this tile.
-            // if (mapTileList[x][y].tileType === 'ground') {
-
-            //     //checking left side tile
-            //     if (mapTileList[x - 1][y].tileType === 'sea') {
-            //         //checking left top tile
-            //         if (mapTileList[x - 1][y - 1].tileType === 'sea') {
-            //             drawMapTile(leftEdge, x - 0.5, y)
-            //         } else {
-            //             drawMapTile(innerCornerLB, x - 0.5, y)
-            //         }
-
-            //         //checking left bottom tile
-            //         if (mapTileList[x - 1][y + 1].tileType === 'sea') {
-            //             drawMapTile(leftEdge, x - 0.5, y + 0.5)
-            //         } else {
-            //             drawMapTile(innerCornerLT, x - 0.5, y + 0.5)
-            //         }
-            //     }
-
-            //     //checking right side tile
-            //     if (mapTileList[x + 1][y].tileType === 'sea') {
-            //         //checking right top tile
-            //         if (mapTileList[x + 1][y - 1].tileType === 'sea') {
-            //             drawMapTile(rightEdge, x + 1, y)
-            //         } else {
-            //             drawMapTile(innerCornerRB, x + 1, y)
-            //         }
-
-            //         //checking right bottom tile
-            //         if (mapTileList[x + 1][y + 1].tileType === 'sea') {
-            //             drawMapTile(rightEdge, x + 1, y + 0.5)
-            //         } else {
-            //             drawMapTile(innerCornerRT, x + 1, y + 0.5)
-            //         }
-            //     }
-
-            //     //checking top side tile
-            //     if (mapTileList[x][y - 1].tileType === 'sea') {
-            //         //checking right top tile
-            //         if (mapTileList[x + 1][y - 1].tileType === 'sea') {
-            //             drawMapTile(topEdge, x + 0.5, y - 0.5)
-            //         } else {
-            //             drawMapTile(innerCornerLT, x + 0.5, y - 0.5)
-            //         }
-
-            //         //checking left top tile
-            //         if (mapTileList[x - 1][y - 1].tileType === 'sea') {
-            //             drawMapTile(topEdge, x, y - 0.5)
-            //         } else {
-            //             drawMapTile(innerCornerRT, x, y - 0.5)
-            //         }
-            //     }
-
-            //     //checking bottom side tile
-            //     if (mapTileList[x][y + 1].tileType === 'sea') {
-            //         //checking right bottom tile
-            //         if (mapTileList[x + 1][y + 1].tileType === 'sea') {
-            //             drawMapTile(bottomEdge, x + 0.5, y + 1)
-            //         } else {
-            //             drawMapTile(innerCornerLT, x, y + 1)
-            //         }
-
-            //         //checking left bottom tile
-            //         if (mapTileList[x - 1][y + 1].tileType === 'sea') {
-            //             drawMapTile(bottomEdge, x, y + 1)
-            //         } else {
-            //             drawMapTile(innerCornerRB, x, y + 1)
-            //         }
-            //     }
-
-            //     //checking left top tile
-            //     if (mapTileList[x - 1][y - 1].tileType === 'sea') {
-            //         drawMapTile(topEdge, x, y - 0.5)
-            //     } else {
-            //         drawMapTile(innerCornerRT, x, y - 0.5)
-            //     }
-
-
-
-            // }
 
 
             // checking this tile.
@@ -365,7 +284,7 @@ function drawMap() {
                     if (rightBottom === 'sea') {
                         drawMapTile(bottomEdge, x + 0.5, y + 1)
                     } else {
-                        drawMapTile(innerCornerLT, x, y + 1)
+                        drawMapTile(innerCornerLB, x + 0.5, y + 1)
                     }
 
                     if (leftBottom === 'sea') {
@@ -390,7 +309,7 @@ function drawMap() {
                     }
                 }
 
-                //draw right side edge tile
+                //draw left side edge tile
                 if (left === 'sea') {
                     if (leftTop === 'sea') {
                         drawMapTile(leftEdge, x - 0.5, y)
@@ -405,36 +324,35 @@ function drawMap() {
                     }
                 }
 
+                //draw left top corner tile
+                if (leftTop === 'sea') {
+                    if (top === 'sea' && left === 'sea') {
+                        drawMapTile(outerCornerLT, x - 0.5, y - 0.5)
+                    }
+                }
 
+                //draw right top corner tile
+                if (rightTop === 'sea') {
+                    if (top === 'sea' && right === 'sea') {
+                        drawMapTile(outerCornerRT, x + 1, y - 0.5)
+                    }
+                }
 
+                //draw left bottom corner tile
+                if (leftBottom === 'sea') {
+                    if (bottom === 'sea' && left === 'sea') {
+                        drawMapTile(outerCornerLB, x - 0.5, y + 1)
+                    }
+                }
 
-
-
+                //draw right bottom corner tile
+                if (rightBottom === 'sea') {
+                    if (bottom === 'sea' && right === 'sea') {
+                        drawMapTile(outerCornerRB, x + 1, y + 1)
+                    }
+                }
             }
-
-
-
-
-
         }
-
-        // drawPlant(pumpkin,1,x-1,y-1)
-
     }
-
-
-
-    // drawMapTile(ground, 11, 7)
-    // drawMapTile(ground, 12, 7.5)
-    // drawMapTile(outerCornerRT, 13.5, 7.5)
-
-
 }
 
-
-// function drawTrees() {
-
-//     ctxPlant.drawImage(trees, 0, 160, 32, 32, 8, 64, 32, 32);
-//     ctxPlant.drawImage(trees, 0, 224, 32, 32, 8, 64, 32, 32);
-
-// }
