@@ -2,7 +2,7 @@ import express from "express";
 import type { Request, Response } from "express";
 import { isLoggedInAPI } from "../guards";
 import { userType } from "../interfaceModels";
-import { dbClient } from "../main";
+import { client } from "../main";
 
 export const loginRoutes = express.Router();
 
@@ -19,7 +19,7 @@ async function login(req: Request, res: Response) {
   }
 
   const user = (
-    await dbClient.query<userType>(
+    await client.query<userType>(
       /*sql */ `
   SELECT * FROM user_info
   WHERE login_account = $1 AND login_password = $2`,
@@ -36,7 +36,7 @@ async function login(req: Request, res: Response) {
   res.json({ success: true });
 }
 
-async function getUserInfo(req: Request, res: Response) {
+export async function getUserInfo(req: Request, res: Response) {
   try {
     const user = req.session["user"];
     const { id, ...others } = user;
