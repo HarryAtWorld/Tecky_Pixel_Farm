@@ -121,7 +121,7 @@ class cutHouseTile {
     }
 }
 
-const small_house = new cutTreeFrames( 32)
+
 
 
 
