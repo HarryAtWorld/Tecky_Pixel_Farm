@@ -8,12 +8,59 @@ body{
 
 .gameContainer{
     background-color: rgb(96, 160, 168);
-    border: solid 1px rgb(200, 0, 0);
+    /* border: solid 1px rgb(200, 0, 0); */
     height: 640px; 
     width: 1440px; 
     margin: 0 auto;
+    position: relative;
+   
 
     /* transform: scale(2) translateY(25%); */
     image-rendering: pixelated;
 }
 
+
+#gameMapLayer{
+    background-color: rgb(96, 160, 168);
+    border: solid 1px rgb(32, 233, 32);
+    position: absolute; 
+    left: 0;
+    top: 0;
+    z-index: 0;
+    /* height: 640px; 
+    width: 1440px; 
+    margin: 0 auto; */
+
+    /* transform: scale(2) translateY(25%); */
+    /* image-rendering: pixelated; */
+}
+
+#gamePlantLayer{
+    
+    border: solid 1px rgb(238, 238, 238);
+    position: absolute; 
+    left: 0;
+    top: 0;
+    z-index: 1;
+    /* height: 640px; 
+    width: 1440px; 
+    margin: 0 auto; */
+
+    /* transform: scale(2) translateY(25%); */
+    /* image-rendering: pixelated; */
+}
+
+#gameUILayer{
+    
+    border: solid 1px rgb(233, 9, 166);
+    position: absolute; 
+    left: 0;
+    top: 0;
+    z-index: 2;
+    /* height: 640px; 
+    width: 1440px; 
+    margin: 0 auto; */
+
+    /* transform: scale(2) translateY(25%); */
+    /* image-rendering: pixelated; */
+} 
