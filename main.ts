@@ -10,12 +10,12 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // SQL Client
-export const dbClient = new pg.Client({
+export const client = new pg.Client({
   database: process.env.DB_NAME,
   user: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
 });
-dbClient.connect();
+client.connect();
 
 const app = express();
 // For json
@@ -40,6 +40,8 @@ app.use((req, res, next) => {
 // Router handler
 import { loginRoutes } from "./routers/loginRoutes";
 app.use(loginRoutes);
+import { rankingRoutes } from "./routers/rankingRoutes";
+app.use(rankingRoutes);
 
 // express Static
 app.use(express.static(path.join(__dirname, "Public")));
