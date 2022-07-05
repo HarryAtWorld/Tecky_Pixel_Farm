@@ -11,9 +11,9 @@ loginRoutes.post("/login", login);
 loginRoutes.get("/users/info", isLoggedInAPI, getUserInfo);
 
 async function login(req: Request, res: Response) {
-  const { username, password } = req.body;
-  console.log(username, password);
-  if (!username || !password) {
+  const { login_account, login_password } = req.body;
+  console.log(login_account, login_password);
+  if (!login_account || !login_password) {
     res.status(400).json({ success: false, message: "invalid username/password" });
     return;
   }
@@ -21,9 +21,9 @@ async function login(req: Request, res: Response) {
   const user = (
     await dbClient.query<userType>(
       /*sql */ `
-  SELECT * FROM users
-  WHERE username = $1 AND password = $2`,
-      [username, password]
+  SELECT * FROM user_info
+  WHERE login_account = $1 AND login_password = $2`,
+      [login_account, login_password]
     )
   ).rows[0];
 
