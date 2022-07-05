@@ -1,6 +1,5 @@
 import express from "express";
-//@ts-ignore
-import type { Request, Response, NextFunction } from "express";
+import type { Request, Response } from "express";
 import { isLoggedInAPI } from "../guards";
 import { userType } from "../interfaceModels";
 import { dbClient } from "../main";

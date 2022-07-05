@@ -3,7 +3,7 @@ import express from "express";
 import type { Request, Response, NextFunction } from "express";
 import expressSession from "express-session";
 import path from "path";
-//@ts-ignore
+// @ts-ignore
 import { isLoggedInStatic } from "./guards";
 import pg from "pg";
 import dotenv from "dotenv";
@@ -37,15 +37,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/c", (req, res) => {
-  if (req.session["name"]) {
-    res.send(`Welcome back to Pixel Farm, ${req.ip}.`);
-  } else {
-    req.session[`name`] = req.ip;
-    res.send(`You are 1st time come here,${req.ip}. `);
-  }
-});
-
 // Router handler
 import { loginRoutes } from "./routers/loginRoutes";
 app.use(loginRoutes);
@@ -61,10 +52,7 @@ app.use((req, res) => {
   res.sendFile(path.join(__dirname, "Public", "404.html"));
 });
 
-// set the port number
 const port = 8080;
-
-// set up listener
 app.listen(port, () => {
   console.log(`server started, http://localhost:${port}`);
 });

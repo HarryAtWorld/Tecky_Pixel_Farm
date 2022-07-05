@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
+//@ts-ignore
 import path from "path";
 
 export const isLoggedInStatic = (req: Request, res: Response, next: NextFunction) => {
@@ -6,6 +7,7 @@ export const isLoggedInStatic = (req: Request, res: Response, next: NextFunction
   if (!req.session["user"]) {
     console.log("isLoggedInMiddleware - fail");
     res.sendFile(path.join(__dirname, "Public", "404.html"));
+    // res.redirect("/");
     return;
   }
   next();
