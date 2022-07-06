@@ -41,17 +41,6 @@ async function login(req: Request, res: Response) {
   res.json({ success: true });
 }
 
-export async function getUserInfo(req: Request, res: Response) {
-  try {
-    const user = req.session["user"];
-    const { id, ...others } = user;
-    res.json({ success: true, user: others });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ success: false, message: "internal server error" });
-  }
-}
-
 async function register(req: Request, res: Response) {
   const { user_name, login_account, login_password } = req.body;
   console.log(user_name, login_account, login_password);
@@ -76,5 +65,16 @@ async function register(req: Request, res: Response) {
     res
       .status(400)
       .json({ success: false, message: "username or email already existed, Try Again" });
+  }
+}
+
+export async function getUserInfo(req: Request, res: Response) {
+  try {
+    const user = req.session["user"];
+    const { id, ...others } = user;
+    res.json({ success: true, user: others });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ success: false, message: "internal server error" });
   }
 }
