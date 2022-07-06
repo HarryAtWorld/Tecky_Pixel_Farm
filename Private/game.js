@@ -1,3 +1,5 @@
+
+
 // map grid to be 32X32 as 1 unit
 const gameImagesAreaHeight = 640 //32*20 should match with css
 const gameImagesAreaWidth = 1440 //32*45 should match with css
@@ -37,46 +39,47 @@ const trees = new Image();
 const plantTiles = new Image();
 const house = new Image();
 
-// BUG: images onload order not correct sometime.<======solved by multi layer
-// mapTiles.onload = drawMap; // Draw when image has loaded
+// using callback to make sure all image were loaded before draw things
+mapTiles.onload = () => {
+    trees.onload = () => {
+        plantTiles.onload = () => {
+            house.onload = drawMap;
+            house.src = './gameImages/house/houseImage.png'
+        }
+        plantTiles.src = './gameImages/plants/plantsImage.png';
+    }
+    trees.src = './gameImages/trees/tree.png';
+}
 mapTiles.src = './gameImages/map/island.png';
 
 
-// trees.onload = drawTrees; // Draw when image has loaded
-trees.src = './gameImages/trees/tree.png';
-plantTiles.onload = drawMap; // Draw when image has loaded
-plantTiles.src = './gameImages/plants/plantsImage.png';
-// house.onload = ; // Draw when image has loaded
-house.src = './gameImages/house/houseImage.png';
-
-
-
 class cutMapTile {
-    constructor(tileType, cutLocationX, cutLocationY, size) {
+    constructor(tileType, cutLocationX, cutLocationY, size, tileValue) {
         this.tileType = tileType;
         this.cutLocationX = cutLocationX;
         this.cutLocationY = cutLocationY;
         this.size = size
+        this.tileValue = tileValue
     }
 }
 
-const sea = new cutMapTile('sea', 12, 1, 16)
-const ground = new cutMapTile('ground', 4.5, 0, 32)
+const sea = new cutMapTile('sea', 12, 1, 16, 0)
+const ground = new cutMapTile('ground', 4.5, 0, 32, 10)
 
-const outerCornerLT = new cutMapTile('outerCornerLT', 0, 0, 16)
-const outerCornerLB = new cutMapTile('outerCornerLB', 0, 2, 16)
-const outerCornerRT = new cutMapTile('outerCornerRT', 2, 0, 16)
-const outerCornerRB = new cutMapTile('outerCornerRB', 2, 2, 16)
+const outerCornerLT = new cutMapTile('outerCornerLT', 0, 0, 16, 1)
+const outerCornerLB = new cutMapTile('outerCornerLB', 0, 2, 16, 1)
+const outerCornerRT = new cutMapTile('outerCornerRT', 2, 0, 16, 1)
+const outerCornerRB = new cutMapTile('outerCornerRB', 2, 2, 16, 1)
 
-const innerCornerLT = new cutMapTile('outerCornerLT', 4, 2, 16)
-const innerCornerLB = new cutMapTile('outerCornerLB', 4, 1, 16)
-const innerCornerRT = new cutMapTile('outerCornerRT', 3, 2, 16)
-const innerCornerRB = new cutMapTile('outerCornerRB', 3, 1, 16)
+const innerCornerLT = new cutMapTile('outerCornerLT', 4, 2, 16, 1)
+const innerCornerLB = new cutMapTile('outerCornerLB', 4, 1, 16, 1)
+const innerCornerRT = new cutMapTile('outerCornerRT', 3, 2, 16, 1)
+const innerCornerRB = new cutMapTile('outerCornerRB', 3, 1, 16, 1)
 
-const topEdge = new cutMapTile('topEdge', 1, 0, 16)
-const bottomEdge = new cutMapTile('bottomEdge', 1, 2, 16)
-const leftEdge = new cutMapTile('leftEdge', 0, 1, 16)
-const rightEdge = new cutMapTile('rightEdge', 2, 1, 16)
+const topEdge = new cutMapTile('topEdge', 1, 0, 16, 1)
+const bottomEdge = new cutMapTile('bottomEdge', 1, 2, 16, 1)
+const leftEdge = new cutMapTile('leftEdge', 0, 1, 16, 1)
+const rightEdge = new cutMapTile('rightEdge', 2, 1, 16, 1)
 
 
 // stage 1 to 3 is life ,stage 4 is die.
@@ -216,7 +219,7 @@ function drawPlant(plant, stageNumber, displayGridX, displayGridY) {
 function drawTree(treeType, frameNumber, displayGridX, displayGridY) {
     // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
     //grid to be 32px X 32px
-    ctxPlant.drawImage(trees, treeType[`frame${frameNumber}cutX`] * treeType.size, treeType[`frame${frameNumber}cutY`] * treeType.size, treeType.size, treeType.size, (displayGridX * treeType.size)-(treeType.size*0.25), (displayGridY * treeType.size)-(treeType.size/2), treeType.size, treeType.size);
+    ctxPlant.drawImage(trees, treeType[`frame${frameNumber}cutX`] * treeType.size, treeType[`frame${frameNumber}cutY`] * treeType.size, treeType.size, treeType.size, (displayGridX * treeType.size) - (treeType.size * 0.25), (displayGridY * treeType.size) - (treeType.size / 2), treeType.size, treeType.size);
 }
 
 
@@ -229,16 +232,17 @@ function drawMap() {
         for (let y = 0; y < mapTileList[x].length; y++) {
             if (mapTileList[x][y].tileType == 'ground') {
                 drawMapTile(ground, x, y)
+                ctxPlant.globalAlpha = 1
 
-                drawTree(green_trees,1,x,y)
-                drawTree(green_trees,1,x,y+0.5)
-                drawTree(green_trees,1,x+0.5,y)
-                drawTree(green_trees,1,x+0.5,y+0.5)
+                drawTree(green_trees, 1, x, y)
+                drawTree(green_trees, 1, x, y + 0.5)
+                drawTree(green_trees, 1, x + 0.5, y)
+                drawTree(green_trees, 1, x + 0.5, y + 0.5)
             }
-            ctxUI.globalAlpha = 0.3
-            ctxUI.strokeStyle = 'rgb(200,200,200)';
-            ctxUI.strokeRect(x * 32, y * 32, 32, 32) //show 32x32 grid
-            
+            ctxPlant.globalAlpha = 0.3
+            ctxPlant.strokeStyle = 'rgb(200,200,200)';
+            ctxPlant.strokeRect(x * 32, y * 32, 32, 32) //show 32x32 grid
+
         }
     }
 
@@ -247,7 +251,7 @@ function drawMap() {
     for (let x = 0; x < mapTileList.length; x++) {
         for (let y = 0; y < mapTileList[x].length; y++) {
 
-            if (x - 1 < 0 || y - 1 < 0 || x + 1 >= mapTileList.length || y + 1 >= mapTileList[x].length) {       //to prevent -1 index error
+            if (x <= 0 || y <= 0 || x + 1 >= mapTileList.length || y + 1 >= mapTileList[x].length) {       //to prevent -1 index error
                 continue
             }
 
@@ -353,6 +357,63 @@ function drawMap() {
                 }
             }
         }
+    }
+}
+
+
+// for remove listener test
+let stopListen = false
+
+//for map edit use ,highlight the available area
+gameUI.addEventListener('mousemove', hightLightMouseForMap);
+
+function hightLightMouseForMap(event) {
+    let bound = gameUI.getBoundingClientRect();
+
+    //covert to canvas XY, canvas left top to be 0,0.
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameUI.clientLeft) / 32);
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameUI.clientTop) / 32);
+
+
+    ctxUI.clearRect(0, 0, gameUI.width, gameUI.height)
+    ctxUI.beginPath();
+    ctxUI.rect(mouseXGrid * 32, mouseYGrid * 32, 32, 32);
+
+    if (mouseXGrid <= 0 || mouseYGrid <= 0 || mouseXGrid + 1 >= mapTileList.length || mouseYGrid + 1 >= mapTileList[mouseXGrid].length) {
+        ctxUI.fillStyle = '#FF0000';
+        ctxUI.fill();
+    } else {
+        console.log(mapTileList[Math.floor(mouseXGrid / 32)][Math.floor(mouseYGrid / 32)].tileValue)
+
+        let top = mapTileList[mouseXGrid][mouseYGrid - 1].tileValue
+        let bottom = mapTileList[mouseXGrid][mouseYGrid + 1].tileValue
+        let left = mapTileList[mouseXGrid - 1][mouseYGrid].tileValue
+        let right = mapTileList[mouseXGrid + 1][mouseYGrid].tileValue
+        let rightTop = mapTileList[mouseXGrid + 1][mouseYGrid - 1].tileValue
+        let leftTop = mapTileList[mouseXGrid - 1][mouseYGrid - 1].tileValue
+        let rightBottom = mapTileList[mouseXGrid + 1][mouseYGrid + 1].tileValue
+        let leftBottom = mapTileList[mouseXGrid - 1][mouseYGrid + 1].tileValue
+
+        let quickCheck = top + bottom + left + right + rightTop + rightBottom + leftTop + leftBottom
+
+        if (mapTileList[mouseXGrid][mouseYGrid].tileType !== 'ground' && quickCheck !== 0) {
+            ctxUI.globalAlpha = 0.35
+            ctxUI.fillStyle = '#00FF00';
+            ctxUI.fill();
+        } else {
+            ctxUI.globalAlpha = 0.4
+            ctxUI.fillStyle = '#FF0000';
+            ctxUI.fill();
+        }
+    }
+
+    // stop listener condition
+    if (stopListen) {
+        gameUI.addEventListener('mousemove', () => {
+            gameUI.removeEventListener('mousemove',
+                hightLightMouseForMap
+            );
+        })
     }
 }
 
