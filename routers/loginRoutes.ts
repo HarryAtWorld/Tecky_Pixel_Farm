@@ -8,6 +8,7 @@ export const loginRoutes = express.Router();
 
 // method: POST, path pattern: /login
 loginRoutes.post("/login", login);
+loginRoutes.post("/register", register);
 loginRoutes.get("/users/info", isLoggedInAPI, getUserInfo);
 
 async function login(req: Request, res: Response) {
@@ -32,7 +33,11 @@ async function login(req: Request, res: Response) {
     return;
   }
 
-  req.session["user"] = { id: user.id, username: user.username };
+  req.session["user"] = {
+    id: user.id,
+    user_name: user.user_name,
+    login_account: user.login_account,
+  };
   res.json({ success: true });
 }
 
@@ -44,5 +49,32 @@ export async function getUserInfo(req: Request, res: Response) {
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ success: false, message: "internal server error" });
+  }
+}
+
+async function register(req: Request, res: Response) {
+  const { user_name, login_account, login_password } = req.body;
+  console.log(user_name, login_account, login_password);
+
+  if (!user_name || !login_account || !login_password) {
+    res.status(400).json({ success: false, message: "Missing Information" });
+    return;
+  }
+
+  const checkAccount = await client.query(
+    `SELECT * FROM user_info WHERE user_name = $1, login_account = $2`,
+    [user_name, login_account]
+  );
+
+  if (!checkAccount) {
+    await client.query(
+      `INSERT INTO user_info (user_name, login_account, login_password) VALUES $1, $2, $3`,
+      [user_name, login_account, login_password]
+    );
+    res.status(200).json({ success: true, message: "Account created successfully" });
+  } else {
+    res
+      .status(400)
+      .json({ success: false, message: "username or email already existed, Try Again" });
   }
 }

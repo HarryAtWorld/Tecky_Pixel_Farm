@@ -18,8 +18,6 @@ CREATE TABLE game_plants_list (
 CREATE TABLE game_farm_data(
     user_id INTEGER,
     FOREIGN key (user_id) REFERENCES user_info(id),
-    user_name VARCHAR(255),
-    FOREIGN KEY (user_name) REFERENCES user_info(user_name),
     game_map_records json,
     game_items json,
     score INTEGER default 0
@@ -47,6 +45,10 @@ select *
 from game_plants_list;
 SELECT *
 FROM game_farm_data;
+SELECT *
+FROM user_status;
+select *
+FROM relationship;
 ----------------------------------------------------------------
 --
 insert into user_info (login_Account, login_Password, user_name)
@@ -80,7 +82,10 @@ INSERT into game_plants_list (items_name)
 VALUES ('big_house');
 --
 Insert into game_farm_data (user_id)
-VALUES (1);
+VALUES (3);
+--
+insert into relationship (user_id_a, user_id_b)
+VALUES (2, 3);
 ----------------------------------------------------------------
 -- DROP TABLE relationship;
 -- DROP TABLE game_farm_data;

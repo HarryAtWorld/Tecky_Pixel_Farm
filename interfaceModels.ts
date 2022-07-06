@@ -1,7 +1,8 @@
 export interface userType {
   id: number;
-  username: string;
-  password: string;
+  login_account: string;
+  user_name: string;
+  user_icon: string;
 }
 
 export interface rankingLevel {
