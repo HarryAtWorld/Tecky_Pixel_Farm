@@ -9,20 +9,20 @@
 <body>
 <!-- partial:index.partial.html -->
 <div class="login-form">
-  <form action="/login" method="POST" enctype="multipart/form-data">
+  <form id="form-login" action="/login" method="POST" >
     <h1>Login</h1>
     <div class="content">
-      <div class="input-field">
-        <input type="email" placeholder="Email" autocomplete="nope">
+      <div class="input-field"> 
+        <input type="email" placeholder="Email" autocomplete="nope" name="login_account">
       </div>
       <div class="input-field">
-        <input type="password" placeholder="Password" autocomplete="new-password">
+        <input type="password" placeholder="Password" autocomplete="new-password" name="login_password">
       </div>
       <a href="#" class="link">Forgot Your Password?</a>
     </div>
     
     <div class="action">
-      <a href="./registration.html" class="reg">Register</a>
+      <a href="./registration.html" id="reg"><button>Register</button></a>
       <button>Sign in</button>
     </div>
   </form>
