@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 window.onload = async () => {
     initLoginForm();
 }
@@ -33,3 +34,11 @@ function initLoginForm() {
       }
     });
 }
+=======
+let form = document.querySelector('login-form');
+
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    return false;
+});
+>>>>>>> 7a6e735ce0176a3e79e8da1773bf874de8466dc9

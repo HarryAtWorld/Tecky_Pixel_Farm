@@ -1,10 +1,10 @@
 -- player table --
 CREATE TABLE user_info (
     id SERIAL primary key,
-    login_Account VARCHAR(255) not null,
-    login_Password VARCHAR(255) not null,
+    login_account VARCHAR(255) not null,
+    login_password VARCHAR(255) not null,
     google_token VARCHAR(255),
-    user_name VARCHAR(255) unique not null,
+    user_name VARCHAR(255) not null,
     user_icon VARCHAR(255),
     create_at TIMESTAMP default now()
 );
@@ -51,12 +51,12 @@ select *
 FROM relationship;
 ----------------------------------------------------------------
 --
-insert into user_info (login_Account, login_Password, user_name)
-values ('alex', 'aaa111', 'alex');
-insert into user_info (login_Account, login_Password, user_name)
-values ('harry', 'harry', 'harry');
-insert into user_info (login_Account, login_Password, user_name)
-values ('jacky', 'jacky', 'jacky');
+insert into user_info (login_account, login_password, user_name)
+values ('alex@gmail.com', 'aaa111', 'alex2');
+insert into user_info (login_account, login_password, user_name)
+values ('harry@gmail.com', 'harry', 'harry2');
+insert into user_info (login_account, login_password, user_name)
+values ('jacky@gmail.com', 'jacky', 'jacky2');
 --
 INSERT into game_plants_list (items_name)
 VALUES ('carrot');
