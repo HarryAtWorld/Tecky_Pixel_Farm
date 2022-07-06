@@ -29,7 +29,7 @@ async function login(req: Request, res: Response) {
   ).rows[0];
 
   if (!user) {
-    res.status(400).json({ success: false, message: "invalid username/password, no user" });
+    res.status(400).json({ success: false, message: "invalid username/password" });
     return;
   }
 
@@ -38,7 +38,7 @@ async function login(req: Request, res: Response) {
     user_name: user.user_name,
     login_account: user.login_account,
   };
-  res.json({ success: true });
+  res.json({ success: true, message: "Login successful, Welcome" });
 }
 
 async function register(req: Request, res: Response) {

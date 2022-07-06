@@ -9,5 +9,4 @@ export interface rankingLevel {
   id: number;
   name: string;
   score: number;
-  numOfPlants: any;
 }

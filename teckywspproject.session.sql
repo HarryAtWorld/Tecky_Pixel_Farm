@@ -16,8 +16,10 @@ CREATE TABLE game_plants_list (
 );
 -- game_farm_data table --
 CREATE TABLE game_farm_data(
-    user_id INTEGER,
+    user_id INTEGER not NULL,
     FOREIGN key (user_id) REFERENCES user_info(id),
+    user_name VARCHAR(255) not null,
+    FOREIGN KEY (user_name) REFERENCES user_info(user_name),
     game_map_records json,
     game_items json,
     score INTEGER default 0
