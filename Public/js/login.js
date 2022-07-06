@@ -2,12 +2,6 @@
 window.onload = async () => {
     initLoginForm();
 }
-let form = document.querySelector('#reg');
-
-form.addEventListener('click', () => {
-    window.location.href = "./register.html";
-    return;
-});
 
 
 function initLoginForm() {
