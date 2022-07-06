@@ -1,0 +1,1 @@
+insert into user_info (login_Account, login_Password, user_name) VALUES ('jacky@gmail.com','1234','jacky');

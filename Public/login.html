@@ -2,14 +2,14 @@
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>Simple Login Form Example</title>
+  <title>Login</title>
   <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Rubik:400,700'><link rel="stylesheet" href="./css/login.css">
 
 </head>
 <body>
 <!-- partial:index.partial.html -->
 <div class="login-form">
-  <form>
+  <form action="/login" method="POST" enctype="multipart/form-data">
     <h1>Login</h1>
     <div class="content">
       <div class="input-field">
@@ -20,8 +20,9 @@
       </div>
       <a href="#" class="link">Forgot Your Password?</a>
     </div>
+    
     <div class="action">
-      <button>Register</button>
+      <a href="./registration.html">Register</a>
       <button>Sign in</button>
     </div>
   </form>
