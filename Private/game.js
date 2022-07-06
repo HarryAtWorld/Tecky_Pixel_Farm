@@ -7,32 +7,35 @@ const gameImagesAreaWidth = 1440 //32*45 should match with css
 
 let mapTileList = []
 let gameItemList = []
+let gameScore = 1000
 
 let mapIsLoaded = false;
 let treesIsLoaded = false;
 
-
-
-
-
+let displayScore = document.querySelector('#gameScore')
 
 // 3 layer canvas
-const gameMap = document.querySelector('#gameMapLayer')
-const gamePlant = document.querySelector('#gamePlantLayer')
-const gameUI = document.querySelector('#gameUILayer')
+const gameDisplayLayer0 = document.querySelector('#gameDisplayLayer0')
+const gameDisplayLayer1 = document.querySelector('#gameDisplayLayer1')
+const gameDisplayLayer2 = document.querySelector('#gameDisplayLayer2')
+const gameDisplayLayer3 = document.querySelector('#gameDisplayLayer3')
 
-gameMap.height = gameImagesAreaHeight;
-gameMap.width = gameImagesAreaWidth;
+gameDisplayLayer0.height = gameImagesAreaHeight;
+gameDisplayLayer0.width = gameImagesAreaWidth;
 
-gamePlant.height = gameImagesAreaHeight;
-gamePlant.width = gameImagesAreaWidth;
+gameDisplayLayer1.height = gameImagesAreaHeight;
+gameDisplayLayer1.width = gameImagesAreaWidth;
 
-gameUI.height = gameImagesAreaHeight;
-gameUI.width = gameImagesAreaWidth;
+gameDisplayLayer2.height = gameImagesAreaHeight;
+gameDisplayLayer2.width = gameImagesAreaWidth;
 
-const ctxMap = gameMap.getContext('2d')
-const ctxPlant = gamePlant.getContext('2d')
-const ctxUI = gameUI.getContext('2d')
+gameDisplayLayer3.height = gameImagesAreaHeight;
+gameDisplayLayer3.width = gameImagesAreaWidth;
+
+const ctxLayer0 = gameDisplayLayer0.getContext('2d')
+const ctxLayer1 = gameDisplayLayer1.getContext('2d')
+const ctxLayer2 = gameDisplayLayer2.getContext('2d')
+const ctxLayer3 = gameDisplayLayer3.getContext('2d')
 
 const mapTiles = new Image();
 const trees = new Image();
@@ -174,7 +177,7 @@ for (let x = 0; x < 45; x++) {
             continue
         }
 
-        let randomTileType = Math.round(Math.random() * 4) //control the quantity of ground
+        let randomTileType = Math.round(Math.random() * 6) //control the quantity of ground
         if (randomTileType == 1) {
             mapTileList[x][y] = ground
         } else {
@@ -207,46 +210,53 @@ for (let x = 0; x < 45; x++) {
 function drawMapTile(tileType, displayGridX, displayGridY) {
     // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
     //grid to be 32px X 32px
-    ctxMap.drawImage(mapTiles, tileType.cutLocationX * tileType.size, tileType.cutLocationY * tileType.size, tileType.size, tileType.size, displayGridX * 32, displayGridY * 32, tileType.size, tileType.size);
+    ctxLayer0.drawImage(mapTiles, tileType.cutLocationX * tileType.size, tileType.cutLocationY * tileType.size, tileType.size, tileType.size, displayGridX * 32, displayGridY * 32, tileType.size, tileType.size);
 }
 
 function drawPlant(plant, stageNumber, displayGridX, displayGridY) {
     // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
     //grid to be 32px X 32px
-    ctxPlant.drawImage(plantTiles, plant[`stage${stageNumber}cutX`] * plant.size, plant[`stage${stageNumber}cutY`] * plant.size, plant.size, plant.size, displayGridX * 32, displayGridY * 32, plant.size, plant.size);
+    ctxLayer1.drawImage(plantTiles, plant[`stage${stageNumber}cutX`] * plant.size, plant[`stage${stageNumber}cutY`] * plant.size, plant.size, plant.size, displayGridX * 32, displayGridY * 32, plant.size, plant.size);
 }
 
 function drawTree(treeType, frameNumber, displayGridX, displayGridY) {
     // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
     //grid to be 32px X 32px
-    ctxPlant.drawImage(trees, treeType[`frame${frameNumber}cutX`] * treeType.size, treeType[`frame${frameNumber}cutY`] * treeType.size, treeType.size, treeType.size, (displayGridX * treeType.size) - (treeType.size * 0.25), (displayGridY * treeType.size) - (treeType.size / 2), treeType.size, treeType.size);
+    ctxLayer1.drawImage(trees, treeType[`frame${frameNumber}cutX`] * treeType.size, treeType[`frame${frameNumber}cutY`] * treeType.size, treeType.size, treeType.size, (displayGridX * treeType.size) - (treeType.size * 0.25), (displayGridY * treeType.size) - (treeType.size / 2), treeType.size, treeType.size);
 }
 
 
+function showGrid() {
+    for (let x = 0; x < mapTileList.length; x++) {
+        for (let y = 0; y < mapTileList[x].length; y++) {
+            ctxLayer3.globalAlpha = 0.3
+            ctxLayer3.strokeStyle = 'rgb(200,200,200)';
+            ctxLayer3.strokeRect(x * 32, y * 32, 32, 32) //show 32x32 grid
 
-function drawMap() {
+        }
+    }
+}
 
 
-    // draw the ground tile
+// draw the ground tile
+function drawGroundTile() {
     for (let x = 0; x < mapTileList.length; x++) {
         for (let y = 0; y < mapTileList[x].length; y++) {
             if (mapTileList[x][y].tileType == 'ground') {
                 drawMapTile(ground, x, y)
-                ctxPlant.globalAlpha = 1
 
+                //temporary tree
                 drawTree(green_trees, 1, x, y)
                 drawTree(green_trees, 1, x, y + 0.5)
                 drawTree(green_trees, 1, x + 0.5, y)
                 drawTree(green_trees, 1, x + 0.5, y + 0.5)
             }
-            ctxPlant.globalAlpha = 0.3
-            ctxPlant.strokeStyle = 'rgb(200,200,200)';
-            ctxPlant.strokeRect(x * 32, y * 32, 32, 32) //show 32x32 grid
-
         }
     }
+}
 
 
+function drawGroundEdge() {
     // draw the ground edge
     for (let x = 0; x < mapTileList.length; x++) {
         for (let y = 0; y < mapTileList[x].length; y++) {
@@ -254,7 +264,6 @@ function drawMap() {
             if (x <= 0 || y <= 0 || x + 1 >= mapTileList.length || y + 1 >= mapTileList[x].length) {       //to prevent -1 index error
                 continue
             }
-
 
             // checking this tile.
             if (mapTileList[x][y].tileType === 'ground') {
@@ -361,59 +370,131 @@ function drawMap() {
 }
 
 
-// for remove listener test
-let stopListen = false
+function drawMap() {
+    drawGroundTile()
+    drawGroundEdge()
+}
 
-//for map edit use ,highlight the available area
-gameUI.addEventListener('mousemove', hightLightMouseForMap);
+function clearLayer(ctxLayer) {
+    ctxLayer.clearRect(0, 0, gameImagesAreaWidth, gameImagesAreaHeight)
+    ctxLayer.beginPath();
+}
 
-function hightLightMouseForMap(event) {
-    let bound = gameUI.getBoundingClientRect();
+// for stop edit map 
+let isStopEditMap = true
 
-    //covert to canvas XY, canvas left top to be 0,0.
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameUI.clientLeft) / 32);
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameUI.clientTop) / 32);
+function startEditMap() {
+
+    //for map edit use ,highlight the available area
+    document.addEventListener('mousemove', highLightMouseForMap);
+    //click to add ground tile
+    document.addEventListener('click', addGroundTile);
 
 
-    ctxUI.clearRect(0, 0, gameUI.width, gameUI.height)
-    ctxUI.beginPath();
-    ctxUI.rect(mouseXGrid * 32, mouseYGrid * 32, 32, 32);
+}
 
+function highLightMouseForMap(event) {
+    let bound = gameDisplayLayer0.getBoundingClientRect();
+
+    //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer0.clientLeft) / 32);
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer0.clientTop) / 32);
+
+    //clear previous highlight 
+    ctxLayer2.clearRect(0, 0, gameDisplayLayer0.width, gameDisplayLayer0.height)
+    ctxLayer2.beginPath();
+    ctxLayer2.rect(mouseXGrid * 32, mouseYGrid * 32, 32, 32);
+
+
+    //control the highlight color
     if (mouseXGrid <= 0 || mouseYGrid <= 0 || mouseXGrid + 1 >= mapTileList.length || mouseYGrid + 1 >= mapTileList[mouseXGrid].length) {
-        ctxUI.fillStyle = '#FF0000';
-        ctxUI.fill();
+        ctxLayer2.globalAlpha = 0.4
+        ctxLayer2.fillStyle = '#FF0000';
+        ctxLayer2.fill();
     } else {
-        console.log(mapTileList[Math.floor(mouseXGrid / 32)][Math.floor(mouseYGrid / 32)].tileValue)
 
-        let top = mapTileList[mouseXGrid][mouseYGrid - 1].tileValue
-        let bottom = mapTileList[mouseXGrid][mouseYGrid + 1].tileValue
-        let left = mapTileList[mouseXGrid - 1][mouseYGrid].tileValue
-        let right = mapTileList[mouseXGrid + 1][mouseYGrid].tileValue
-        let rightTop = mapTileList[mouseXGrid + 1][mouseYGrid - 1].tileValue
-        let leftTop = mapTileList[mouseXGrid - 1][mouseYGrid - 1].tileValue
-        let rightBottom = mapTileList[mouseXGrid + 1][mouseYGrid + 1].tileValue
-        let leftBottom = mapTileList[mouseXGrid - 1][mouseYGrid + 1].tileValue
-
-        let quickCheck = top + bottom + left + right + rightTop + rightBottom + leftTop + leftBottom
-
-        if (mapTileList[mouseXGrid][mouseYGrid].tileType !== 'ground' && quickCheck !== 0) {
-            ctxUI.globalAlpha = 0.35
-            ctxUI.fillStyle = '#00FF00';
-            ctxUI.fill();
+        if (mapTileList[mouseXGrid][mouseYGrid].tileType !== 'ground' && isNextToGround(mouseXGrid, mouseYGrid)) {
+            ctxLayer2.globalAlpha = 0.4
+            ctxLayer2.fillStyle = '#00FF00';
+            ctxLayer2.fill();
         } else {
-            ctxUI.globalAlpha = 0.4
-            ctxUI.fillStyle = '#FF0000';
-            ctxUI.fill();
+            ctxLayer2.globalAlpha = 0.4
+            ctxLayer2.fillStyle = '#FF0000';
+            ctxLayer2.fill();
         }
     }
 
     // stop listener condition
-    if (stopListen) {
-        gameUI.addEventListener('mousemove', () => {
-            gameUI.removeEventListener('mousemove',
-                hightLightMouseForMap
-            );
-        })
+    if (isStopEditMap) {
+
+        document.removeEventListener('mousemove',
+            highLightMouseForMap
+        );
+
+        document.removeEventListener('click',
+            addGroundTile
+        );
     }
 }
 
+function addGroundTile(event) {
+    let bound = gameDisplayLayer0.getBoundingClientRect();
+
+    //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer0.clientLeft) / 32);
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer0.clientTop) / 32);
+
+    //check if mouse in un available area
+    if (mouseXGrid <= 0 || mouseYGrid <= 0 || mouseXGrid + 1 >= mapTileList.length || mouseYGrid + 1 >= mapTileList[mouseXGrid].length) {
+        return
+    }
+
+
+
+    if (mapTileList[mouseXGrid][mouseYGrid].tileType !== 'ground' && isNextToGround(mouseXGrid, mouseYGrid)) {
+
+        mapTileList[mouseXGrid][mouseYGrid] = ground
+        clearLayer(ctxLayer0)
+        drawGroundTile()
+        drawGroundEdge()
+
+        gameScore -= 50
+
+        displayScore.innerHTML = `<h1>Score:${gameScore}</h1>`
+
+    }
+}
+
+function isNextToGround(mouseXGrid, mouseYGrid) {
+    let top = mapTileList[mouseXGrid][mouseYGrid - 1].tileValue
+    let bottom = mapTileList[mouseXGrid][mouseYGrid + 1].tileValue
+    let left = mapTileList[mouseXGrid - 1][mouseYGrid].tileValue
+    let right = mapTileList[mouseXGrid + 1][mouseYGrid].tileValue
+    let rightTop = mapTileList[mouseXGrid + 1][mouseYGrid - 1].tileValue
+    let leftTop = mapTileList[mouseXGrid - 1][mouseYGrid - 1].tileValue
+    let rightBottom = mapTileList[mouseXGrid + 1][mouseYGrid + 1].tileValue
+    let leftBottom = mapTileList[mouseXGrid - 1][mouseYGrid + 1].tileValue
+    let quickCheck = top + bottom + left + right + rightTop + rightBottom + leftTop + leftBottom
+
+    if (quickCheck == 0) {
+        return false
+    } else {
+        return true
+    }
+}
+
+
+
+// button for edit map mode
+let mapEditButton = document.querySelector('#editMap');
+mapEditButton.addEventListener("click", () => {
+    isStopEditMap = !isStopEditMap;
+
+    if (isStopEditMap) {
+        clearLayer(ctxLayer3)
+    } else {
+        showGrid()
+        startEditMap();
+    }
+
+})
