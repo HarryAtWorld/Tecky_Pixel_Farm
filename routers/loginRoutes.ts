@@ -28,6 +28,23 @@ async function login(req: Request, res: Response) {
     )
   ).rows[0];
 
+  // ////////////////////////////////
+  // const testing = await client.query(`select create_at from user_info`);
+  // console.log(testing.rows);
+  // // return
+  // // [
+  // //   { create_at: 2022-07-05T14:27:27.100Z },
+  // //   { create_at: 2022-07-05T14:27:27.100Z },
+  // //   { create_at: 2022-07-05T14:27:27.100Z },
+  // //   { create_at: 2022-07-06T04:25:44.049Z },
+  // //   { create_at: 2022-07-06T04:25:44.049Z },
+  // //   { create_at: 2022-07-06T04:25:44.049Z }
+  // // ]
+  // console.log(testing.rows[0].create_at); // 2022-07-05T14:27:27.100Z
+  // const create_at = testing.rows[0].create_at;
+  // const diffOfTime = (new Date().getTime() - new Date(create_at).getTime()) / 1000;
+  // console.log(`${diffOfTime} s`); // return as seconds
+  // ////////////////////////////////
   if (!user) {
     res.status(400).json({ success: false, message: "invalid username/password" });
     return;

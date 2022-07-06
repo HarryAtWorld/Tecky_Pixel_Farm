@@ -79,3 +79,27 @@
 -   [ ] fetch '/friendRank', method get
     -   [ ] await resp.json()
     -   [ ] for of html div
+
+# Testing result
+
+```ts
+////////////////////////////////
+const testing = await client.query(`select create_at from user_info`)
+console.log(testing.rows)
+// return
+// [
+//   { create_at: 2022-07-05T14:27:27.100Z },
+//   { create_at: 2022-07-05T14:27:27.100Z },
+//   { create_at: 2022-07-05T14:27:27.100Z },
+//   { create_at: 2022-07-06T04:25:44.049Z },
+//   { create_at: 2022-07-06T04:25:44.049Z },
+//   { create_at: 2022-07-06T04:25:44.049Z }
+// ]
+console.log(testing.rows[0].create_at)
+// return 2022-07-05T14:27:27.100Z
+const create_at = testing.rows[0].create_at
+const diffOfTime = (new Date().getTime() - new Date(create_at).getTime()) / 1000
+console.log(`${diffOfTime} s`)
+// return as 91953.403 seconds
+////////////////////////////////
+```
