@@ -1,33 +1,42 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Simple Login Form Example</title>
-  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Rubik:400,700'><link rel="stylesheet" href="./login.css">
+  <title>Login</title>
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Rubik:400,700'>
+  <link rel="stylesheet" href="./css/login.css">
 
 </head>
+
 <body>
-<!-- partial:index.partial.html -->
+
 <div class="login-form">
-  <form>
+  <form id="form-login" action="/login" method="POST" >
     <h1>Login</h1>
     <div class="content">
-      <div class="input-field">
-        <input type="email" placeholder="Email" autocomplete="nope">
+      <div class="input-field"> 
+        <input type="email" placeholder="Email" autocomplete="nope" name="login_account">
       </div>
       <div class="input-field">
-        <input type="password" placeholder="Password" autocomplete="new-password">
+        <input type="password" placeholder="Password" autocomplete="new-password" name="login_password">
       </div>
       <a href="#" class="link">Forgot Your Password?</a>
     </div>
+    
     <div class="action">
-      <button>Register</button>
       <button>Sign in</button>
     </div>
   </form>
+  <div class="action2">
+    <a href="./registration.html"><button>Register</button></a>
+  </div>
+
+
 </div>
 <!-- partial -->
-  <script  src="./login.js"></script>
+  <script  src="./js/login.js"></script>
 
 </body>
+
 </html>
