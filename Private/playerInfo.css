@@ -72,10 +72,22 @@ body{
     margin-top: -15%;
 }
 .profile-work p{
+    /* text-align: center; */
     font-size: 30px;
     color: #818182;
     font-weight: 600;
     margin-top: 10%;
+}
+.profile-work div{
+    width:200px;height:25px;
+    border:1px solid #495057;
+    text-align: center; 
+    line-height: 22px;
+    overflow:hidden;
+    border-radius: 20px;
+    color: red;
+    margin-top: 8px;
+    
 }
 .profile-work a{
     text-decoration: none;

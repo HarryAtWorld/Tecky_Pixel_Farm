@@ -30,7 +30,7 @@ function initLoginForm() {
 
     } else {
       alert(result.message);
-      // window.location.href = "/index.html";
+      window.location.href = "./game.html";
     }
   });
 }

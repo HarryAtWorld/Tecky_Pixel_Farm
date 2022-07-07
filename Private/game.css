@@ -18,6 +18,27 @@ body{
 }
 
 
+#gameScore{
+    display: flex;
+    justify-content:space-between
+    
+}
+
+#gameScore .playerInfo{
+    width:200px;height:25px;
+    border:1px solid #495057;
+    text-align: center; 
+    line-height: 22px;
+    overflow:hidden;
+    border-radius: 20px;
+    color: red;
+    margin-top: 30px;
+    cursor: pointer;
+    
+    
+}
+
+
 #gameDisplayLayer0{
     background-color: rgb(96, 160, 168);
     border: solid 1px rgb(32, 233, 32);
