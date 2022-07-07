@@ -1,16 +1,25 @@
 
 
 // map grid to be 32X32 as 1 unit
-const gameImagesAreaHeight = 640 //32*20 should match with css
-const gameImagesAreaWidth = 1440 //32*45 should match with css
+const gameBaseGridSize = 32
+const gameXGridNumber = 45
+const gameYGridNumber = 20
+const gameImagesAreaHeight = gameBaseGridSize * gameYGridNumber //32*20 = 640 should match with css
+const gameImagesAreaWidth = gameBaseGridSize * gameXGridNumber //32*45 = 1440 should match with css
 
+let showGridSize = gameBaseGridSize
 
 let mapTileList = []
+let groundTileList = []
+let plantRecord = {}
 let gameItemList = []
 let gameScore = 1000
 
-let mapIsLoaded = false;
-let treesIsLoaded = false;
+
+// for stop edit mode =================================================================================
+let isStopEditMap = true
+let isStopPlanting = true
+
 
 let displayScore = document.querySelector('#gameScore')
 
@@ -46,7 +55,7 @@ const house = new Image();
 mapTiles.onload = () => {
     trees.onload = () => {
         plantTiles.onload = () => {
-            house.onload = drawMap;
+            house.onload = drawWorld;
             house.src = './gameImages/house/houseImage.png'
         }
         plantTiles.src = './gameImages/plants/plantsImage.png';
@@ -87,16 +96,16 @@ const rightEdge = new cutMapTile('rightEdge', 2, 1, 16, 1)
 
 // stage 1 to 3 is life ,stage 4 is die.
 class cutPlantTile {
-    constructor(s1X, s1Y, s2X, s2Y, s3X, s3Y, s4X, s4Y, size) {
+    constructor(s0X, s0Y, s1X, s1Y, s2X, s2Y, s3X, s3Y, size) {
 
+        this.stage0cutX = s0X;
+        this.stage0cutY = s0Y;
         this.stage1cutX = s1X;
         this.stage1cutY = s1Y;
         this.stage2cutX = s2X;
         this.stage2cutY = s2Y;
         this.stage3cutX = s3X;
         this.stage3cutY = s3Y;
-        this.stage4cutX = s4X;
-        this.stage4cutY = s4Y;
         this.size = size
     }
 }
@@ -110,16 +119,28 @@ const pumpkin = new cutPlantTile(1, 3, 3, 3, 5, 3, 0, 33, 16)
 const lettuce = new cutPlantTile(1, 8, 3, 8, 5, 8, 0, 33, 16)
 
 
+class plantingBox {
+    constructor(plantType, stage, locationX, locationY) {
+        this.plantType = plantType;
+        this.stage = stage;
+        this.x = locationX
+        this.y = locationY
+    }
+}
+
+
+
+
 class cutTreeFrames {
-    constructor(s1X, s1Y, s2X, s2Y, s3X, s3Y, s4X, s4Y, size) {
-        this.frame1cutX = s1X;
-        this.frame1cutY = s1Y;
-        this.frame2cutX = s2X;
-        this.frame2cutY = s2Y;
-        this.frame3cutX = s3X;
-        this.frame3cutY = s3Y;
-        this.frame4cutX = s4X;
-        this.frame4cutY = s4Y;
+    constructor(f0X, f0Y, f1X, f1Y, f2X, f2Y, f3X, f3Y, size) {
+        this.frame0cutX = f0X;
+        this.frame0cutY = f0Y;
+        this.frame1cutX = f1X;
+        this.frame1cutY = f1Y;
+        this.frame2cutX = f2X;
+        this.frame2cutY = f2Y;
+        this.frame3cutX = f3X;
+        this.frame3cutY = f3Y;
         this.size = size
     }
 }
@@ -164,28 +185,45 @@ function mapInit() {
 
 
 // ==============for test only, making a random map=========================================================================================
-for (let x = 0; x < 45; x++) {
+let groundCounter = 0 //for test only
+
+for (let x = 0; x < gameXGridNumber; x++) {
     mapTileList.push([])
 }
-for (let x = 0; x < 45; x++) {
-    for (let y = 0; y < 20; y++) {
 
-        if (x == 0 || y == 0 || x == 44 || y == 19) {       //to make the map edge to be sea
+//Random making the ground
+for (let x = 0; x < gameXGridNumber; x++) {
+    for (let y = 0; y < gameYGridNumber; y++) {
 
+        if (x <= 0 || y <= 0 || x + 1 == gameXGridNumber || y + 1 == gameYGridNumber) {       //to make the map edge to be sea
             mapTileList[x][y] = sea
-
             continue
         }
 
-        let randomTileType = Math.round(Math.random() * 6) //control the quantity of ground
+        let randomTileType = Math.round(Math.random() * 4) //control the quantity of ground
         if (randomTileType == 1) {
             mapTileList[x][y] = ground
+            groundCounter += 1
+            groundTileList.push([x, y])
+
         } else {
             mapTileList[x][y] = sea
         }
-
     }
 }
+
+
+
+//Random making the Plants
+for (let xy of groundTileList) {
+    let hasPlant = Math.round(Math.random())
+    let plantStage = Math.round(Math.random() * 3)
+
+    if (hasPlant == 1) {
+        plantRecord[`${xy[0]},${xy[1]}`] = new plantingBox(carrot, plantStage, xy[0], xy[1])
+    }
+}
+
 
 //==========================================================================================================================
 
@@ -201,7 +239,7 @@ for (let x = 0; x < 45; x++) {
 
 // function updateUI(){
 //     if(mapIsLoaded && treesIsLoaded){
-//         drawMap();
+//         drawWorld();
 //         drawTrees();
 //     }
 // }
@@ -213,7 +251,7 @@ function drawMapTile(tileType, displayGridX, displayGridY) {
     ctxLayer0.drawImage(mapTiles, tileType.cutLocationX * tileType.size, tileType.cutLocationY * tileType.size, tileType.size, tileType.size, displayGridX * 32, displayGridY * 32, tileType.size, tileType.size);
 }
 
-function drawPlant(plant, stageNumber, displayGridX, displayGridY) {
+function drawPlantingBox(plant, stageNumber, displayGridX, displayGridY) {
     // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
     //grid to be 32px X 32px
     ctxLayer1.drawImage(plantTiles, plant[`stage${stageNumber}cutX`] * plant.size, plant[`stage${stageNumber}cutY`] * plant.size, plant.size, plant.size, displayGridX * 32, displayGridY * 32, plant.size, plant.size);
@@ -226,12 +264,13 @@ function drawTree(treeType, frameNumber, displayGridX, displayGridY) {
 }
 
 
-function showGrid() {
-    for (let x = 0; x < mapTileList.length; x++) {
-        for (let y = 0; y < mapTileList[x].length; y++) {
+function showGrid(gridSize) {
+    for (let x = 0; x < gameXGridNumber * (gameBaseGridSize / gridSize); x++) {
+        for (let y = 0; y < gameYGridNumber * (gameBaseGridSize / gridSize); y++) {
             ctxLayer3.globalAlpha = 0.3
             ctxLayer3.strokeStyle = 'rgb(200,200,200)';
-            ctxLayer3.strokeRect(x * 32, y * 32, 32, 32) //show 32x32 grid
+
+            ctxLayer3.strokeRect(x * (gridSize / gameBaseGridSize) * gameBaseGridSize, y * (gridSize / gameBaseGridSize) * gameBaseGridSize, gridSize, gridSize)
 
         }
     }
@@ -239,17 +278,17 @@ function showGrid() {
 
 
 // draw the ground tile
-function drawGroundTile() {
-    for (let x = 0; x < mapTileList.length; x++) {
+function drawGround() {
+    for (let x = 0; x < gameXGridNumber; x++) {
         for (let y = 0; y < mapTileList[x].length; y++) {
             if (mapTileList[x][y].tileType == 'ground') {
                 drawMapTile(ground, x, y)
 
                 //temporary tree
-                drawTree(green_trees, 1, x, y)
-                drawTree(green_trees, 1, x, y + 0.5)
-                drawTree(green_trees, 1, x + 0.5, y)
-                drawTree(green_trees, 1, x + 0.5, y + 0.5)
+                // drawTree(green_trees, 1, x, y)
+                // drawTree(green_trees, 1, x, y + 0.5)
+                // drawTree(green_trees, 1, x + 0.5, y)
+                // drawTree(green_trees, 1, x + 0.5, y + 0.5)
             }
         }
     }
@@ -370,9 +409,21 @@ function drawGroundEdge() {
 }
 
 
-function drawMap() {
-    drawGroundTile()
+function drawPlants() {
+    // console.log('draw plants')
+    // console.log(plantRecord)
+    for (let plant in plantRecord) {
+        drawPlantingBox(plantRecord[plant].plantType, plantRecord[plant].stage, plantRecord[plant].x, plantRecord[plant].y)
+    }
+}
+
+
+
+function drawWorld() {
+    drawGround()
     drawGroundEdge()
+    drawPlants()
+
 }
 
 function clearLayer(ctxLayer) {
@@ -380,40 +431,43 @@ function clearLayer(ctxLayer) {
     ctxLayer.beginPath();
 }
 
-// for stop edit map 
-let isStopEditMap = true
 
 function startEditMap() {
-
     //for map edit use ,highlight the available area
-    document.addEventListener('mousemove', highLightMouseForMap);
+    document.addEventListener('mousemove', mapEditHighLight);
     //click to add ground tile
     document.addEventListener('click', addGroundTile);
-
-
 }
 
-function highLightMouseForMap(event) {
+function startPlanting() {
+    //for map edit use ,highlight the available area
+    document.addEventListener('mousemove', plantingHighLight);
+    //click to add ground tile
+    // document.addEventListener('click', addGroundTile);
+}
+
+function plantingHighLight(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
-    //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer0.clientLeft) / 32);
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer0.clientTop) / 32);
+    //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer2.clientLeft) / showGridSize);
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer2.clientTop) / showGridSize);
 
     //clear previous highlight 
-    ctxLayer2.clearRect(0, 0, gameDisplayLayer0.width, gameDisplayLayer0.height)
+    ctxLayer2.clearRect(0, 0, gameDisplayLayer2.width, gameDisplayLayer2.height)
     ctxLayer2.beginPath();
-    ctxLayer2.rect(mouseXGrid * 32, mouseYGrid * 32, 32, 32);
 
+    //draw the grid box
+    ctxLayer2.rect(mouseXGrid * showGridSize, mouseYGrid * showGridSize, showGridSize, showGridSize);
 
-    //control the highlight color
-    if (mouseXGrid <= 0 || mouseYGrid <= 0 || mouseXGrid + 1 >= mapTileList.length || mouseYGrid + 1 >= mapTileList[mouseXGrid].length) {
+    //control the grid box highlight color
+    if (Math.floor(mouseXGrid / (gameBaseGridSize / showGridSize)) <= 0 || Math.floor(mouseYGrid / (gameBaseGridSize / showGridSize)) <= 0 || Math.floor(mouseXGrid / (gameBaseGridSize / showGridSize)) + 1 >= gameXGridNumber || Math.floor(mouseYGrid / (gameBaseGridSize / showGridSize)) + 1 >= gameYGridNumber) {
         ctxLayer2.globalAlpha = 0.4
         ctxLayer2.fillStyle = '#FF0000';
         ctxLayer2.fill();
-    } else {
 
-        if (mapTileList[mouseXGrid][mouseYGrid].tileType !== 'ground' && isNextToGround(mouseXGrid, mouseYGrid)) {
+    } else if (plantRecord[`${mouseXGrid * (showGridSize / gameBaseGridSize)},${mouseYGrid * (showGridSize / gameBaseGridSize)}`]) {
+        if (plantRecord[`${mouseXGrid * (showGridSize / gameBaseGridSize)},${mouseYGrid * (showGridSize / gameBaseGridSize)}`].stage === 3) {
             ctxLayer2.globalAlpha = 0.4
             ctxLayer2.fillStyle = '#00FF00';
             ctxLayer2.fill();
@@ -422,19 +476,50 @@ function highLightMouseForMap(event) {
             ctxLayer2.fillStyle = '#FF0000';
             ctxLayer2.fill();
         }
+
+    } else if (mapTileList[Math.floor(mouseXGrid * (showGridSize / gameBaseGridSize))][Math.floor(mouseYGrid * (showGridSize / gameBaseGridSize))].tileType === 'ground') {
+        ctxLayer2.globalAlpha = 0.4
+        ctxLayer2.fillStyle = '#00FF00';
+        ctxLayer2.fill();
+
+    } else {
+        ctxLayer2.globalAlpha = 0.4
+        ctxLayer2.fillStyle = '#FF0000';
+        ctxLayer2.fill();
     }
 
-    // stop listener condition
-    if (isStopEditMap) {
+}
 
-        document.removeEventListener('mousemove',
-            highLightMouseForMap
-        );
 
-        document.removeEventListener('click',
-            addGroundTile
-        );
+function mapEditHighLight(event) {
+    let bound = gameDisplayLayer0.getBoundingClientRect();
+
+    //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer2.clientLeft) / showGridSize);
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer2.clientTop) / showGridSize);
+
+    //clear previous highlight 
+    ctxLayer2.clearRect(0, 0, gameDisplayLayer2.width, gameDisplayLayer2.height)
+    ctxLayer2.beginPath();
+
+    //draw the grid box
+    ctxLayer2.rect(mouseXGrid * showGridSize, mouseYGrid * showGridSize, showGridSize, showGridSize);
+
+    //control the grid box highlight color
+    if (Math.floor(mouseXGrid / (gameBaseGridSize / showGridSize)) <= 0 || Math.floor(mouseYGrid / (gameBaseGridSize / showGridSize)) <= 0 || Math.floor(mouseXGrid / (gameBaseGridSize / showGridSize)) + 1 >= gameXGridNumber || Math.floor(mouseYGrid / (gameBaseGridSize / showGridSize)) + 1 >= gameYGridNumber) {
+        ctxLayer2.globalAlpha = 0.4
+        ctxLayer2.fillStyle = '#FF0000';
+        ctxLayer2.fill();
+    } else if (mapTileList[Math.floor(mouseXGrid * (showGridSize / gameBaseGridSize))][Math.floor(mouseYGrid * (showGridSize / gameBaseGridSize))].tileType !== 'ground' && isNextToGround(Math.floor(mouseXGrid * (showGridSize / gameBaseGridSize)), Math.floor(mouseYGrid * (showGridSize / gameBaseGridSize)))) {
+        ctxLayer2.globalAlpha = 0.4
+        ctxLayer2.fillStyle = '#00FF00';
+        ctxLayer2.fill();
+    } else {
+        ctxLayer2.globalAlpha = 0.4
+        ctxLayer2.fillStyle = '#FF0000';
+        ctxLayer2.fill();
     }
+
 }
 
 function addGroundTile(event) {
@@ -455,7 +540,7 @@ function addGroundTile(event) {
 
         mapTileList[mouseXGrid][mouseYGrid] = ground
         clearLayer(ctxLayer0)
-        drawGroundTile()
+        drawGround()
         drawGroundEdge()
 
         gameScore -= 50
@@ -490,11 +575,61 @@ let mapEditButton = document.querySelector('#editMap');
 mapEditButton.addEventListener("click", () => {
     isStopEditMap = !isStopEditMap;
 
+    isStopPlanting = true
+    document.removeEventListener('click',
+        plantingHighLight
+    );
+
+    showGridSize = 32
+
     if (isStopEditMap) {
+        document.removeEventListener('mousemove',
+            mapEditHighLight
+        );
+
+        document.removeEventListener('click',
+            addGroundTile
+        );
+
         clearLayer(ctxLayer3)
     } else {
-        showGrid()
+        showGrid(showGridSize)
         startEditMap();
+    }
+
+})
+
+// button for planting mode
+let plantingButton = document.querySelector('#planting');
+plantingButton.addEventListener("click", () => {
+    isStopPlanting = !isStopPlanting;
+
+    isStopEditMap = true
+    document.removeEventListener('click',
+        addGroundTile
+    );
+
+
+    showGridSize = 16
+
+    if (isStopPlanting) {
+        document.removeEventListener('mousemove',
+            plantingHighLight
+        );
+        document.removeEventListener('mousemove',
+            mapEditHighLight
+        );
+
+        // document.removeEventListener('click',
+        //     addGroundTile
+        // );
+
+        clearLayer(ctxLayer3)
+    } else {
+        showGrid(showGridSize)
+        startPlanting()
+
+
     }
 
 })
