@@ -52,12 +52,54 @@
 
 (BE)
 
--   [ ] All player ranking
+-   [x] All player ranking
 
-    -   [ ] sql query game_farm_data oder by DESC
-    -   [ ] res.json()
+    -   [x] sql query game_farm_data oder by DESC LIMIT 10
+    -   [x] res.json()
+
+(FE)
+
+-   [ ] fetch '/allPlayerRank', method get
+
+    -   [ ] await resp.json()
+    -   [ ] for of html div
+
+&
+
+(BE)
 
 -   [ ] Friend ranking routes
-    -   [ ] session.user.id
-    -   [ ] sql query select relationship where user_id_a = $1 || user_id_b = $1, [session.user.id]
-    -   [ ] query result -> for of query
+    -   [x] session.user.id
+    -   [x] sql query select relationship where user_id_a = $1 || user_id_b = $1, [session.user.id]
+    -   [ ] query result -> for of -> select user_id, score, name from game_farm_data
+    -   [ ] res.json()
+
+(FE)
+
+-   [ ] fetch '/friendRank', method get
+    -   [ ] await resp.json()
+    -   [ ] for of html div
+
+# Testing result
+
+```ts
+////////////////////////////////
+const testing = await client.query(`select create_at from user_info`)
+console.log(testing.rows)
+// return
+// [
+//   { create_at: 2022-07-05T14:27:27.100Z },
+//   { create_at: 2022-07-05T14:27:27.100Z },
+//   { create_at: 2022-07-05T14:27:27.100Z },
+//   { create_at: 2022-07-06T04:25:44.049Z },
+//   { create_at: 2022-07-06T04:25:44.049Z },
+//   { create_at: 2022-07-06T04:25:44.049Z }
+// ]
+console.log(testing.rows[0].create_at)
+// return 2022-07-05T14:27:27.100Z
+const create_at = testing.rows[0].create_at
+const diffOfTime = (new Date().getTime() - new Date(create_at).getTime()) / 1000
+console.log(`${diffOfTime} s`)
+// return as 91953.403 seconds
+////////////////////////////////
+```
