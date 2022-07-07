@@ -2,7 +2,7 @@
 
 // map grid to be 32X32 as 1 unit
 const gameBaseGridSize = 32
-const gameXGridNumber = 45
+const gameXGridNumber = 46
 const gameYGridNumber = 20
 const gameImagesAreaHeight = gameBaseGridSize * gameYGridNumber //32*20 = 640 should match with css
 const gameImagesAreaWidth = gameBaseGridSize * gameXGridNumber //32*45 = 1440 should match with css
@@ -164,22 +164,7 @@ const big_house = new cutHouseTile(1, 0, 94)
 
 
 
-function mapInit() {
-    for (let x = 0; x < mapTileList.length - 2; x++) {
-        for (let y = 0; y < mapTileList[x + 1].length - 2; y++) {
-            if (mapTileList[x][y + 1].tileType === 'ground') {         //check left 
-                if (mapTileList[x][y].status === 'ground') {        //check left top
-                    drawMapTile(leftEdge, x + 0.5, y)
-                } else {
-                    drawMapTile(innerCornerLB, x + 0.5 + 1, y + 1)
-                }
 
-            }
-
-        }
-    }
-
-}
 
 
 
@@ -568,30 +553,37 @@ function isNextToGround(mouseXGrid, mouseYGrid) {
     }
 }
 
+function clearAllMouseListener() {
 
+    document.removeEventListener('mousemove',
+        mapEditHighLight
+    );
+
+    document.removeEventListener('click',
+        addGroundTile
+    );
+
+    document.removeEventListener('mousemove',
+        plantingHighLight
+    );
+
+}
 
 // button for edit map mode
 let mapEditButton = document.querySelector('#editMap');
 mapEditButton.addEventListener("click", () => {
-    isStopEditMap = !isStopEditMap;
+    clearAllMouseListener()
+    clearLayer(ctxLayer3)
 
     isStopPlanting = true
-    document.removeEventListener('click',
-        plantingHighLight
-    );
+    isStopEditMap = !isStopEditMap;
 
     showGridSize = 32
 
     if (isStopEditMap) {
-        document.removeEventListener('mousemove',
-            mapEditHighLight
-        );
-
-        document.removeEventListener('click',
-            addGroundTile
-        );
-
+        clearAllMouseListener()
         clearLayer(ctxLayer3)
+
     } else {
         showGrid(showGridSize)
         startEditMap();
@@ -602,34 +594,19 @@ mapEditButton.addEventListener("click", () => {
 // button for planting mode
 let plantingButton = document.querySelector('#planting');
 plantingButton.addEventListener("click", () => {
-    isStopPlanting = !isStopPlanting;
+    clearAllMouseListener()
+    clearLayer(ctxLayer3)
 
     isStopEditMap = true
-    document.removeEventListener('click',
-        addGroundTile
-    );
-
+    isStopPlanting = !isStopPlanting;
 
     showGridSize = 16
 
     if (isStopPlanting) {
-        document.removeEventListener('mousemove',
-            plantingHighLight
-        );
-        document.removeEventListener('mousemove',
-            mapEditHighLight
-        );
-
-        // document.removeEventListener('click',
-        //     addGroundTile
-        // );
-
+        clearAllMouseListener()
         clearLayer(ctxLayer3)
     } else {
         showGrid(showGridSize)
         startPlanting()
-
-
     }
-
 })
