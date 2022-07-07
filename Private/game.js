@@ -1,5 +1,6 @@
 
 
+
 // map grid to be 32X32 as 1 unit
 const gameBaseGridSize = 32
 const gameXGridNumber = 46
@@ -10,7 +11,7 @@ const gameImagesAreaWidth = gameBaseGridSize * gameXGridNumber //32*45 = 1440 sh
 let showGridSize = gameBaseGridSize
 
 let mapTileList = []
-let groundTileList = []
+// let groundTileList = []
 let plantRecord = {}
 let gameItemList = []
 let gameScore = 1000
@@ -176,38 +177,49 @@ for (let x = 0; x < gameXGridNumber; x++) {
     mapTileList.push([])
 }
 
-//Random making the ground
 for (let x = 0; x < gameXGridNumber; x++) {
     for (let y = 0; y < gameYGridNumber; y++) {
 
-        if (x <= 0 || y <= 0 || x + 1 == gameXGridNumber || y + 1 == gameYGridNumber) {       //to make the map edge to be sea
-            mapTileList[x][y] = sea
-            continue
-        }
-
-        let randomTileType = Math.round(Math.random() * 4) //control the quantity of ground
-        if (randomTileType == 1) {
-            mapTileList[x][y] = ground
-            groundCounter += 1
-            groundTileList.push([x, y])
-
-        } else {
-            mapTileList[x][y] = sea
-        }
+        mapTileList[x][y] = sea
     }
 }
+
+
+mapTileList[15][3] = ground
+// groundTileList.push([10, 23])
+
+// // Random making the ground
+// for (let x = 0; x < gameXGridNumber; x++) {
+//     for (let y = 0; y < gameYGridNumber; y++) {
+
+//         if (x <= 0 || y <= 0 || x + 1 == gameXGridNumber || y + 1 == gameYGridNumber) {       //to make the map edge to be sea
+//             mapTileList[x][y] = sea
+//             continue
+//         }
+
+//         let randomTileType = Math.round(Math.random() * 4) //control the quantity of ground
+//         if (randomTileType == 1) {
+//             mapTileList[x][y] = ground
+//             groundCounter += 1
+//             groundTileList.push([x, y])
+
+//         } else {
+//             mapTileList[x][y] = sea
+//         }
+//     }
+// }
 
 
 
 //Random making the Plants
-for (let xy of groundTileList) {
-    let hasPlant = Math.round(Math.random())
-    let plantStage = Math.round(Math.random() * 3)
+// for (let xy of groundTileList) {
+//     let hasPlant = Math.round(Math.random())
+//     let plantStage = Math.round(Math.random() * 3)
 
-    if (hasPlant == 1) {
-        plantRecord[`${xy[0]},${xy[1]}`] = new plantingBox(carrot, plantStage, xy[0], xy[1])
-    }
-}
+//     if (hasPlant == 1) {
+//         plantRecord[`x${xy[0] * 2}y${xy[1] * 2}`] = new plantingBox(carrot, plantStage, xy[0] * 2, xy[1] * 2)
+//     }
+// }
 
 
 //==========================================================================================================================
@@ -239,7 +251,7 @@ function drawMapTile(tileType, displayGridX, displayGridY) {
 function drawPlantingBox(plant, stageNumber, displayGridX, displayGridY) {
     // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
     //grid to be 32px X 32px
-    ctxLayer1.drawImage(plantTiles, plant[`stage${stageNumber}cutX`] * plant.size, plant[`stage${stageNumber}cutY`] * plant.size, plant.size, plant.size, displayGridX * 32, displayGridY * 32, plant.size, plant.size);
+    ctxLayer1.drawImage(plantTiles, plant[`stage${stageNumber}cutX`] * plant.size, plant[`stage${stageNumber}cutY`] * plant.size, plant.size, plant.size, displayGridX * 16, displayGridY * 16, plant.size, plant.size);
 }
 
 function drawTree(treeType, frameNumber, displayGridX, displayGridY) {
@@ -425,10 +437,10 @@ function startEditMap() {
 }
 
 function startPlanting() {
-    //for map edit use ,highlight the available area
+    //for planting use ,highlight the available area
     document.addEventListener('mousemove', plantingHighLight);
-    //click to add ground tile
-    // document.addEventListener('click', addGroundTile);
+    //click to add plant
+    document.addEventListener('click', addPlant);
 }
 
 function plantingHighLight(event) {
@@ -451,8 +463,8 @@ function plantingHighLight(event) {
         ctxLayer2.fillStyle = '#FF0000';
         ctxLayer2.fill();
 
-    } else if (plantRecord[`${mouseXGrid * (showGridSize / gameBaseGridSize)},${mouseYGrid * (showGridSize / gameBaseGridSize)}`]) {
-        if (plantRecord[`${mouseXGrid * (showGridSize / gameBaseGridSize)},${mouseYGrid * (showGridSize / gameBaseGridSize)}`].stage === 3) {
+    } else if (plantRecord[`x${mouseXGrid}y${mouseYGrid}`]) {
+        if (plantRecord[`x${mouseXGrid}y${mouseYGrid}`].stage === 3) {
             ctxLayer2.globalAlpha = 0.4
             ctxLayer2.fillStyle = '#00FF00';
             ctxLayer2.fill();
@@ -519,8 +531,6 @@ function addGroundTile(event) {
         return
     }
 
-
-
     if (mapTileList[mouseXGrid][mouseYGrid].tileType !== 'ground' && isNextToGround(mouseXGrid, mouseYGrid)) {
 
         mapTileList[mouseXGrid][mouseYGrid] = ground
@@ -530,9 +540,54 @@ function addGroundTile(event) {
 
         gameScore -= 50
 
-        displayScore.innerHTML = `<h1>Score:${gameScore}</h1>`
+        displayScore.innerHTML = `<h2>Score:${gameScore}</h2>`
 
     }
+}
+
+function addPlant(event) {
+    let bound = gameDisplayLayer0.getBoundingClientRect();
+
+    //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer1.clientLeft) / showGridSize);
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer1.clientTop) / showGridSize);
+
+    //check if mouse in un available area
+    if (Math.floor(mouseXGrid / (gameBaseGridSize / showGridSize)) <= 0 || Math.floor(mouseYGrid / (gameBaseGridSize / showGridSize)) <= 0 || Math.floor(mouseXGrid / (gameBaseGridSize / showGridSize)) + 1 >= gameXGridNumber || Math.floor(mouseYGrid / (gameBaseGridSize / showGridSize)) + 1 >= gameYGridNumber) {
+        return
+    }
+
+
+
+    if (plantRecord[`x${mouseXGrid}y${mouseYGrid}`]) {
+        if (plantRecord[`x${mouseXGrid}y${mouseYGrid}`].stage === 3) {
+            plantRecord[`x${mouseXGrid}y${mouseYGrid}`] = new plantingBox(carrot, 2, mouseXGrid, mouseYGrid)
+            clearLayer(ctxLayer1)
+            drawPlants()
+        }
+
+    } else if (mapTileList[Math.floor(mouseXGrid * (showGridSize / gameBaseGridSize))][Math.floor(mouseYGrid * (showGridSize / gameBaseGridSize))].tileType === 'ground') {
+        plantRecord[`x${mouseXGrid}y${mouseYGrid}`] = new plantingBox(carrot, 2, mouseXGrid, mouseYGrid)
+        clearLayer(ctxLayer1)
+        drawPlants()
+    }
+}
+
+
+async function saveToServer(userName){
+    const content = [userName,mapTileList,plantRecord];
+    const resp = await fetch(`/gameSave/${userName}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content }),
+    });
+    const result = await resp.json();
+    if (result.success) {
+      console.log('saved');
+    }
+
 }
 
 function isNextToGround(mouseXGrid, mouseYGrid) {
@@ -565,6 +620,9 @@ function clearAllMouseListener() {
 
     document.removeEventListener('mousemove',
         plantingHighLight
+    );
+
+    document.removeEventListener('click', addPlant
     );
 
 }
@@ -609,4 +667,10 @@ plantingButton.addEventListener("click", () => {
         showGrid(showGridSize)
         startPlanting()
     }
+})
+
+// button for planting mode
+let saveToServerButton = document.querySelector('#saveToServer');
+saveToServerButton.addEventListener("click", () => {
+    saveToServer('Player101')
 })
