@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import { isLoggedInAPI } from "../guards";
 import { userType } from "../interfaceModels";
 import { client } from "../main";
+import console from "console";
 
 export const loginRoutes = express.Router();
 
@@ -66,15 +67,17 @@ async function register(req: Request, res: Response) {
     res.status(400).json({ success: false, message: "Missing Information" });
     return;
   }
+  console.log(`passed check empty`);
 
   const checkAccount = await client.query(
-    `SELECT * FROM user_info WHERE user_name = $1, login_account = $2`,
+    `SELECT * FROM user_info WHERE user_name = $1 AND login_account = $2`,
     [user_name, login_account]
   );
+  console.log(`passed checkAccount, result: ${checkAccount.rows[0]}`);
 
-  if (!checkAccount) {
+  if (checkAccount.rows[0] === undefined) {
     await client.query(
-      `INSERT INTO user_info (user_name, login_account, login_password) VALUES $1, $2, $3`,
+      `INSERT INTO user_info (user_name, login_account, login_password) VALUES ($1, $2, $3)`,
       [user_name, login_account, login_password]
     );
     res.status(200).json({ success: true, message: "Account created successfully" });
