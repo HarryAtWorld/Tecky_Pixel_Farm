@@ -6,8 +6,11 @@ import path from "path";
 // @ts-ignore
 import { isLoggedInStatic } from "./guards";
 import pg from "pg";
+//@ts-ignore
+import fetch from "cross-fetch";
 import dotenv from "dotenv";
 dotenv.config();
+import grant from "grant";
 
 // SQL Client
 export const client = new pg.Client({
@@ -36,6 +39,21 @@ app.use((req, res, next) => {
   console.log(`ip: ${req.ip} accessed the path: ${req.path} by method: ${req.method}`);
   next();
 });
+
+const grantExpress = grant.express({
+  defaults: {
+    origin: "http://localhost:8080",
+    transport: "session",
+    state: true,
+  },
+  google: {
+    key: process.env.GOOGLE_CLIENT_ID || "",
+    secret: process.env.GOOGLE_CLIENT_SECRET || "",
+    scope: ["profile", "email"],
+    callback: "/login/google",
+  },
+});
+app.use(grantExpress as express.RequestHandler);
 
 // Router handler
 import { loginRoutes } from "./routers/loginRoutes";

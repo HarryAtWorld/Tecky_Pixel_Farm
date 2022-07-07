@@ -8,6 +8,7 @@ import console from "console";
 export const loginRoutes = express.Router();
 
 // method: POST, path pattern: /login
+loginRoutes.get("/login/google", loginGoogle);
 loginRoutes.post("/login", login);
 loginRoutes.post("/register", register);
 loginRoutes.get("/users/info", isLoggedInAPI, getUserInfo);
@@ -86,6 +87,38 @@ async function register(req: Request, res: Response) {
       .status(400)
       .json({ success: false, message: "username or email already existed, Try Again" });
   }
+}
+
+async function loginGoogle(req: express.Request, res: express.Response) {
+  const accessToken = req.session?.["grant"].response.access_token;
+  const fetchRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+    method: "get",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  const result = await fetchRes.json();
+  console.log(result);
+  const users = (
+    await client.query(`SELECT * FROM user_info WHERE login_account = $1`, [result.email])
+  ).rows;
+  let user = users[0];
+  if (!user) {
+    // Create the user when the user does not exist
+    user = (
+      await client.query(
+        `INSERT INTO user_info (login_account,login_password) 
+                VALUES ($1,$2) RETURNING *`,
+        [result.email, 1234]
+      )
+    ).rows[0];
+  }
+  if (req.session) {
+    req.session["user"] = {
+      id: user.id,
+    };
+  }
+  return res.redirect("/");
 }
 
 export async function getUserInfo(req: Request, res: Response) {
