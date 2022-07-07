@@ -6,7 +6,7 @@ import { client } from "../main";
 
 export const plantsRoutes = express.Router();
 
-// plantsRoutes.get("/", getGameData);
+plantsRoutes.get("/", calculateScore);
 
 // async function getGameData(req: Request, res: Response) {
 //   const gameJsonDataFromFE = req.body;
@@ -28,16 +28,18 @@ export function calculateScore(findPlant_id: number) {
   return score;
 }
 
-function diffOfTime(create_time: string): number {
-  let timeOfDiff = (new Date().getTime() - new Date(create_time).getTime()) / 1000;
-  return timeOfDiff;
-}
-
+// 基於物件items_id，然後讀取其create_time
 async function findCreateAt(findPlant_id: number) {
   const data = await client.query(`select create_at from game_plants_data value id = $1`, [
     findPlant_id,
   ]);
   return data.rows[0].create_at;
+}
+
+// 計算時間差距 .getTime server time － getTime create time，然後／1000 獲取秒數
+function diffOfTime(create_time: string): number {
+  let timeOfDiff = (new Date().getTime() - new Date(create_time).getTime()) / 1000;
+  return timeOfDiff;
 }
 
 // calculateScore logic
@@ -50,6 +52,7 @@ async function findCreateAt(findPlant_id: number) {
 // stage 2 have 7200 seconds, counting 720 times
 // stage 3 have 10800 seconds, counting 1080 times
 
+// 計分邏輯及向database寫入stage。
 async function scoreLogic(times: number, findPlant_id: number) {
   if (times <= 3600) {
     await client.query(`update game_plants_data set stage = $1 where id = $2`, [1, findPlant_id]);
