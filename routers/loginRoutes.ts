@@ -28,7 +28,7 @@ async function login(req: Request, res: Response) {
     )
   ).rows[0];
 
-  // ////////////////////////////////
+  // //////////////////////////////// testing functions //////////////////
   // const testing = await client.query(`select create_at from user_info`);
   // console.log(testing.rows);
   // // return
@@ -44,7 +44,7 @@ async function login(req: Request, res: Response) {
   // const create_at = testing.rows[0].create_at;
   // const diffOfTime = (new Date().getTime() - new Date(create_at).getTime()) / 1000;
   // console.log(`${diffOfTime} s`); // return as seconds
-  // ////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   if (!user) {
     res.status(400).json({ success: false, message: "invalid username/password" });
     return;
