@@ -2,26 +2,29 @@ import express from "express";
 import type { Request, Response } from "express";
 import { client } from "../main";
 import { friendRow } from "../interfaceModels";
+import console from "console";
 
 export const friendRankRoutes = express.Router();
 
 friendRankRoutes.get("/", friends_ranking);
 
 export async function friends_ranking(req: Request, res: Response) {
-  const fd_result = await findAllFriend();
+  const user = req.session["user"];
+  console.log(`passed friends_ranking my id : ${user.id}`);
+  const fd_result = await findAllFriend(user.id);
   console.log(fd_result);
   res.json(fd_result);
 }
 
-async function findAllFriend() {
+async function findAllFriend(my_id: number) {
   const myFriends_rowB = await client.query<friendRow>(
     `select user_id_a
   from relationship
   where user_id_b = $1`,
-    [2]
+    [my_id]
   );
   const fd_b = myFriends_rowB.rows;
-  console.log(fd_b);
+  console.log(`My fd in row_b : ${fd_b}`);
 
   let friends_result: string[] = [];
   if (fd_b !== undefined) {
@@ -46,11 +49,11 @@ async function findAllFriend() {
     `select user_id_b
   from relationship
   where user_id_a = $1`,
-    [2]
+    [my_id]
   );
   ////////////////////////////////
   const fd_a = myFriends_rowA.rows;
-  console.log(fd_a);
+  console.log(`My fd in row_b : ${fd_a}`);
 
   if (fd_a !== undefined) {
     for (let row of fd_a) {
