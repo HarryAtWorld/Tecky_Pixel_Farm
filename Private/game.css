@@ -21,7 +21,7 @@ body{
     background-color: white;
 
     display: flex;
-    justify-content:space-between;
+    justify-content: space-between;
     /* border: solid 1px rgb(33, 36, 221); */
     border-radius: 10px;
     
@@ -35,8 +35,8 @@ body{
     line-height: 22px;
     overflow:hidden;
     border-radius: 20px;
-    color: red;
-    margin-top: 10px;
+    color: black;
+    margin-top: 20px;
     cursor: pointer;
     
     
