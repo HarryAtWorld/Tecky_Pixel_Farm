@@ -11,11 +11,9 @@ export interface rankingLevel {
   score: number;
 }
 
-export interface friendRowA {
-  user_id_a: number;
-}
-export interface friendRowB {
-  user_id_b: number;
+export interface friendRow {
+  user_id_a?: number;
+  user_id_b?: number;
 }
 
 export interface friendArray {

@@ -14,11 +14,10 @@ loginRoutes.post("/login", login);
 loginRoutes.post("/register", register);
 loginRoutes.get("/users/info", isLoggedInAPI, getUserInfo);
 
-
-
 function loginPage(req: Request, res: Response) {
   res.redirect("./login.html");
 }
+
 
 
 async function login(req: Request, res: Response) {

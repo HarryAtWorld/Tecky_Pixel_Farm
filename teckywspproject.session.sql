@@ -19,24 +19,13 @@ CREATE TABLE plant_score_data (
 );
 -- game_farm_data table --
 CREATE TABLE game_farm_data(
+    id serial primary key,
     user_id INTEGER not NULL,
     FOREIGN key (user_id) REFERENCES user_info(id),
-    user_name VARCHAR,
     game_map_records_id json,
     game_items_list_id json,
     score INTEGER default 0
 );
--- -- game_plants_data --
--- CREATE TABLE game_plants_data (
---     id SERIAL PRIMARY KEY,
---     user_id INTEGER,
---     FOREIGN KEY (user_id) REFERENCES user_info (id),
---     items_id INTEGER,
---     FOREIGN KEY (items_id) REFERENCES game_plants_list(items_id),
---     xylocation json,
---     stage INTEGER DEFAULT 1,
---     create_at TIMESTAMP DEFAULT now()
--- );
 -- relationship table --
 CREATE TABLE relationship (
     id SERIAL PRIMARY KEY,
@@ -102,8 +91,7 @@ VALUES (2, 3);
 ----------------------------------------------------------------
 -- DROP TABLE relationship;
 -- DROP TABLE game_farm_data;
--- DROP TABLE game_plants_data;
--- DROP TABLE game_plants_list;
+-- DROP TABLE plant_score_data;
 -- DROP TABLE user_status;
 -- DROP TABLE user_info;
 ----------------------------------------------------------------
