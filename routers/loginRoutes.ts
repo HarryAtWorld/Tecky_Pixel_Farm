@@ -79,7 +79,7 @@ async function register(req: Request, res: Response) {
   console.log(`passed check empty`);
 
   const checkAccount = await client.query(
-    `SELECT * FROM user_info WHERE user_name = $1 AND login_account = $2`,
+    `SELECT * FROM user_info WHERE user_name = $1 OR login_account = $2`,
     [user_name, login_account]
   );
   console.log(`passed checkAccount, result: ${checkAccount.rows[0]}`);
