@@ -57,9 +57,9 @@ app.use(grantExpress as express.RequestHandler);
 
 // Router handler
 import { loginRoutes } from "./routers/loginRoutes";
-app.use("allPlayerRank", loginRoutes);
+app.use(loginRoutes);
 import { rankingRoutes } from "./routers/rankingRoutes";
-app.use(rankingRoutes);
+app.use("/allPlayerRank", rankingRoutes);
 
 // express Static
 app.use(express.static(path.join(__dirname, "Public")));

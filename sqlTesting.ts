@@ -161,7 +161,7 @@ async function findAllFriend() {
   const fd_b = myFriends_rowB.rows;
   console.log(fd_b);
 
-  let friends_result_rowB: [] = [];
+  let friends_result_rowB: string[] = [];
   for (let row of fd_b) {
     friends_result_rowB.push(
       `select
