@@ -151,7 +151,6 @@ client.connect();
 ////////////////////////////////
 
 async function findAllFriend() {
-  // const myself = req.session["user"];
   const myFriends_rowB = await client.query<friendRow>(
     `select user_id_a
   from relationship
@@ -161,10 +160,11 @@ async function findAllFriend() {
   const fd_b = myFriends_rowB.rows;
   console.log(fd_b);
 
-  let friends_result_rowB: string[] = [];
-  for (let row of fd_b) {
-    friends_result_rowB.push(
-      `select
+  let friends_result: string[] = [];
+  if (fd_b !== undefined) {
+    for (let row of fd_b) {
+      let result = await client.query(
+        `select
         game_farm_data.user_id,
         game_farm_data.game_map_records_id,
         game_farm_data.game_items_list_id,
@@ -173,41 +173,47 @@ async function findAllFriend() {
         FROM game_farm_data join user_info
         on game_farm_data.user_id = user_info.id 
         where game_farm_data.user_id = $1`,
-      [row.user_id_b]
-    );
+        [row.user_id_a]
+      );
+      friends_result.push(result.rows[0]);
+      // console.log(friends_result);
+    }
   }
-
-  ////////////////////////////////
-
   const myFriends_rowA = await client.query<friendRow>(
     `select user_id_b
-    from relationship
-    where user_id_a = $1`,
+  from relationship
+  where user_id_a = $1`,
     [2]
   );
+  ////////////////////////////////
   const fd_a = myFriends_rowA.rows;
   console.log(fd_a);
 
-  //////////////////////////////////////////
-
-  // console.log(myFriends_rowA, myFriends_rowB);
-  // for (let friend of myFriends_rowA.rows) {
-  //   const data: number = friend.user_id_b;
-  //   friendList.push(data);
-  // }
-  // for (let friend of myFriends_rowB.rows) {
-  //   const data: number = friend.user_id_a;
-  //   friendList.push(data);
-  // }
-  console.log(friendList);
-  let result;
-  for (let showMyFriends of friendList) {
-    result = client.query(`select user_name, score from game_farm_data where user_id = $1`, [
-      showMyFriends,
-    ]);
+  // let friends_result_rowA: string[] = [];
+  if (fd_a !== undefined) {
+    for (let row of fd_a) {
+      let result = await client.query(
+        `select
+        game_farm_data.user_id,
+        game_farm_data.game_map_records_id,
+        game_farm_data.game_items_list_id,
+        game_farm_data.score,
+        user_info.user_name
+        FROM game_farm_data join user_info
+        on game_farm_data.user_id = user_info.id 
+        where game_farm_data.user_id = $1`,
+        [row.user_id_b]
+      );
+      friends_result.push(result.rows[0]);
+      // console.log(friends_result);
+    }
   }
-  console.log(result);
-  // // res.json(result);
+  // console.log(friends_result);
+  return friends_result;
 }
 
-findAllFriend();
+async function friends_ranking() {
+  const fd_result = await findAllFriend();
+  console.log(fd_result);
+}
+friends_ranking();
