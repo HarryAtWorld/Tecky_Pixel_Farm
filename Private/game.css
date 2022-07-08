@@ -21,13 +21,14 @@ h2{
 }
 
 #gameScore .playerInfo{
-    width:200px;height:25px;
-    border:1px solid #495057;
+    width:100px;height:25px;
+    border:1px  #495057;
+    background-color: rgba(255,255,255,0.3);
     text-align: center; 
     line-height: 22px;
     overflow:hidden;
     border-radius: 20px;
-    color: red;
+    color: black;
     margin-top: 30px;
     cursor: pointer;
     

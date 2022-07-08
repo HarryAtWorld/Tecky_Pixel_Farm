@@ -58,6 +58,9 @@ body {
 }
 
 .custom_nav-container.navbar-expand-lg .navbar-nav .nav-link {
+  background-color: rgba(150, 200, 110, 0);
+  border-color: rgba(150, 200, 110, 0);
+  border-radius: 20px;
   padding: 0px 25px;
   color: #fefeff;
   text-align: center;
