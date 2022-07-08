@@ -2,12 +2,14 @@ body{
     background: -webkit-linear-gradient(left, #4455f4, #00c6ff);
 }
 .emp-profile{
+
     padding: 3%;
     margin-top: 3%;
     margin-bottom: 3%;
     border-radius: 2rem;
     background: #fff;
 }
+
 .profile-img{
     text-align: center;
 }
@@ -40,11 +42,14 @@ body{
 .profile-edit-btn{
     border: none;
     border-radius: 1.5rem;
-    width: 70%;
+    width: 80%;
     padding: 2%;
     font-weight: 600;
     color: #6c757d;
     cursor: pointer;
+}
+.changeUsername{
+    margin-bottom: 15px;
 }
 .proile-rating{
     font-size: 12px;
@@ -67,6 +72,10 @@ body{
     border: none;
     border-bottom:1px solid #818182;
 }
+.inputBox{
+    width: 70%;
+    margin-bottom: 15px;
+}
 .profile-work{
     padding: 14%;
     margin-top: -15%;
@@ -80,12 +89,12 @@ body{
 }
 .profile-work div{
     width:200px;height:25px;
-    border:1px solid #495057;
+    border:1px  #495057;
     text-align: center; 
     line-height: 22px;
     overflow:hidden;
     border-radius: 20px;
-    color: red;
+    color: black;
     margin-top: 8px;
     
 }
