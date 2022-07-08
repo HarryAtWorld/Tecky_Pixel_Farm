@@ -4,43 +4,80 @@
 
 body{
     background-color: rgb(96, 160, 168); /*this is the sea color*/
+    font-family: Arial, Helvetica, sans-serif;
 
 }
-
-
 
 h2{
-    margin: 0;
+    /* margin: auto; */
 }
 
-#gameScore{
+
+
+#topPanel{
+    height: 60px;
+    width:1520px;
+    margin: auto;
+    background-color: white;
+
     display: flex;
     justify-content:space-between;
-    
+    /* border: solid 1px rgb(33, 36, 221); */
+    border-radius: 10px;
     
 }
 
-#gameScore .playerInfo{
-    width:200px;height:25px;
+#topPanel .playerInfo{
+    width:200px;
+    height:25px;
     border:1px solid #495057;
     text-align: center; 
     line-height: 22px;
     overflow:hidden;
     border-radius: 20px;
     color: red;
-    margin-top: 30px;
+    margin-top: 10px;
     cursor: pointer;
     
     
 }
 
 /*============================================== Game Area ===================================*/
-.gameContainer{
-    background-color: rgb(96, 160, 168);    
-    height: 640px;  /* should match js ---->gameImagesAreaWidth*/
-    width: 1472px; /* should match js ---->gameImagesAreaWidth*/
-    
-    margin: 0 auto;
+
+#gameArea{
+    display: flex;
+    width:1520px;
+    margin: auto;
+    justify-content:space-between;
+    align-items: center;
+
+}
+
+#leftControlPanel{
+    height: 544px;
+    width: 80px;
+    /* border: solid 1px rgb(33, 36, 221); */
+    display: flexbox;
+    background-color: white;
+    border-radius: 10px;
+}
+
+#rightControlPanel{
+    height: 544px;
+    width: 80px;
+    /* border: solid 1px rgb(50, 33, 202); */
+    display: flexbox;
+    background-color: white;
+    border-radius: 10px;
+}
+
+
+#gameContainer{
+      
+    height: 544px;  /* should match js ---->gameImagesAreaWidth*/
+    width: 1344px; /* should match js ---->gameImagesAreaWidth*/
+    /* border: solid 1px rgb(32, 233, 32); */
+    margin: 5px;
     
     position: relative;     
     image-rendering: pixelated;
@@ -55,6 +92,8 @@ h2{
     left: 0;
     top: 0;
     z-index: 0;  
+    border-radius: 10px;
+    
 }
 
 #gameDisplayLayer1{
@@ -64,6 +103,8 @@ h2{
     left: 0;
     top: 0;
     z-index: 1;
+    border-radius: 10px;
+    
 }
 
 #gameDisplayLayer2{
@@ -73,15 +114,41 @@ h2{
     left: 0;
     top: 0;
     z-index: 2;
+    border-radius: 10px;
+    
 } 
 
 #gameDisplayLayer3{
     
-    border: solid 1px rgb(233, 9, 166);
+    border: solid 1px rgb(228, 243, 13);
     position: absolute; 
     left: 0;
     top: 0;
     z-index: 3;
+    border-radius: 10px;
+    
 } 
 
+
+#rightControlPanel button{
+    height: 70px;
+    width: fit-content;
+    margin-top: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+    border-radius: 10px;
+}
+
 /*============================================== Game Area End =================================*/
+
+
+#bottomPanel{
+    height: 80px;
+    width:1520px;
+    margin: auto;
+    /* border: solid 1px rgb(67, 23, 224); */
+    background-color: white;
+    border-radius: 10px;
+}
+
+

@@ -12,22 +12,42 @@
 </head>
 
 <body>
-    <div>
-        <div id="gameScore">
-            <h2>Score:1000</h2>
-            <a href="./playerInfo.html"><input  type="button" class="playerInfo" name="playerInfo" value="PlayerInfo"></a>
-            
+
+    <div id="topPanel">
+        <h2 id="gameScore">Score:1000</h2>
+        <a href="./playerInfo.html"><input type="button" class="playerInfo" name="playerInfo" value="PlayerInfo"></a>
+
+    </div>
+
+
+    <div id="gameArea">
+        <div id="leftControlPanel">
+
         </div>
 
-    </div>
-    <div class="gameContainer">
-        <canvas id="gameDisplayLayer0"></canvas>
-        <canvas id="gameDisplayLayer1"></canvas>
-        <canvas id="gameDisplayLayer2"></canvas>
-        <canvas id="gameDisplayLayer3"></canvas>
+        <div id="gameContainer">
+            <canvas id="gameDisplayLayer0"></canvas>
+            <canvas id="gameDisplayLayer1"></canvas>
+            <canvas id="gameDisplayLayer2"></canvas>
+            <canvas id="gameDisplayLayer3"></canvas>
+        </div>
+
+        <div id="rightControlPanel">
+            <button id="addLand">Add Lands</button>
+            <button id="removeLand">Remove Lands</button>
+
+            <button id="addPlant">Add Plants</button>
+            <button id="removePlant">Remove Plants</button>
+
+            <button id="saveToServer">Save to Server</button>
+        </div>
     </div>
 
-    <div><button id="editMap">Start Edit Map</button><button id="planting">Start Planting</button><button id="saveToServer">Save to Server</button></div>
+
+
+    <div id="bottomPanel">
+
+    </div>
 
 
 
