@@ -60,6 +60,8 @@ import { loginRoutes } from "./routers/loginRoutes";
 app.use(loginRoutes);
 import { rankingRoutes } from "./routers/rankingRoutes";
 app.use("/allPlayerRank", rankingRoutes);
+import { friendRankRoutes } from "./routers/friendRankRoutes";
+app.use("/friendRank", friendRankRoutes);
 
 // express Static
 app.use(express.static(path.join(__dirname, "Public")));
