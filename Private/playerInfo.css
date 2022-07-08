@@ -71,6 +71,15 @@ body{
     padding: 14%;
     margin-top: -15%;
 }
+.col-md-4 p{
+    text-align: center;
+    font-size: 30px;
+    color: #818182;
+    font-weight: 600;
+    margin-top: 10%;
+    margin-right: 10%;
+
+}
 .profile-work p{
     /* text-align: center; */
     font-size: 30px;
