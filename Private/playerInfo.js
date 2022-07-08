@@ -7,7 +7,7 @@ window.onload = () => {
 
 
  async function loadRanking() {
-    const resp = await fetch("/allPlayerRank");
+    const resp = await fetch("/friendRank");
     console.log(`passed fetch, ${resp}`);
     const datas = await resp.json();
     let htmlStr = "";
