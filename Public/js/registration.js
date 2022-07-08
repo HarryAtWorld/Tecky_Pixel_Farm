@@ -25,7 +25,7 @@ function initRegisterForm() {
    
      } else {
       alert(result.message);
-       // window.location.href = "/admin.html";
+       window.location.href = "./login.html";
      }
    });
 }
