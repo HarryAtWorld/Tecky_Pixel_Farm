@@ -62,6 +62,8 @@ import { rankingRoutes } from "./routers/rankingRoutes";
 app.use("/allPlayerRank", rankingRoutes);
 import { friendRankRoutes } from "./routers/friendRankRoutes";
 app.use("/friendRank", friendRankRoutes);
+import { edit_name } from "./routers/editNameRoutes";
+app.use("/edit_name", edit_name);
 
 // express Static
 app.use(express.static(path.join(__dirname, "Public")));
@@ -78,4 +80,3 @@ const port = 8080;
 app.listen(port, () => {
   console.log(`server started, http://localhost:${port}`);
 });
-

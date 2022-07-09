@@ -1,7 +1,9 @@
 import pg from "pg";
 import dotenv from "dotenv";
+//@ts-ignore
 import console from "console";
 // import type { Request, Response } from "express";
+//@ts-ignore
 import { friendRow } from "./interfaceModels";
 dotenv.config();
 const client = new pg.Client({
@@ -150,70 +152,88 @@ client.connect();
 
 ////////////////////////////////
 
-async function findAllFriend() {
-  const myFriends_rowB = await client.query<friendRow>(
-    `select user_id_a
-  from relationship
-  where user_id_b = $1`,
-    [2]
-  );
-  const fd_b = myFriends_rowB.rows;
-  console.log(fd_b);
+// async function findAllFriend() {
+//   const myFriends_rowB = await client.query<friendRow>(
+//     `select user_id_a
+//   from relationship
+//   where user_id_b = $1`,
+//     [2]
+//   );
+//   const fd_b = myFriends_rowB.rows;
+//   console.log(fd_b);
 
-  let friends_result: string[] = [];
-  if (fd_b !== undefined) {
-    for (let row of fd_b) {
-      let result = await client.query(
-        `select
-        game_farm_data.user_id,
-        game_farm_data.game_map_records_id,
-        game_farm_data.game_items_list_id,
-        game_farm_data.score,
-        user_info.user_name
-        FROM game_farm_data join user_info
-        on game_farm_data.user_id = user_info.id 
-        where game_farm_data.user_id = $1`,
-        [row.user_id_a]
-      );
-      friends_result.push(result.rows[0]);
-      // console.log(friends_result);
-    }
-  }
-  const myFriends_rowA = await client.query<friendRow>(
-    `select user_id_b
-  from relationship
-  where user_id_a = $1`,
-    [2]
-  );
-  ////////////////////////////////
-  const fd_a = myFriends_rowA.rows;
-  console.log(fd_a);
+//   let friends_result: string[] = [];
+//   if (fd_b !== undefined) {
+//     for (let row of fd_b) {
+//       let result = await client.query(
+//         `select
+//         game_farm_data.user_id,
+//         game_farm_data.game_map_records_id,
+//         game_farm_data.game_items_list_id,
+//         game_farm_data.score,
+//         user_info.user_name
+//         FROM game_farm_data join user_info
+//         on game_farm_data.user_id = user_info.id
+//         where game_farm_data.user_id = $1`,
+//         [row.user_id_a]
+//       );
+//       friends_result.push(result.rows[0]);
+//       // console.log(friends_result);
+//     }
+//   }
+//   const myFriends_rowA = await client.query<friendRow>(
+//     `select user_id_b
+//   from relationship
+//   where user_id_a = $1`,
+//     [2]
+//   );
+//   ////////////////////////////////
+//   const fd_a = myFriends_rowA.rows;
+//   console.log(fd_a);
 
-  // let friends_result_rowA: string[] = [];
-  if (fd_a !== undefined) {
-    for (let row of fd_a) {
-      let result = await client.query(
-        `select
-        game_farm_data.user_id,
-        game_farm_data.game_map_records_id,
-        game_farm_data.game_items_list_id,
-        game_farm_data.score,
-        user_info.user_name
-        FROM game_farm_data join user_info
-        on game_farm_data.user_id = user_info.id 
-        where game_farm_data.user_id = $1`,
-        [row.user_id_b]
-      );
-      friends_result.push(result.rows[0]);
-      // console.log(friends_result);
-    }
-  }
-  // console.log(friends_result);
-  return friends_result;
-}
+//   // let friends_result_rowA: string[] = [];
+//   if (fd_a !== undefined) {
+//     for (let row of fd_a) {
+//       let result = await client.query(
+//         `select
+//         game_farm_data.user_id,
+//         game_farm_data.game_map_records_id,
+//         game_farm_data.game_items_list_id,
+//         game_farm_data.score,
+//         user_info.user_name
+//         FROM game_farm_data join user_info
+//         on game_farm_data.user_id = user_info.id
+//         where game_farm_data.user_id = $1`,
+//         [row.user_id_b]
+//       );
+//       friends_result.push(result.rows[0]);
+//       // console.log(friends_result);
+//     }
+//   }
+//   // console.log(friends_result);
+//   return friends_result;
+// }
 
-async function friends_ranking() {
-  const fd_result = await findAllFriend();
-  console.log(fd_result);
-}
-friends_ranking();
+// async function friends_ranking() {
+//   const fd_result = await findAllFriend();
+//   console.log(fd_result);
+// }
+// friends_ranking();
+
+// //////////////////////////////// testing functions //////////////////
+// const testing = await client.query(`select create_at from user_info`);
+// console.log(testing.rows);
+// // return
+// // [
+// //   { create_at: 2022-07-05T14:27:27.100Z },
+// //   { create_at: 2022-07-05T14:27:27.100Z },
+// //   { create_at: 2022-07-05T14:27:27.100Z },
+// //   { create_at: 2022-07-06T04:25:44.049Z },
+// //   { create_at: 2022-07-06T04:25:44.049Z },
+// //   { create_at: 2022-07-06T04:25:44.049Z }
+// // ]
+// console.log(testing.rows[0].create_at); // 2022-07-05T14:27:27.100Z
+// const create_at = testing.rows[0].create_at;
+// const diffOfTime = (new Date().getTime() - new Date(create_at).getTime()) / 1000;
+// console.log(`${diffOfTime} s`); // return as seconds
+// ////////////////////////////////////////////////////////////////////
