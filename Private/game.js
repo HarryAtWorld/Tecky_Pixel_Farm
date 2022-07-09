@@ -5,20 +5,19 @@ let recordTime = Date.now()
 const gameBaseGridSize = 32
 const gameXGridNumber = 42
 const gameYGridNumber = 17
-const gameImagesAreaHeight = gameBaseGridSize * gameYGridNumber //32*20 = 640 should match with css
-const gameImagesAreaWidth = gameBaseGridSize * gameXGridNumber //32*45 = 1440 should match with css
+const gameImagesAreaHeight = gameBaseGridSize * gameYGridNumber //17*32 = 544 should match with css
+const gameImagesAreaWidth = gameBaseGridSize * gameXGridNumber //42*32 = 1344 should match with css
 
-let showGridSize = gameBaseGridSize
+let showGridSize = gameBaseGridSize //this will be changed in other function
 
 let mapTileList = []
-// let groundTileList = []
-let plantRecord = {}
-let gameItemList = []
+let gameItemList = {}
 let landCount = 0
 let gameScore = 1000
+let displayScore = document.querySelector('#gameScore')
 
 
-// ========for stop edit mode =================================================================================
+// ========for stop edit mode =======================================================================
 
 let actionStopList = {
     isStopAddLand: true,
@@ -33,8 +32,6 @@ let editButtonList = {
     addPlantButton: "background-color:rgb(240,240,240);",
     removePlantButton: "background-color:rgb(240,240,240);"
 }
-
-let displayScore = document.querySelector('#gameScore')
 
 
 //==========================================Mouse Press Detect================================
@@ -156,7 +153,7 @@ const lettuce = new cutPlantTile(1, 8, 3, 8, 5, 8, 0, 33, 16)
 
 
 class plantingBox {
-    constructor(plantType,createTime, stage, locationX, locationY) {
+    constructor(plantType, createTime, stage, locationX, locationY) {
         this.plantType = plantType;
         this.createTime = createTime
         this.stage = stage;
@@ -197,13 +194,6 @@ const big_house = new cutHouseTile(1, 0, 94)
 
 
 
-//===================================================SET UP CLASS END===============================
-
-
-
-
-
-
 // ==============SET UP A MAP GRID =================================================================
 
 for (let x = 0; x < gameXGridNumber; x++) {
@@ -217,64 +207,11 @@ for (let x = 0; x < gameXGridNumber; x++) {
 }
 
 // add the first land
-mapTileList[15][3] = ground
+mapTileList[21][8] = ground
 
 // ==============SET UP A MAP GRID END =================================================================
 
-// groundTileList.push([10, 23])
 
-// // Random making the ground
-// for (let x = 0; x < gameXGridNumber; x++) {
-//     for (let y = 0; y < gameYGridNumber; y++) {
-
-//         if (x <= 0 || y <= 0 || x + 1 == gameXGridNumber || y + 1 == gameYGridNumber) {       //to make the map edge to be sea
-//             mapTileList[x][y] = sea
-//             continue
-//         }
-
-//         let randomTileType = Math.round(Math.random() * 4) //control the quantity of ground
-//         if (randomTileType == 1) {
-//             mapTileList[x][y] = ground
-//             groundCounter += 1
-//             groundTileList.push([x, y])
-
-//         } else {
-//             mapTileList[x][y] = sea
-//         }
-//     }
-// }
-
-
-
-//Random making the Plants
-// for (let xy of groundTileList) {
-//     let hasPlant = Math.round(Math.random())
-//     let plantStage = Math.round(Math.random() * 3)
-
-//     if (hasPlant == 1) {
-//         plantRecord[`x${xy[0] * 2}y${xy[1] * 2}`] = new plantingBox(carrot, plantStage, xy[0] * 2, xy[1] * 2)
-//     }
-// }
-
-
-//==========================================================================================================================
-
-
-// map.onload = ()=>{ mapIsLoaded = true}; // Draw when image has loaded
-// map.src = './gameImages/map/island.png';
-// trees.onload = ()=>{ treesIsLoaded = true}; // Draw when image has loaded
-// trees.src = './gameImages/trees/tree.png';
-
-
-// updateUI()
-
-
-// function updateUI(){
-//     if(mapIsLoaded && treesIsLoaded){
-//         drawWorld();
-//         drawTrees();
-//     }
-// }
 
 // Input displayX,displayY number to grid number. Not actual X,Y.
 function drawMapTile(tileType, displayGridX, displayGridY) {
@@ -296,16 +233,26 @@ function drawTree(treeType, frameNumber, displayGridX, displayGridY) {
 }
 
 
+// display the grid by specified size
 function showGrid(gridSize) {
+    ctxLayer3.globalAlpha = 0.4
+    ctxLayer3.lineWidth = 1;
+    ctxLayer3.strokeStyle = 'rgb(255,255,255)';
+    ctxLayer3.setLineDash([4, 2])
     for (let x = 0; x < gameXGridNumber * (gameBaseGridSize / gridSize); x++) {
-        for (let y = 0; y < gameYGridNumber * (gameBaseGridSize / gridSize); y++) {
-            ctxLayer3.globalAlpha = 0.3
-            ctxLayer3.strokeStyle = 'rgb(200,200,200)';
-
-            ctxLayer3.strokeRect(x * (gridSize / gameBaseGridSize) * gameBaseGridSize, y * (gridSize / gameBaseGridSize) * gameBaseGridSize, gridSize, gridSize)
-
-        }
+        ctxLayer3.beginPath();
+        ctxLayer3.moveTo(x * gridSize, 0)
+        ctxLayer3.lineTo(x * gridSize, gameYGridNumber * gameBaseGridSize)
+        ctxLayer3.stroke();
     }
+    for (let y = 0; y < gameYGridNumber * (gameBaseGridSize / gridSize); y++) {
+        ctxLayer3.beginPath();
+        ctxLayer3.moveTo(0, y * gridSize)
+        ctxLayer3.lineTo(gameXGridNumber * gameBaseGridSize, y * gridSize)
+        ctxLayer3.stroke();
+    }
+
+
 }
 
 function drawWorld() {
@@ -328,20 +275,31 @@ function drawGround() {
 }
 
 //temporary tree
-// drawTree(green_trees, 1, x, y)
-// drawTree(green_trees, 1, x, y + 0.5)
-// drawTree(green_trees, 1, x + 0.5, y)
-// drawTree(green_trees, 1, x + 0.5, y + 0.5)
+// drawTree(green_trees, 0, x, y)
+// drawTree(green_trees, 0, x, y + 0.5)
+// drawTree(green_trees, 0, x + 0.5, y)
+// drawTree(green_trees, 0, x + 0.5, y + 0.5)
 
 
+// draw the plants with sorted gameItemList( must sort by y location)
 function drawPlants() {
-    // console.log('draw plants')
-    // console.log(plantRecord)
-    for (let plant in plantRecord) {
-        drawPlantingBox(plantRecord[plant].plantType, plantRecord[plant].stage, plantRecord[plant].x, plantRecord[plant].y)
+    let sortedKeys = Object.keys(gameItemList).sort((a, b) => {
+        if (gameItemList[a]['y'] < gameItemList[b]['y']) {
+            return -1
+        } else if (gameItemList[a]['y'] > gameItemList[b]['y']) {
+            return 1
+        } else {
+            return 0;
+        }
+    })
+
+    for (let key of sortedKeys) {
+        drawPlantingBox(gameItemList[key].plantType, gameItemList[key].stage, gameItemList[key].x, gameItemList[key].y)
     }
 }
 
+
+// checking the map tiles and draw the edge map tiles
 function drawGroundEdge() {
     // draw the ground edge
     for (let x = 0; x < mapTileList.length; x++) {
@@ -458,19 +416,14 @@ function drawGroundEdge() {
 
 
 
-
+// clear all images on the specified ctx layer,
 function clearLayer(ctxLayer) {
     ctxLayer.clearRect(0, 0, gameImagesAreaWidth, gameImagesAreaHeight)
-    ctxLayer.beginPath();
+
 }
 
-
-
-
+// start to highlight mouse location and add land
 function startAddLand() {
-    //for map edit use ,highlight the available area
-    // document.addEventListener('mousemove', highLightAddLand);
-    //click to add ground tile
     document.addEventListener('mousemove', SAL);
     document.addEventListener('mousedown', addLand)
 }
@@ -481,11 +434,8 @@ function SAL(event) {
     }
 }
 
-
+// start to highlight mouse location and remove land
 function startRemoveLand() {
-    //for map edit use ,highlight the available area
-    // document.addEventListener('mousemove', highLightRemoveLand);
-    //click to add ground tile
     document.addEventListener('mousemove', SRL);
     document.addEventListener('mousedown', removeLand)
 }
@@ -497,11 +447,8 @@ function SRL(event) {
 }
 
 
-
+// start to highlight mouse location and add plant
 function startAddPlant() {
-    //for planting use ,highlight the available area
-    // document.addEventListener('mousemove', highLightAddPlant);
-    //click to add plant
     document.addEventListener('mousemove', SAP);
     document.addEventListener('mousedown', addPlant)
 }
@@ -513,15 +460,13 @@ function SAP(event) {
 }
 
 
+// start to highlight mouse location and remove plant
 function startRemovePlant() {
-    //for planting use ,highlight the available area
-    // document.addEventListener('mousemove', highLightDeletePlant);
-    //click to add plant
     document.addEventListener('mousemove', SRP);
     document.addEventListener('mousedown', removePlant)
 }
 function SRP(event) {
-    highLightDeletePlant(event)
+    highLightRemovePlant(event)
     if (mousePressed()) {
         removePlant(event)
     }
@@ -529,7 +474,7 @@ function SRP(event) {
 
 
 
-
+//highlight mouse location when add plant
 function highLightAddPlant(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
@@ -550,8 +495,8 @@ function highLightAddPlant(event) {
         ctxLayer2.fillStyle = '#FF0000';
         ctxLayer2.fill();
 
-    } else if (plantRecord[`x${mouseXGrid}y${mouseYGrid}`]) {
-        if (plantRecord[`x${mouseXGrid}y${mouseYGrid}`].stage === 3) {
+    } else if (gameItemList[`x${mouseXGrid}y${mouseYGrid}`]) {
+        if (gameItemList[`x${mouseXGrid}y${mouseYGrid}`].stage === 3) {
             ctxLayer2.globalAlpha = 0.4
             ctxLayer2.fillStyle = '#00FF00';
             ctxLayer2.fill();
@@ -574,8 +519,8 @@ function highLightAddPlant(event) {
 
 }
 
-
-function highLightDeletePlant(event) {
+//highlight mouse location when remove plant
+function highLightRemovePlant(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to
@@ -593,7 +538,7 @@ function highLightDeletePlant(event) {
         return
     }
     //control the grid box highlight color
-    if (plantRecord[`x${mouseXGrid}y${mouseYGrid}`]) {
+    if (gameItemList[`x${mouseXGrid}y${mouseYGrid}`]) {
         ctxLayer2.globalAlpha = 0.4
         ctxLayer2.fillStyle = '#00FF00';
         ctxLayer2.fill();
@@ -606,7 +551,7 @@ function highLightDeletePlant(event) {
 
 }
 
-
+//highlight mouse location when add land
 function highLightAddLand(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
@@ -638,7 +583,7 @@ function highLightAddLand(event) {
 
 }
 
-
+//highlight mouse location when remove land
 function highLightRemoveLand(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
@@ -659,7 +604,7 @@ function highLightRemoveLand(event) {
         ctxLayer2.fillStyle = '#FF0000';
         ctxLayer2.fill();
     } else if (mapTileList[mouseXGrid][mouseYGrid].tileType === 'ground' && landCount > 1) {
-        if (plantRecord[`x${mouseXGrid * 2}y${mouseYGrid * 2}`] || plantRecord[`x${mouseXGrid * 2 + 1}y${mouseYGrid * 2}`] || plantRecord[`x${mouseXGrid * 2}y${mouseYGrid * 2 + 1}`] || plantRecord[`x${mouseXGrid * 2 + 1}y${mouseYGrid * 2 + 1}`]) {
+        if (gameItemList[`x${mouseXGrid * 2}y${mouseYGrid * 2}`] || gameItemList[`x${mouseXGrid * 2 + 1}y${mouseYGrid * 2}`] || gameItemList[`x${mouseXGrid * 2}y${mouseYGrid * 2 + 1}`] || gameItemList[`x${mouseXGrid * 2 + 1}y${mouseYGrid * 2 + 1}`]) {
             ctxLayer2.globalAlpha = 0.4
             ctxLayer2.fillStyle = '#FF0000';
             ctxLayer2.fill();
@@ -677,6 +622,7 @@ function highLightRemoveLand(event) {
 
 }
 
+//add land with checking
 function addLand(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
@@ -706,7 +652,7 @@ function addLand(event) {
     }
 }
 
-
+//remove land with checking
 function removeLand(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
@@ -720,7 +666,7 @@ function removeLand(event) {
     }
 
     if (mapTileList[mouseXGrid][mouseYGrid].tileType === 'ground' && landCount > 1) {
-        if (!plantRecord[`x${mouseXGrid * 2}y${mouseYGrid * 2}`] && !plantRecord[`x${mouseXGrid * 2 + 1}y${mouseYGrid * 2}`] && !plantRecord[`x${mouseXGrid * 2}y${mouseYGrid * 2 + 1}`] && !plantRecord[`x${mouseXGrid * 2 + 1}y${mouseYGrid * 2 + 1}`]) {
+        if (!gameItemList[`x${mouseXGrid * 2}y${mouseYGrid * 2}`] && !gameItemList[`x${mouseXGrid * 2 + 1}y${mouseYGrid * 2}`] && !gameItemList[`x${mouseXGrid * 2}y${mouseYGrid * 2 + 1}`] && !gameItemList[`x${mouseXGrid * 2 + 1}y${mouseYGrid * 2 + 1}`]) {
             mapTileList[mouseXGrid][mouseYGrid] = sea
 
             clearLayer(ctxLayer0)
@@ -731,6 +677,7 @@ function removeLand(event) {
     }
 }
 
+//add plant with checking
 function addPlant(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
@@ -744,20 +691,21 @@ function addPlant(event) {
     }
 
 
-    if (plantRecord[`x${mouseXGrid}y${mouseYGrid}`]) {
-        if (plantRecord[`x${mouseXGrid}y${mouseYGrid}`].stage === 3) {
-            plantRecord[`x${mouseXGrid}y${mouseYGrid}`] = new plantingBox(carrot,Date.now(), 0, mouseXGrid, mouseYGrid)
+    if (gameItemList[`x${mouseXGrid}y${mouseYGrid}`]) {
+        if (gameItemList[`x${mouseXGrid}y${mouseYGrid}`].stage === 3) {
+            gameItemList[`x${mouseXGrid}y${mouseYGrid}`] = new plantingBox(carrot, Date.now(), 0, mouseXGrid, mouseYGrid)
             clearLayer(ctxLayer1)
             drawPlants()
         }
 
     } else if (mapTileList[Math.floor(mouseXGrid * (showGridSize / gameBaseGridSize))][Math.floor(mouseYGrid * (showGridSize / gameBaseGridSize))].tileType === 'ground') {
-        plantRecord[`x${mouseXGrid}y${mouseYGrid}`] = new plantingBox(carrot,Date.now(), 0, mouseXGrid, mouseYGrid)
+        gameItemList[`x${mouseXGrid}y${mouseYGrid}`] = new plantingBox(carrot, Date.now(), 0, mouseXGrid, mouseYGrid)
         clearLayer(ctxLayer1)
         drawPlants()
     }
 }
 
+//remove plant with checking
 function removePlant(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
@@ -765,18 +713,18 @@ function removePlant(event) {
     mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer1.clientLeft) / showGridSize);
     mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer1.clientTop) / showGridSize);
 
-    if (plantRecord[`x${mouseXGrid}y${mouseYGrid}`]) {
+    if (gameItemList[`x${mouseXGrid}y${mouseYGrid}`]) {
 
-        delete plantRecord[`x${mouseXGrid}y${mouseYGrid}`]
+        delete gameItemList[`x${mouseXGrid}y${mouseYGrid}`]
 
         clearLayer(ctxLayer1)
         drawPlants()
     }
 }
 
-
+//send player information JSON to server.
 async function saveToServer(userName) {
-    const content = [userName, mapTileList, plantRecord];
+    const content = [userName, mapTileList, gameItemList];
     const resp = await fetch(`/gameSave/${userName}`, {
         method: "PUT",
         headers: {
@@ -791,6 +739,7 @@ async function saveToServer(userName) {
 
 }
 
+//check the map tile is next to another map tile or not
 function isNextToGround(mouseXGrid, mouseYGrid) {
     let top = mapTileList[mouseXGrid][mouseYGrid - 1].tileValue
     let bottom = mapTileList[mouseXGrid][mouseYGrid + 1].tileValue
@@ -809,6 +758,7 @@ function isNextToGround(mouseXGrid, mouseYGrid) {
     }
 }
 
+//clear all mouse listener for edit mode
 function clearAllMouseListener() {
     document.removeEventListener('mousemove', SAL);
     document.removeEventListener('mousedown', addLand);
@@ -824,7 +774,7 @@ function clearAllMouseListener() {
 
 }
 
-
+//reset the isStopxxxxx to true ,except the specified one.  
 function stopActionsExceptThis(exceptedAction) {
     for (let action in actionStopList) {
         if (action === exceptedAction) {
@@ -835,31 +785,23 @@ function stopActionsExceptThis(exceptedAction) {
     }
 }
 
-function highLightThisButton(thisButton) {
+// clear the red highlight on edit buttons
+function clearButtonHighLight() {
     for (let button in editButtonList) {
-        if (button === thisButton) {
-            editButtonList[button] = 'background-color:rgb(220,50,50);'
-            
-        } else {
-            editButtonList[button] = 'background-color:rgb(240,240,240);'
-            
-        }
-        
+        editButtonList[button] = 'background-color:rgb(240,240,240);'
     }
-
     addLandButton.style = editButtonList['addLandButton']
     removeLandButton.style = editButtonList['removeLandButton']
     addPlantButton.style = editButtonList['addPlantButton']
     removePlantButton.style = editButtonList['removePlantButton']
-
 }
 
 
 //===========================Score Calculation ================================================
 
-setInterval(()=>{
-console.log('this is 1s')
-},1000)
+setInterval(() => {
+    console.log('this is 1s')
+}, 1000)
 
 
 
@@ -872,10 +814,10 @@ addLandButton.addEventListener("click", () => {
     clearLayer(ctxLayer3)
 
     stopActionsExceptThis('isStopAddLand')
-    highLightThisButton('addLandButton')
+    clearButtonHighLight('addLandButton')
 
     actionStopList.isStopAddLand = !actionStopList.isStopAddLand;
-   
+
     showGridSize = 32
 
     if (actionStopList.isStopAddLand) {
@@ -883,9 +825,10 @@ addLandButton.addEventListener("click", () => {
         clearLayer(ctxLayer3)
         addLandButton.style = 'background-color:rgb(240,240,240);'
     } else {
+        addLandButton.style = 'background-color:rgb(220,50,50);'
         showGrid(showGridSize)
-        startAddLand();        
-    }        
+        startAddLand();
+    }
 })
 
 // button for remove land
@@ -895,7 +838,7 @@ removeLandButton.addEventListener("click", () => {
     clearLayer(ctxLayer3)
 
     stopActionsExceptThis('isStopRemoveLand')
-    highLightThisButton('removeLandButton')
+    clearButtonHighLight('removeLandButton')
 
     actionStopList.isStopRemoveLand = !actionStopList.isStopRemoveLand;
 
@@ -906,8 +849,9 @@ removeLandButton.addEventListener("click", () => {
         clearLayer(ctxLayer3)
         removeLandButton.style = 'background-color:rgb(240,240,240);'
     } else {
+        removeLandButton.style = 'background-color:rgb(220,50,50);'
         showGrid(showGridSize)
-        startRemoveLand();       
+        startRemoveLand();
     }
 })
 
@@ -920,7 +864,7 @@ addPlantButton.addEventListener("click", () => {
     clearLayer(ctxLayer3)
 
     stopActionsExceptThis('isStopAddPlant')
-    highLightThisButton('addPlantButton')
+    clearButtonHighLight('addPlantButton')
 
     actionStopList.isStopAddPlant = !actionStopList.isStopAddPlant;
 
@@ -931,8 +875,9 @@ addPlantButton.addEventListener("click", () => {
         clearLayer(ctxLayer3)
         addPlantButton.style = 'background-color:rgb(240,240,240);'
     } else {
+        addPlantButton.style = 'background-color:rgb(220,50,50);'
         showGrid(showGridSize)
-        startAddPlant()        
+        startAddPlant()
     }
 })
 
@@ -944,7 +889,7 @@ removePlantButton.addEventListener("click", () => {
     clearLayer(ctxLayer3)
 
     stopActionsExceptThis('isStopRemovePlant')
-    highLightThisButton('removePlantButton')
+    clearButtonHighLight('removePlantButton')
 
     actionStopList.isStopRemovePlant = !actionStopList.isStopRemovePlant;
 
@@ -955,8 +900,9 @@ removePlantButton.addEventListener("click", () => {
         clearLayer(ctxLayer3)
         removePlantButton.style = 'background-color:rgb(240,240,240);'
     } else {
+        removePlantButton.style = 'background-color:rgb(220,50,50);'
         showGrid(showGridSize)
-        startRemovePlant()        
+        startRemovePlant()
     }
 })
 
@@ -968,10 +914,10 @@ saveToServerButton.addEventListener("click", () => {
 
     //temporary testing
 
-for(let i in plantRecord){
-    console.log(plantRecord[i].stage)
-}
-
     
+    console.log(Object.keys(gameItemList))
+
+
+
 })
 
