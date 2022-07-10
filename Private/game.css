@@ -50,9 +50,48 @@ body{
     width:1520px;
     margin: auto;
     justify-content:space-between;
-    align-items: center;
-
+    align-items: center;   
+    position: relative;   
 }
+
+/*==========hided pop up iFrame=============*/
+#popUpFrame{
+    position: absolute; 
+    left: 40px;
+    top: -45px;
+    z-index: 50;    
+       
+}
+#innerFrame{
+    
+    height: 610px;
+    width:1400px;
+    /* background-color: rgb(255, 255, 255); */
+    border: solid 2px rgb(243, 0, 0);
+    border-radius: 10px;
+    background-color: rgb(240, 240, 240);
+    padding: 20px;
+    
+    
+}
+
+#closeButtonArea{
+    /* background-color: rgb(199, 15, 15); */
+    justify-content:end;
+    display: flex;
+    justify-content: end;
+   
+    
+}
+
+#innerFrameContent{    
+    height: 595px;
+    width:1400px;  
+    border: 0;    
+    
+}
+
+/*==================game display ================*/
 
 #leftControlPanel{
     height: 544px;
@@ -97,35 +136,46 @@ body{
     
 }
 
-#gameDisplayLayer1{
+#gameDisplayLayer10{
     
     /* border: solid 1px rgb(238, 238, 238); */
     position: absolute; 
     left: 0;
     top: 0;
-    z-index: 1;
+    z-index: 10;
     border-radius: 10px;
     
 }
 
-#gameDisplayLayer2{
+#gameDisplayLayer20{
     
     /* border: solid 1px rgb(233, 9, 166); */
     position: absolute; 
     left: 0;
     top: 0;
-    z-index: 2;
+    z-index: 20;
     border-radius: 10px;
     
 } 
 
-#gameDisplayLayer3{
+#gameDisplayLayer30{
+    
+   
+    position: absolute; 
+    left: 0;
+    top: 0;
+    z-index: 30;
+    border-radius: 10px;
+    
+} 
+
+#gameDisplayLayer40{
     
     border: solid 1px rgb(228, 243, 13);
     position: absolute; 
     left: 0;
     top: 0;
-    z-index: 3;
+    z-index: 40;
     border-radius: 10px;
     
 } 
@@ -139,7 +189,7 @@ body{
 }
 
 #testImage{
-    width: 60px;
+    width: 50px;
 }
 
 /*============================================== Game Area End =================================*/
@@ -154,5 +204,7 @@ body{
     border-radius: 10px;
     padding: 0px 10px 0px 10px;
 }
+
+
 
 

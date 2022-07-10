@@ -1,5 +1,5 @@
 
-let recordTime = Date.now()
+const recordTime = Date.now()
 
 // map grid to be 32X32 as 1 unit
 const gameBaseGridSize = 32
@@ -15,6 +15,20 @@ let gameItemList = {}
 let landCount = 0
 let gameScore = 1000
 let displayScore = document.querySelector('#gameScore')
+let ctxLayer40Alpha = 0.9
+
+let scoreCheckingGroups = {
+    group0: [],
+    group1: [],
+    group2: [],
+    group3: [],
+    group4: [],
+    group5: [],
+    group6: [],
+    group7: [],
+    group8: [],
+    group9: []
+}
 
 
 // ========for stop edit mode =======================================================================
@@ -56,27 +70,32 @@ document.addEventListener('mouseup', () => {
 //==========================================Mouse Press Detect End================================
 
 // 3 layer canvas
-const gameDisplayLayer0 = document.querySelector('#gameDisplayLayer0')
-const gameDisplayLayer1 = document.querySelector('#gameDisplayLayer1')
-const gameDisplayLayer2 = document.querySelector('#gameDisplayLayer2')
-const gameDisplayLayer3 = document.querySelector('#gameDisplayLayer3')
+const gameDisplayLayer0 = document.querySelector('#gameDisplayLayer0') //for land tile
+const gameDisplayLayer10 = document.querySelector('#gameDisplayLayer10') //for non animation game items
+const gameDisplayLayer20 = document.querySelector('#gameDisplayLayer20') //for mouse move highlight at edit mode
+const gameDisplayLayer30 = document.querySelector('#gameDisplayLayer30') //for grid display at edit mode
+const gameDisplayLayer40 = document.querySelector('#gameDisplayLayer40') //for text showing animation 
 
 gameDisplayLayer0.height = gameImagesAreaHeight;
 gameDisplayLayer0.width = gameImagesAreaWidth;
 
-gameDisplayLayer1.height = gameImagesAreaHeight;
-gameDisplayLayer1.width = gameImagesAreaWidth;
+gameDisplayLayer10.height = gameImagesAreaHeight;
+gameDisplayLayer10.width = gameImagesAreaWidth;
 
-gameDisplayLayer2.height = gameImagesAreaHeight;
-gameDisplayLayer2.width = gameImagesAreaWidth;
+gameDisplayLayer20.height = gameImagesAreaHeight;
+gameDisplayLayer20.width = gameImagesAreaWidth;
 
-gameDisplayLayer3.height = gameImagesAreaHeight;
-gameDisplayLayer3.width = gameImagesAreaWidth;
+gameDisplayLayer30.height = gameImagesAreaHeight;
+gameDisplayLayer30.width = gameImagesAreaWidth;
+
+gameDisplayLayer40.height = gameImagesAreaHeight;
+gameDisplayLayer40.width = gameImagesAreaWidth;
 
 const ctxLayer0 = gameDisplayLayer0.getContext('2d')
-const ctxLayer1 = gameDisplayLayer1.getContext('2d')
-const ctxLayer2 = gameDisplayLayer2.getContext('2d')
-const ctxLayer3 = gameDisplayLayer3.getContext('2d')
+const ctxLayer10 = gameDisplayLayer10.getContext('2d')
+const ctxLayer20 = gameDisplayLayer20.getContext('2d')
+const ctxLayer30 = gameDisplayLayer30.getContext('2d')
+const ctxLayer40 = gameDisplayLayer40.getContext('2d')
 
 const mapTiles = new Image();
 const trees = new Image();
@@ -96,6 +115,13 @@ mapTiles.onload = () => {
 }
 mapTiles.src = './gameImages/map/island.png';
 
+
+function drawWorld() {
+    drawGround()
+    drawGroundEdge()
+    drawPlants()
+    randomGroupingPlants
+}
 
 //===================================================SET UP CLASS===============================
 class cutMapTile {
@@ -194,7 +220,7 @@ const big_house = new cutHouseTile(1, 0, 94)
 
 
 
-// ==============SET UP A MAP GRID =================================================================
+// ===================================SET UP A MAP GRID ===================================================
 
 for (let x = 0; x < gameXGridNumber; x++) {
     mapTileList.push([])
@@ -208,6 +234,12 @@ for (let x = 0; x < gameXGridNumber; x++) {
 
 // add the first land
 mapTileList[21][8] = ground
+// add the first plant
+gameItemList[`x${42}y${16}`] = new plantingBox(carrot, Date.now(), 2, 42, 16)
+gameItemList[`x${43}y${17}`] = new plantingBox(carrot, Date.now(), 2, 43, 17)
+//add the plant to score checking group
+scoreCheckingGroups['group0'].push(`x${42}y${16}`)
+scoreCheckingGroups['group1'].push(`x${43}y${17}`)
 
 // ==============SET UP A MAP GRID END =================================================================
 
@@ -223,43 +255,46 @@ function drawMapTile(tileType, displayGridX, displayGridY) {
 function drawPlantingBox(plant, stageNumber, displayGridX, displayGridY) {
     // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
     //grid to be 32px X 32px
-    ctxLayer1.drawImage(plantTiles, plant[`stage${stageNumber}cutX`] * plant.size, plant[`stage${stageNumber}cutY`] * plant.size, plant.size, plant.size, displayGridX * 16, displayGridY * 16, plant.size, plant.size);
+    ctxLayer10.drawImage(plantTiles, plant[`stage${stageNumber}cutX`] * plant.size, plant[`stage${stageNumber}cutY`] * plant.size, plant.size, plant.size, displayGridX * 16, displayGridY * 16, plant.size, plant.size);
 }
 
 function drawTree(treeType, frameNumber, displayGridX, displayGridY) {
     // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
     //grid to be 32px X 32px
-    ctxLayer1.drawImage(trees, treeType[`frame${frameNumber}cutX`] * treeType.size, treeType[`frame${frameNumber}cutY`] * treeType.size, treeType.size, treeType.size, (displayGridX * treeType.size) - (treeType.size * 0.25), (displayGridY * treeType.size) - (treeType.size / 2), treeType.size, treeType.size);
+    ctxLayer10.drawImage(trees, treeType[`frame${frameNumber}cutX`] * treeType.size, treeType[`frame${frameNumber}cutY`] * treeType.size, treeType.size, treeType.size, (displayGridX * treeType.size) - (treeType.size * 0.25), (displayGridY * treeType.size) - (treeType.size / 2), treeType.size, treeType.size);
 }
 
 
 // display the grid by specified size
 function showGrid(gridSize) {
-    ctxLayer3.globalAlpha = 0.4
-    ctxLayer3.lineWidth = 1;
-    ctxLayer3.strokeStyle = 'rgb(255,255,255)';
-    ctxLayer3.setLineDash([4, 2])
+    ctxLayer30.globalAlpha = 0.4
+    ctxLayer30.lineWidth = 1;
+    ctxLayer30.strokeStyle = 'rgb(255,255,255)';
+    ctxLayer30.setLineDash([4, 2])
     for (let x = 0; x < gameXGridNumber * (gameBaseGridSize / gridSize); x++) {
-        ctxLayer3.beginPath();
-        ctxLayer3.moveTo(x * gridSize, 0)
-        ctxLayer3.lineTo(x * gridSize, gameYGridNumber * gameBaseGridSize)
-        ctxLayer3.stroke();
+        ctxLayer30.beginPath();
+        ctxLayer30.moveTo(x * gridSize, 0)
+        ctxLayer30.lineTo(x * gridSize, gameYGridNumber * gameBaseGridSize)
+        ctxLayer30.stroke();
     }
     for (let y = 0; y < gameYGridNumber * (gameBaseGridSize / gridSize); y++) {
-        ctxLayer3.beginPath();
-        ctxLayer3.moveTo(0, y * gridSize)
-        ctxLayer3.lineTo(gameXGridNumber * gameBaseGridSize, y * gridSize)
-        ctxLayer3.stroke();
+        ctxLayer30.beginPath();
+        ctxLayer30.moveTo(0, y * gridSize)
+        ctxLayer30.lineTo(gameXGridNumber * gameBaseGridSize, y * gridSize)
+        ctxLayer30.stroke();
     }
 
 
 }
 
-function drawWorld() {
-    drawGround()
-    drawGroundEdge()
-    drawPlants()
 
+
+function randomGroupingPlants() {
+    for (let key of Object.keys(gameItemList)) {
+        let randomGrouping = Math.floor(Math.random() * 10)
+        scoreCheckingGroups[`group${randomGrouping}`].push(key)
+
+    }
 }
 
 // draw the ground tile according the mapTileList
@@ -419,7 +454,6 @@ function drawGroundEdge() {
 // clear all images on the specified ctx layer,
 function clearLayer(ctxLayer) {
     ctxLayer.clearRect(0, 0, gameImagesAreaWidth, gameImagesAreaHeight)
-
 }
 
 // start to highlight mouse location and add land
@@ -479,42 +513,42 @@ function highLightAddPlant(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer2.clientLeft) / showGridSize);
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer2.clientTop) / showGridSize);
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer20.clientLeft) / showGridSize);
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer20.clientTop) / showGridSize);
 
     //clear previous highlight 
-    ctxLayer2.clearRect(0, 0, gameDisplayLayer2.width, gameDisplayLayer2.height)
-    ctxLayer2.beginPath();
+    ctxLayer20.clearRect(0, 0, gameDisplayLayer20.width, gameDisplayLayer20.height)
+    ctxLayer20.beginPath();
 
     //draw the grid box
-    ctxLayer2.rect(mouseXGrid * showGridSize, mouseYGrid * showGridSize, showGridSize, showGridSize);
+    ctxLayer20.rect(mouseXGrid * showGridSize, mouseYGrid * showGridSize, showGridSize, showGridSize);
 
     //control the grid box highlight color
     if (Math.floor(mouseXGrid / (gameBaseGridSize / showGridSize)) <= 0 || Math.floor(mouseYGrid / (gameBaseGridSize / showGridSize)) <= 0 || Math.floor(mouseXGrid / (gameBaseGridSize / showGridSize)) + 1 >= gameXGridNumber || Math.floor(mouseYGrid / (gameBaseGridSize / showGridSize)) + 1 >= gameYGridNumber) {
-        ctxLayer2.globalAlpha = 0.4
-        ctxLayer2.fillStyle = '#FF0000';
-        ctxLayer2.fill();
+        ctxLayer20.globalAlpha = 0.4
+        ctxLayer20.fillStyle = '#FF0000';
+        ctxLayer20.fill();
 
     } else if (gameItemList[`x${mouseXGrid}y${mouseYGrid}`]) {
         if (gameItemList[`x${mouseXGrid}y${mouseYGrid}`].stage === 3) {
-            ctxLayer2.globalAlpha = 0.4
-            ctxLayer2.fillStyle = '#00FF00';
-            ctxLayer2.fill();
+            ctxLayer20.globalAlpha = 0.4
+            ctxLayer20.fillStyle = '#00FF00';
+            ctxLayer20.fill();
         } else {
-            ctxLayer2.globalAlpha = 0.4
-            ctxLayer2.fillStyle = '#FF0000';
-            ctxLayer2.fill();
+            ctxLayer20.globalAlpha = 0.4
+            ctxLayer20.fillStyle = '#FF0000';
+            ctxLayer20.fill();
         }
 
     } else if (mapTileList[Math.floor(mouseXGrid * (showGridSize / gameBaseGridSize))][Math.floor(mouseYGrid * (showGridSize / gameBaseGridSize))].tileType === 'ground') {
-        ctxLayer2.globalAlpha = 0.4
-        ctxLayer2.fillStyle = '#00FF00';
-        ctxLayer2.fill();
+        ctxLayer20.globalAlpha = 0.4
+        ctxLayer20.fillStyle = '#00FF00';
+        ctxLayer20.fill();
 
     } else {
-        ctxLayer2.globalAlpha = 0.4
-        ctxLayer2.fillStyle = '#FF0000';
-        ctxLayer2.fill();
+        ctxLayer20.globalAlpha = 0.4
+        ctxLayer20.fillStyle = '#FF0000';
+        ctxLayer20.fill();
     }
 
 }
@@ -524,29 +558,29 @@ function highLightRemovePlant(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer2.clientLeft) / showGridSize);
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer2.clientTop) / showGridSize);
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer20.clientLeft) / showGridSize);
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer20.clientTop) / showGridSize);
 
     //clear previous highlight 
-    ctxLayer2.clearRect(0, 0, gameDisplayLayer2.width, gameDisplayLayer2.height)
-    ctxLayer2.beginPath();
+    ctxLayer20.clearRect(0, 0, gameDisplayLayer20.width, gameDisplayLayer20.height)
+    ctxLayer20.beginPath();
 
     //draw the grid box
-    ctxLayer2.rect(mouseXGrid * showGridSize, mouseYGrid * showGridSize, showGridSize, showGridSize);
+    ctxLayer20.rect(mouseXGrid * showGridSize, mouseYGrid * showGridSize, showGridSize, showGridSize);
 
     if (Math.floor(mouseXGrid / (gameBaseGridSize / showGridSize)) <= 0 || Math.floor(mouseYGrid / (gameBaseGridSize / showGridSize)) <= 0 || Math.floor(mouseXGrid / (gameBaseGridSize / showGridSize)) + 1 >= gameXGridNumber || Math.floor(mouseYGrid / (gameBaseGridSize / showGridSize)) + 1 >= gameYGridNumber) {
         return
     }
     //control the grid box highlight color
     if (gameItemList[`x${mouseXGrid}y${mouseYGrid}`]) {
-        ctxLayer2.globalAlpha = 0.4
-        ctxLayer2.fillStyle = '#00FF00';
-        ctxLayer2.fill();
+        ctxLayer20.globalAlpha = 0.4
+        ctxLayer20.fillStyle = '#00FF00';
+        ctxLayer20.fill();
 
     } else {
-        ctxLayer2.globalAlpha = 0.4
-        ctxLayer2.fillStyle = '#FF0000';
-        ctxLayer2.fill();
+        ctxLayer20.globalAlpha = 0.4
+        ctxLayer20.fillStyle = '#FF0000';
+        ctxLayer20.fill();
     }
 
 }
@@ -556,29 +590,29 @@ function highLightAddLand(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer2.clientLeft) / showGridSize);
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer2.clientTop) / showGridSize);
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer20.clientLeft) / showGridSize);
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer20.clientTop) / showGridSize);
 
     //clear previous highlight 
-    ctxLayer2.clearRect(0, 0, gameDisplayLayer2.width, gameDisplayLayer2.height)
-    ctxLayer2.beginPath();
+    ctxLayer20.clearRect(0, 0, gameDisplayLayer20.width, gameDisplayLayer20.height)
+    ctxLayer20.beginPath();
 
     //draw the grid box
-    ctxLayer2.rect(mouseXGrid * showGridSize, mouseYGrid * showGridSize, showGridSize, showGridSize);
+    ctxLayer20.rect(mouseXGrid * showGridSize, mouseYGrid * showGridSize, showGridSize, showGridSize);
 
     //control the grid box highlight color
     if (mouseXGrid <= 0 || mouseYGrid <= 0 || mouseXGrid + 1 >= gameXGridNumber || mouseYGrid + 1 >= gameYGridNumber) {
-        ctxLayer2.globalAlpha = 0.4
-        ctxLayer2.fillStyle = '#FF0000';
-        ctxLayer2.fill();
+        ctxLayer20.globalAlpha = 0.4
+        ctxLayer20.fillStyle = '#FF0000';
+        ctxLayer20.fill();
     } else if (mapTileList[mouseXGrid][mouseYGrid].tileType !== 'ground' && isNextToGround(mouseXGrid, mouseYGrid)) {
-        ctxLayer2.globalAlpha = 0.4
-        ctxLayer2.fillStyle = '#00FF00';
-        ctxLayer2.fill();
+        ctxLayer20.globalAlpha = 0.4
+        ctxLayer20.fillStyle = '#00FF00';
+        ctxLayer20.fill();
     } else {
-        ctxLayer2.globalAlpha = 0.4
-        ctxLayer2.fillStyle = '#FF0000';
-        ctxLayer2.fill();
+        ctxLayer20.globalAlpha = 0.4
+        ctxLayer20.fillStyle = '#FF0000';
+        ctxLayer20.fill();
     }
 
 }
@@ -588,36 +622,36 @@ function highLightRemoveLand(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer2.clientLeft) / showGridSize);
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer2.clientTop) / showGridSize);
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer20.clientLeft) / showGridSize);
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer20.clientTop) / showGridSize);
 
     //clear previous highlight 
-    ctxLayer2.clearRect(0, 0, gameDisplayLayer2.width, gameDisplayLayer2.height)
-    ctxLayer2.beginPath();
+    ctxLayer20.clearRect(0, 0, gameDisplayLayer20.width, gameDisplayLayer20.height)
+    ctxLayer20.beginPath();
 
     //draw the grid box
-    ctxLayer2.rect(mouseXGrid * showGridSize, mouseYGrid * showGridSize, showGridSize, showGridSize);
+    ctxLayer20.rect(mouseXGrid * showGridSize, mouseYGrid * showGridSize, showGridSize, showGridSize);
 
     //control the grid box highlight color
     if (mouseXGrid <= 0 || mouseYGrid <= 0 || mouseXGrid + 1 >= gameXGridNumber || mouseYGrid + 1 >= gameYGridNumber) {
-        ctxLayer2.globalAlpha = 0.4
-        ctxLayer2.fillStyle = '#FF0000';
-        ctxLayer2.fill();
+        ctxLayer20.globalAlpha = 0.4
+        ctxLayer20.fillStyle = '#FF0000';
+        ctxLayer20.fill();
     } else if (mapTileList[mouseXGrid][mouseYGrid].tileType === 'ground' && landCount > 1) {
         if (gameItemList[`x${mouseXGrid * 2}y${mouseYGrid * 2}`] || gameItemList[`x${mouseXGrid * 2 + 1}y${mouseYGrid * 2}`] || gameItemList[`x${mouseXGrid * 2}y${mouseYGrid * 2 + 1}`] || gameItemList[`x${mouseXGrid * 2 + 1}y${mouseYGrid * 2 + 1}`]) {
-            ctxLayer2.globalAlpha = 0.4
-            ctxLayer2.fillStyle = '#FF0000';
-            ctxLayer2.fill();
+            ctxLayer20.globalAlpha = 0.4
+            ctxLayer20.fillStyle = '#FF0000';
+            ctxLayer20.fill();
         } else {
-            ctxLayer2.globalAlpha = 0.4
-            ctxLayer2.fillStyle = '#00FF00';
-            ctxLayer2.fill();
+            ctxLayer20.globalAlpha = 0.4
+            ctxLayer20.fillStyle = '#00FF00';
+            ctxLayer20.fill();
         }
 
     } else {
-        ctxLayer2.globalAlpha = 0.4
-        ctxLayer2.fillStyle = '#FF0000';
-        ctxLayer2.fill();
+        ctxLayer20.globalAlpha = 0.4
+        ctxLayer20.fillStyle = '#FF0000';
+        ctxLayer20.fill();
     }
 
 }
@@ -682,8 +716,8 @@ function addPlant(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer1.clientLeft) / showGridSize);
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer1.clientTop) / showGridSize);
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer10.clientLeft) / showGridSize);
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer10.clientTop) / showGridSize);
 
     //check if mouse in un available area
     if (Math.floor(mouseXGrid / (gameBaseGridSize / showGridSize)) <= 0 || Math.floor(mouseYGrid / (gameBaseGridSize / showGridSize)) <= 0 || Math.floor(mouseXGrid / (gameBaseGridSize / showGridSize)) + 1 >= gameXGridNumber || Math.floor(mouseYGrid / (gameBaseGridSize / showGridSize)) + 1 >= gameYGridNumber) {
@@ -694,14 +728,18 @@ function addPlant(event) {
     if (gameItemList[`x${mouseXGrid}y${mouseYGrid}`]) {
         if (gameItemList[`x${mouseXGrid}y${mouseYGrid}`].stage === 3) {
             gameItemList[`x${mouseXGrid}y${mouseYGrid}`] = new plantingBox(carrot, Date.now(), 0, mouseXGrid, mouseYGrid)
-            clearLayer(ctxLayer1)
+            clearLayer(ctxLayer10)
             drawPlants()
+            let randomGrouping = Math.floor(Math.random() * 10)
+            scoreCheckingGroups[`group${randomGrouping}`].push(`x${mouseXGrid}y${mouseYGrid}`)
         }
 
     } else if (mapTileList[Math.floor(mouseXGrid * (showGridSize / gameBaseGridSize))][Math.floor(mouseYGrid * (showGridSize / gameBaseGridSize))].tileType === 'ground') {
         gameItemList[`x${mouseXGrid}y${mouseYGrid}`] = new plantingBox(carrot, Date.now(), 0, mouseXGrid, mouseYGrid)
-        clearLayer(ctxLayer1)
+        clearLayer(ctxLayer10)
         drawPlants()
+        let randomGrouping = Math.floor(Math.random() * 10)
+        scoreCheckingGroups[`group${randomGrouping}`].push(`x${mouseXGrid}y${mouseYGrid}`)
     }
 }
 
@@ -710,14 +748,23 @@ function removePlant(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer1.clientLeft) / showGridSize);
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer1.clientTop) / showGridSize);
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer10.clientLeft) / showGridSize);
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer10.clientTop) / showGridSize);
 
     if (gameItemList[`x${mouseXGrid}y${mouseYGrid}`]) {
 
         delete gameItemList[`x${mouseXGrid}y${mouseYGrid}`]
 
-        clearLayer(ctxLayer1)
+        for (let group in scoreCheckingGroups) {
+            if (scoreCheckingGroups[group].includes(`x${mouseXGrid}y${mouseYGrid}`)) {
+                scoreCheckingGroups[group] = scoreCheckingGroups[group].filter(e => e !== `x${mouseXGrid}y${mouseYGrid}`)
+                break
+            }
+        }
+
+
+
+        clearLayer(ctxLayer10)
         drawPlants()
     }
 }
@@ -799,9 +846,74 @@ function clearButtonHighLight() {
 
 //===========================Score Calculation ================================================
 
-setInterval(() => {
-    console.log('this is 1s')
-}, 1000)
+
+
+for (let i = 0; i < Object.keys(scoreCheckingGroups).length; i++) {
+    let textContent = '+3'
+    let checkingGroup = `group${i}`
+
+    setTimeout(() => {
+        // console.log(i, scoreCheckingGroups[`group${i}`])
+
+        // after onload, show the score adding animation
+        showTextToItems(checkingGroup)
+
+
+        // set up regular 10s checking for score and stage
+        let regularChecking = setInterval(() => {
+            showTextToItems(checkingGroup)
+
+            // add score action here
+            //change plant stage here
+
+        }, 10000)
+    }, i * 1000)
+
+}
+
+function showTextToItems(checkingGroup) {
+
+    let animationFrame = 0
+    let yMove = 0
+    let moveUpRate = 2
+    ctxLayer40.globalAlpha = ctxLayer40Alpha
+    ctxLayer40.fillStyle = '#FFFF00'
+
+    let TSA = setInterval(() => { textShowingAnimation() }, 50)
+
+    function textShowingAnimation() {
+        animationFrame++
+        ctxLayer40.globalAlpha -= 0.04
+        if (animationFrame < 20) {
+            yMove += moveUpRate
+            ctxLayer40.font = "12px Arial";
+            clearLayer(ctxLayer40)
+            for (let key of scoreCheckingGroups[checkingGroup]) {
+                ctxLayer40.fillText(`Y${gameItemList[key].y}`, gameItemList[key].x * 16, gameItemList[key].y * 16 - yMove + 16)
+            }
+
+        } else {
+            ctxLayer40.globalAlpha = ctxLayer40Alpha
+            yMove = 0
+            animationFrame = 0
+            clearInterval(TSA)
+            clearLayer(ctxLayer40)
+        }
+    }
+}
+
+//============================ animation ====================================================
+
+
+
+// window.requestAnimationFrame(countTime)
+
+// let time = 1
+// function countTime() {
+//     time++
+//     console.log(time)
+//     window.requestAnimationFrame(countTime)
+// }
 
 
 
@@ -811,7 +923,7 @@ setInterval(() => {
 let addLandButton = document.querySelector('#addLand');
 addLandButton.addEventListener("click", () => {
     clearAllMouseListener()
-    clearLayer(ctxLayer3)
+    clearLayer(ctxLayer30)
 
     stopActionsExceptThis('isStopAddLand')
     clearButtonHighLight('addLandButton')
@@ -822,7 +934,7 @@ addLandButton.addEventListener("click", () => {
 
     if (actionStopList.isStopAddLand) {
         clearAllMouseListener()
-        clearLayer(ctxLayer3)
+        clearLayer(ctxLayer30)
         addLandButton.style = 'background-color:rgb(240,240,240);'
     } else {
         addLandButton.style = 'background-color:rgb(220,50,50);'
@@ -835,7 +947,7 @@ addLandButton.addEventListener("click", () => {
 let removeLandButton = document.querySelector('#removeLand');
 removeLandButton.addEventListener("click", () => {
     clearAllMouseListener()
-    clearLayer(ctxLayer3)
+    clearLayer(ctxLayer30)
 
     stopActionsExceptThis('isStopRemoveLand')
     clearButtonHighLight('removeLandButton')
@@ -846,7 +958,7 @@ removeLandButton.addEventListener("click", () => {
 
     if (actionStopList.isStopRemoveLand) {
         clearAllMouseListener()
-        clearLayer(ctxLayer3)
+        clearLayer(ctxLayer30)
         removeLandButton.style = 'background-color:rgb(240,240,240);'
     } else {
         removeLandButton.style = 'background-color:rgb(220,50,50);'
@@ -861,7 +973,7 @@ removeLandButton.addEventListener("click", () => {
 let addPlantButton = document.querySelector('#addPlant');
 addPlantButton.addEventListener("click", () => {
     clearAllMouseListener()
-    clearLayer(ctxLayer3)
+    clearLayer(ctxLayer30)
 
     stopActionsExceptThis('isStopAddPlant')
     clearButtonHighLight('addPlantButton')
@@ -872,7 +984,7 @@ addPlantButton.addEventListener("click", () => {
 
     if (actionStopList.isStopAddPlant) {
         clearAllMouseListener()
-        clearLayer(ctxLayer3)
+        clearLayer(ctxLayer30)
         addPlantButton.style = 'background-color:rgb(240,240,240);'
     } else {
         addPlantButton.style = 'background-color:rgb(220,50,50);'
@@ -886,7 +998,7 @@ let removePlantButton = document.querySelector('#removePlant');
 removePlantButton.addEventListener("click", () => {
 
     clearAllMouseListener()
-    clearLayer(ctxLayer3)
+    clearLayer(ctxLayer30)
 
     stopActionsExceptThis('isStopRemovePlant')
     clearButtonHighLight('removePlantButton')
@@ -897,7 +1009,7 @@ removePlantButton.addEventListener("click", () => {
 
     if (actionStopList.isStopRemovePlant) {
         clearAllMouseListener()
-        clearLayer(ctxLayer3)
+        clearLayer(ctxLayer30)
         removePlantButton.style = 'background-color:rgb(240,240,240);'
     } else {
         removePlantButton.style = 'background-color:rgb(220,50,50);'
@@ -914,9 +1026,46 @@ saveToServerButton.addEventListener("click", () => {
 
     //temporary testing
 
-    
-    console.log(Object.keys(gameItemList))
 
+    console.log(Object.keys(gameItemList))
+    console.log(scoreCheckingGroups)
+
+
+})
+
+
+let playerInfoButton = document.querySelector('#playerInfoButton');
+playerInfoButton.addEventListener("click", () => {
+
+    //temporary testing
+
+    let popUpFrame= document.querySelector('#popUpFrame')
+
+    popUpFrame.innerHTML = ` 
+     <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">X</button> </div><iframe id="innerFrameContent" src="./playerInfo.html"></iframe> </div>`
+
+    let closeButton = document.querySelector('#closeButton');
+    closeButton.addEventListener("click", () => {
+        popUpFrame.innerHTML =''
+    })
+
+
+})
+
+let rankingButton = document.querySelector('#rankingButton');
+rankingButton.addEventListener("click", () => {
+
+    //temporary testing
+
+    let popUpFrame= document.querySelector('#popUpFrame')
+
+    popUpFrame.innerHTML = ` 
+     <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">X</button> </div><iframe id="innerFrameContent" src="./ranking.html"></iframe> </div>`
+
+    let closeButton = document.querySelector('#closeButton');
+    closeButton.addEventListener("click", () => {
+        popUpFrame.innerHTML =''
+    })
 
 
 })
