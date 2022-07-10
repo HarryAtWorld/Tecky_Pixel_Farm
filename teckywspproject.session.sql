@@ -81,7 +81,8 @@ Insert into game_farm_data (user_id)
 VALUES (2);
 Insert into game_farm_data (user_id)
 VALUES (3);
---
+insert into game_farm_data (user_id)
+values (4);
 insert into relationship (user_id_a, user_id_b)
 VALUES (1, 2);
 insert into relationship (user_id_a, user_id_b)
@@ -94,6 +95,11 @@ VALUES (2, 3);
 -- DROP TABLE plant_score_data;
 -- DROP TABLE user_status;
 -- DROP TABLE user_info;
+----------------------------------------------------------------
+-- DELETE from relationship;
+-- DELETE from game_farm_data;
+-- delete from user_status;
+-- DELETE from user_info;
 ----------------------------------------------------------------
 select *
 from user_info;

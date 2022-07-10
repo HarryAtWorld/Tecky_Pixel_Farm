@@ -68,10 +68,23 @@ async function register(req: Request, res: Response) {
 
   if (checkAccount.rows[0] === undefined) {
     const hashedPassword = await hashingPassword(login_password);
-    await client.query(
-      `INSERT INTO user_info (user_name, login_account, login_password) VALUES ($1, $2, $3)`,
+    const data = await client.query(
+      `INSERT INTO user_info (user_name, login_account, login_password) VALUES ($1, $2, $3) RETURNING id`,
       [user_name, login_account, hashedPassword]
     );
+    // console.log(`returning of insert: `);
+    // console.log(data);
+    const temp_ac = data.rows[0].id;
+    // console.log(`passed temp_ac, result: ${temp_ac}`);
+    //@ts-ignore
+    const createPlayerData = await client.query(
+      `Insert into game_farm_data (user_id)
+      VALUES ($1) RETURNING *`,
+      [temp_ac]
+    );
+    console.log(`created playerData`);
+    // console.log(createPlayerData);
+
     res.status(200).json({ success: true, message: "Account created successfully" });
   } else {
     res
