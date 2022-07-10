@@ -10,7 +10,7 @@ import pg from "pg";
 import fetch from "cross-fetch";
 import dotenv from "dotenv";
 dotenv.config();
-import grant from "grant";
+// import grant from "grant";
 
 // SQL Client
 export const client = new pg.Client({
@@ -40,20 +40,20 @@ app.use((req, res, next) => {
   next();
 });
 
-const grantExpress = grant.express({
-  defaults: {
-    origin: "http://localhost:8080",
-    transport: "session",
-    state: true,
-  },
-  google: {
-    key: process.env.GOOGLE_CLIENT_ID || "",
-    secret: process.env.GOOGLE_CLIENT_SECRET || "",
-    scope: ["profile", "email"],
-    callback: "/login/google",
-  },
-});
-app.use(grantExpress as express.RequestHandler);
+// const grantExpress = grant.express({
+//   defaults: {
+//     origin: "http://localhost:8080",
+//     transport: "session",
+//     state: true,
+//   },
+//   google: {
+//     key: process.env.GOOGLE_CLIENT_ID || "",
+//     secret: process.env.GOOGLE_CLIENT_SECRET || "",
+//     scope: ["profile", "email"],
+//     callback: "/login/google",
+//   },
+// });
+// app.use(grantExpress as express.RequestHandler);
 
 // Router handler
 import { loginRoutes } from "./routers/loginRoutes";
@@ -64,11 +64,11 @@ import { friendRankRoutes } from "./routers/friendRankRoutes";
 app.use("/friendRank", friendRankRoutes);
 import { edit_name } from "./routers/editNameRoutes";
 app.use("/edit_name", edit_name);
+import { edit_password } from "./routers/editPasswordRoutes";
+app.use("./edit_password", edit_password);
 
 // express Static
 app.use(express.static(path.join(__dirname, "Public")));
-// logic for check login but some error that can not load the 404 page anymore.
-// problem in guards.ts line 8 redirect to "/",  temporary solution is using res.sendFile(404);
 app.use(isLoggedInStatic, express.static(path.join(__dirname, "Private")));
 
 // !!!404 Not Fund Page, must be the last handler !!!

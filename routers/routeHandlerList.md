@@ -59,26 +59,49 @@
 
 (FE)
 
--   [ ] fetch '/allPlayerRank', method get
+-   [x] fetch '/allPlayerRank', method get
 
-    -   [ ] await resp.json()
-    -   [ ] for of html div
+    -   [x] await resp.json()
+    -   [x] for of html div
 
 &
 
 (BE)
 
--   [ ] Friend ranking routes
+-   [x] Friend ranking routes
     -   [x] session.user.id
     -   [x] sql query select relationship where user_id_a = $1 || user_id_b = $1, [session.user.id]
-    -   [ ] query result -> for of -> select user_id, score, name from game_farm_data
-    -   [ ] res.json()
+    -   [x] query result -> for of -> select user_id, score, name from game_farm_data
+    -   [x] res.json()
 
 (FE)
 
--   [ ] fetch '/friendRank', method get
-    -   [ ] await resp.json()
-    -   [ ] for of html div
+-   [x] fetch '/friendRank', method get
+    -   [x] await resp.json()
+    -   [x] for of html div
+
+# Edit Password
+
+-   [ ] fetch '/editPassword', method put
+    -   [x] req.body
+        -   [x] const result = client.query select \* from user_Info where id = user.id
+        -   [x] !result -> return
+        -   [x] req.body new password
+        -   [x] hashing password
+        -   [x] update password query
+        -   [x] res.status(200).json({seccess: true})
+
+# Hashing
+
+(BE)
+
+-   [x] export hashing
+
+    -   [x] Create Acc
+
+    -   [x] Login In
+
+    -   [x] edit password
 
 # Testing result
 
