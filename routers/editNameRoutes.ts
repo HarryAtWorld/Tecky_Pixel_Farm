@@ -4,7 +4,7 @@ import { client } from "../main";
 
 export const edit_name = express.Router();
 
-edit_name.put("/", changeName);
+edit_name.patch("/", changeName);
 
 // routers of edit user name
 async function changeName(req: Request, res: Response) {

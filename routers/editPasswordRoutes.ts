@@ -5,7 +5,7 @@ import { hashingPassword } from "../hashing";
 
 export const edit_password = express.Router();
 
-edit_password.put("/", changePassword);
+edit_password.patch("/", changePassword);
 
 function changePassword(req: Request, res: Response) {
   const user = req.session["user"];
