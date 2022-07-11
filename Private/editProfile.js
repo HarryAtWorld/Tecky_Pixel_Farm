@@ -1,8 +1,7 @@
 window.onload = async () => {
-<<<<<<< HEAD
   loadUserName();
-  // initChangeUserName();
-  // initChangePassWord();
+  initChangeUserName();
+  initChangePassWord();
 }
 
 async function loadUserName() {
@@ -21,48 +20,11 @@ function initChangeUserName() {
     console.log(user_name);
 
     const resp = await fetch("/name", {
-      method: "put",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ user_name }),
-=======
-    loadUserName();
-    initChangeUserName();
-    initChangePassWord();
- }
- 
- async function loadUserName() {
-    const resp = await fetch('/userInfo')
-    const data = await resp.json()
-    let htmlStr = "";
-    htmlStr += `<h2>${data.user_name}</h2>`;
-    document.querySelector("#h5").innerHTML = htmlStr;}
- 
- function initChangeUserName() {
-    document.querySelector("#form-name").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const form = e.target;
-      const user_name = form.changeUsername.value;
-      console.log(user_name);
-      
-      const resp = await fetch("/name", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ user_name }),
-      });
-      const result = await resp.json();
-      if (!result.success) {
-        alert(result.message);
-        
-    
-      } else {
-       alert(result.message);
-        
-      }
->>>>>>> 42f8356335677ccfa4bcb24479a9a7b93de869c4
     });
     const result = await resp.json();
     if (!result.success) {
@@ -74,6 +36,15 @@ function initChangeUserName() {
 
     }
   });
+  const result = await resp.json();
+  if (!result.success) {
+    alert(result.message);
+
+
+  } else {
+    alert(result.message);
+
+  };
 }
 
 function initChangePassWord() {

@@ -69,15 +69,9 @@ import { edit_name } from "./routers/editNameRoutes";
 app.use("/name", edit_name);
 import { edit_password } from "./routers/editPasswordRoutes";
 app.use("/password", edit_password);
-<<<<<<< HEAD
-// logout
-import { logoutRoute } from "./routers/logoutRoutes";
-app.use("/logout", logoutRoute);
-=======
 import { plantsRoutes } from "./routers/plantsRoutes";
-app.use("/requestRecord",plantsRoutes);
-app.use("/updateItem",plantsRoutes);
->>>>>>> 42f8356335677ccfa4bcb24479a9a7b93de869c4
+app.use("/requestRecord", plantsRoutes);
+app.use("/updateItem", plantsRoutes);
 
 // express Static
 app.use(express.static(path.join(__dirname, "Public")));
