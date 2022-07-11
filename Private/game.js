@@ -106,10 +106,11 @@ const house = new Image();
 mapTiles.onload = () => {
     trees.onload = () => {
         plantTiles.onload = () => {
-            house.onload = ()=>{
+            house.onload = () => {
+                requestRecordFromServer()
                 drawWorld();
                 loginMessage();
-            } 
+            }
             house.src = './gameImages/house/houseImage.png'
         }
         plantTiles.src = './gameImages/plants/plantsImage.png';
@@ -119,6 +120,17 @@ mapTiles.onload = () => {
 mapTiles.src = './gameImages/map/island.png';
 
 
+async function requestRecordFromServer() {
+    const requestRecord = await fetch(`/requestRecord/`, {
+        method: "get"
+    });
+    const result = await requestRecord.json();
+    if (result.message) {
+        console.log(result.message);
+    }
+}
+
+
 function drawWorld() {
     drawGround()
     drawGroundEdge()
@@ -126,10 +138,11 @@ function drawWorld() {
     randomGroupingPlants
 }
 
-function loginMessage(){
-    let popUpFrame= document.querySelector('#popUpFrame')
+//popUp message when enter game page
+function loginMessage() {
+    let popUpFrame = document.querySelector('#popUpFrame')
 
-    popUpFrame.style ='left: 400px; top:100px;'
+    popUpFrame.style = 'left: 400px; top:100px;'
 
     popUpFrame.innerHTML = ` 
      <div id="loginPopUp"> 
@@ -139,7 +152,7 @@ function loginMessage(){
 
     let closeButton = document.querySelector('#closeButton');
     closeButton.addEventListener("click", () => {
-        popUpFrame.innerHTML =''
+        popUpFrame.innerHTML = ''
     })
 }
 
@@ -789,19 +802,21 @@ function removePlant(event) {
     }
 }
 
+
+
 //send player information JSON to server.
 async function saveToServer(userName) {
-    const content = [userName, mapTileList, gameItemList];
-    const resp = await fetch(`/gameSave/${userName}`, {
-        method: "PUT",
+    // const content = {};
+    const requestRecord = await fetch(`/updateItem`, {
+        method: "put",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ content }),
+        body: JSON.stringify({'user_name':userName, 'map':mapTileList, 'game_item_record':gameItemList}),
     });
-    const result = await resp.json();
-    if (result.success) {
-        console.log('saved');
+    const result = await requestRecord.json();
+    if (result.message) {
+        console.log(result.message);
     }
 
 }
@@ -878,15 +893,18 @@ for (let i = 0; i < Object.keys(scoreCheckingGroups).length; i++) {
         // after onload, show the score adding animation
         showTextToItems(checkingGroup)
 
+        gameScore += scoreCheckingGroups[checkingGroup].length * 1
+        displayScore.innerText = `Score:${gameScore}`
+
 
         // set up regular 10s checking for score and stage
         let regularChecking = setInterval(() => {
             showTextToItems(checkingGroup)
 
             // add score action here
-            gameScore += scoreCheckingGroups[checkingGroup].length*1
+            gameScore += scoreCheckingGroups[checkingGroup].length * 1
             displayScore.innerText = `Score:${gameScore}`
-            
+
             //change plant stage here
 
         }, 10000)
@@ -913,7 +931,7 @@ function showTextToItems(checkingGroup) {
             clearLayer(ctxLayer40)
             for (let key of scoreCheckingGroups[checkingGroup]) {
                 ctxLayer40.fillText(`+1`, gameItemList[key].x * 16, gameItemList[key].y * 16 - yMove + 16)
-                
+
             }
 
         } else {
@@ -1042,57 +1060,52 @@ removePlantButton.addEventListener("click", () => {
     }
 })
 
+// button for popUP of player info page
+// let playerInfoButton = document.querySelector('#playerInfoButton');
+// playerInfoButton.addEventListener("click", () => {
 
-// button for save to server
-let saveToServerButton = document.querySelector('#saveToServer');
-saveToServerButton.addEventListener("click", () => {
-    // saveToServer('Player101')
+//     let popUpFrame = document.querySelector('#popUpFrame')
+//     popUpFrame.style = 'left: 40px; top:-45px;'
 
-    //temporary testing
+//     popUpFrame.innerHTML = ` 
+//      <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">X</button> </div><iframe id="innerFrameContent" src="./playerInfo.html"></iframe> </div>`
 
+//     let closeButton = document.querySelector('#closeButton');
+//     closeButton.addEventListener("click", () => {
+//         popUpFrame.innerHTML = ''
+//     })
 
-    console.log(Object.keys(gameItemList))
-    console.log(scoreCheckingGroups)
+// })
 
-
-})
-
-
-let playerInfoButton = document.querySelector('#playerInfoButton');
-playerInfoButton.addEventListener("click", () => {
-
-    //temporary testing
-
-    let popUpFrame= document.querySelector('#popUpFrame')
-    popUpFrame.style ='left: 40px; top:-45px;'
-
-    popUpFrame.innerHTML = ` 
-     <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">X</button> </div><iframe id="innerFrameContent" src="./playerInfo.html"></iframe> </div>`
-
-    let closeButton = document.querySelector('#closeButton');
-    closeButton.addEventListener("click", () => {
-        popUpFrame.innerHTML =''
-    })
-
-
-})
-
+// button for popUP of ranking page
 let rankingButton = document.querySelector('#rankingButton');
 rankingButton.addEventListener("click", () => {
 
-    //temporary testing
-
-    let popUpFrame= document.querySelector('#popUpFrame')
-    popUpFrame.style ='left: 40px; top:-45px;'
+    let popUpFrame = document.querySelector('#popUpFrame')
+    popUpFrame.style = 'left: 40px; top:-45px;'
 
     popUpFrame.innerHTML = ` 
      <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">X</button> </div><iframe id="innerFrameContent" src="./ranking.html"></iframe> </div>`
 
     let closeButton = document.querySelector('#closeButton');
     closeButton.addEventListener("click", () => {
-        popUpFrame.innerHTML =''
+        popUpFrame.innerHTML = ''
     })
-
 
 })
 
+
+// button for save to server
+let saveToServerButton = document.querySelector('#saveToServer');
+saveToServerButton.addEventListener("click", () => {
+    saveToServer('Player101')
+
+    //temporary testing
+
+
+    console.log(Object.keys(gameItemList))
+    console.log(scoreCheckingGroups)
+    console.log(gameItemList)
+
+
+})
