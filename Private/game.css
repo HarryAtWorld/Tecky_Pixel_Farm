@@ -52,14 +52,17 @@ body{
     justify-content:space-between;
     align-items: center;   
     position: relative;   
+    
 }
 
 /*==========hided pop up iFrame=============*/
 #popUpFrame{
     position: absolute; 
-    left: 40px;
-    top: -45px;
-    z-index: 50;    
+    /* left: 40px;
+    top: -45px; */
+    z-index: 50;
+    display: flex; 
+    justify-items: center;   
        
 }
 #innerFrame{
@@ -71,6 +74,19 @@ body{
     border-radius: 10px;
     background-color: rgb(240, 240, 240);
     padding: 20px;
+    
+    
+}
+#loginPopUp{
+    
+    height: 300px;
+    width:600px;
+    /* background-color: rgb(255, 255, 255); */
+    border: solid 2px rgb(243, 0, 0);
+    border-radius: 10px;
+    background-color: rgb(240, 240, 240);
+    padding: 20px;
+    text-align: center;
     
     
 }
@@ -183,7 +199,7 @@ body{
 
 #rightControlPanel button{
     min-height: 70px;
-    width: fit-content;
+    min-width: 70px;
     margin: 20px 5px 0px 5px;   
     border-radius: 10px;
 }

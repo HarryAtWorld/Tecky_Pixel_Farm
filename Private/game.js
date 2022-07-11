@@ -106,7 +106,10 @@ const house = new Image();
 mapTiles.onload = () => {
     trees.onload = () => {
         plantTiles.onload = () => {
-            house.onload = drawWorld;
+            house.onload = ()=>{
+                drawWorld();
+                loginMessage();
+            } 
             house.src = './gameImages/house/houseImage.png'
         }
         plantTiles.src = './gameImages/plants/plantsImage.png';
@@ -121,6 +124,23 @@ function drawWorld() {
     drawGroundEdge()
     drawPlants()
     randomGroupingPlants
+}
+
+function loginMessage(){
+    let popUpFrame= document.querySelector('#popUpFrame')
+
+    popUpFrame.style ='left: 400px; top:100px;'
+
+    popUpFrame.innerHTML = ` 
+     <div id="loginPopUp"> 
+     <div id="closeButtonArea"><button id="closeButton">X</button></div>
+     <div><h1>Welcome Back</h1></div>
+     </div>`
+
+    let closeButton = document.querySelector('#closeButton');
+    closeButton.addEventListener("click", () => {
+        popUpFrame.innerHTML =''
+    })
 }
 
 //===================================================SET UP CLASS===============================
@@ -864,6 +884,9 @@ for (let i = 0; i < Object.keys(scoreCheckingGroups).length; i++) {
             showTextToItems(checkingGroup)
 
             // add score action here
+            gameScore += scoreCheckingGroups[checkingGroup].length*1
+            displayScore.innerText = `Score:${gameScore}`
+            
             //change plant stage here
 
         }, 10000)
@@ -889,7 +912,8 @@ function showTextToItems(checkingGroup) {
             ctxLayer40.font = "12px Arial";
             clearLayer(ctxLayer40)
             for (let key of scoreCheckingGroups[checkingGroup]) {
-                ctxLayer40.fillText(`Y${gameItemList[key].y}`, gameItemList[key].x * 16, gameItemList[key].y * 16 - yMove + 16)
+                ctxLayer40.fillText(`+1`, gameItemList[key].x * 16, gameItemList[key].y * 16 - yMove + 16)
+                
             }
 
         } else {
@@ -1040,6 +1064,7 @@ playerInfoButton.addEventListener("click", () => {
     //temporary testing
 
     let popUpFrame= document.querySelector('#popUpFrame')
+    popUpFrame.style ='left: 40px; top:-45px;'
 
     popUpFrame.innerHTML = ` 
      <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">X</button> </div><iframe id="innerFrameContent" src="./playerInfo.html"></iframe> </div>`
@@ -1058,6 +1083,7 @@ rankingButton.addEventListener("click", () => {
     //temporary testing
 
     let popUpFrame= document.querySelector('#popUpFrame')
+    popUpFrame.style ='left: 40px; top:-45px;'
 
     popUpFrame.innerHTML = ` 
      <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">X</button> </div><iframe id="innerFrameContent" src="./ranking.html"></iframe> </div>`
