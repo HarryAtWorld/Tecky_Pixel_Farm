@@ -1,7 +1,5 @@
 window.onload = async () => {
   loadUserName();
-  initChangeUserName();
-  initChangePassWord();
 }
 
 async function loadUserName() {
