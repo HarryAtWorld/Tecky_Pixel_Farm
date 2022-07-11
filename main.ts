@@ -60,19 +60,24 @@ app.use((req, res, next) => {
 // Router handler
 import { loginRoutes } from "./routers/loginRoutes";
 app.use(loginRoutes);
+import { friendRoutes } from "./routers/addFriendRoutes";
+app.use("/friend", friendRoutes);
 import { rankingRoutes } from "./routers/rankingRoutes";
 app.use("/allPlayerRank", rankingRoutes);
 import { userinfoRoutes } from "./routers/userInfoRoutes";
 app.use("/userInfo", userinfoRoutes);
 import { friendRankRoutes } from "./routers/friendRankRoutes";
 app.use("/friendRank", friendRankRoutes);
+//  edit_name
 import { edit_name } from "./routers/editNameRoutes";
 app.use("/name", edit_name);
 import { edit_password } from "./routers/editPasswordRoutes";
 app.use("/password", edit_password);
+import { logoutRoute } from "./routers/logoutRoutes";
+app.use("/logout", logoutRoute);
 import { plantsRoutes } from "./routers/plantsRoutes";
-app.use("/requestRecord",plantsRoutes);
-app.use("/updateItem",plantsRoutes);
+app.use("/requestRecord", plantsRoutes);
+app.use("/updateItem", plantsRoutes);
 
 // express Static
 app.use(express.static(path.join(__dirname, "Public")));

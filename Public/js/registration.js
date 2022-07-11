@@ -11,6 +11,8 @@ function initRegisterForm() {
     const user_name = form.user_name.value;
     const login_account = form.login_account.value;
     const login_password = form.login_password.value;
+    const login_password_confirm = form.login_password_confirm.value;
+    if(login_password === login_password_confirm) {
     const resp = await fetch("/register", {
       method: "POST",
       headers: {
@@ -26,6 +28,8 @@ function initRegisterForm() {
     } else {
      alert(result.message);
       window.location.href = "./login.html";
+    }}else {
+      alert("Password does not match");
     }
   });
 }
