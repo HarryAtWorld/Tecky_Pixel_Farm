@@ -3,7 +3,7 @@ const recordTime = Date.now()
 
 // map grid to be 32X32 as 1 unit
 const gameBaseGridSize = 32
-const gameXGridNumber = 21 
+const gameXGridNumber = 21
 const gameYGridNumber = 10
 const gameImagesAreaHeight = gameBaseGridSize * gameYGridNumber //17*32 = 544 should match with css
 const gameImagesAreaWidth = gameBaseGridSize * gameXGridNumber //42*32 = 1344 should match with css
@@ -107,9 +107,9 @@ mapTiles.onload = () => {
     trees.onload = () => {
         plantTiles.onload = () => {
             house.onload = () => {
-                requestRecordFromServer()
-                drawWorld();
-                loginMessage();
+                requestRecordAndDrawWorld()
+
+
             }
             house.src = './gameImages/house/houseImage.png'
         }
@@ -120,14 +120,21 @@ mapTiles.onload = () => {
 mapTiles.src = './gameImages/map/island.png';
 
 
-async function requestRecordFromServer() {
+async function requestRecordAndDrawWorld() {
     const requestRecord = await fetch(`/requestRecord/`, {
         method: "get"
     });
     const result = await requestRecord.json();
-    if (result.message) {
-        console.log(result.message);
+
+    if (result) {
+        console.log(result);
     }
+
+    mapTileList = result.map
+    gameItemList = result.game_item_record
+
+    drawWorld();
+    loginMessage();
 }
 
 
@@ -188,7 +195,7 @@ const rightEdge = new cutMapTile('rightEdge', 2, 1, 16, 1)
 
 // stage 1 to 3 is life ,stage 4 is die.
 class cutPlantTile {
-    constructor(name,s0X, s0Y, s1X, s1Y, s2X, s2Y, s3X, s3Y, size) {
+    constructor(name, s0X, s0Y, s1X, s1Y, s2X, s2Y, s3X, s3Y, size) {
         this.name = name
         this.stage0cutX = s0X;
         this.stage0cutY = s0Y;
@@ -202,19 +209,19 @@ class cutPlantTile {
     }
 }
 
-const carrot = new cutPlantTile('carrot',1, 0, 3, 0, 5, 0, 0, 33, 16)
-const corn = new cutPlantTile('corn',1, 4, 3, 4, 5, 4, 0, 33, 16)
-const yellow_flower = new cutPlantTile('yellow_flower',1, 33, 3, 33, 4, 33, 0, 33, 16)
-const red_flower = new cutPlantTile('red_flower',1, 18, 3, 18, 4, 18, 0, 33, 16)
-const blue_flower = new cutPlantTile('blue_flower',1, 16, 3, 16, 4, 16, 0, 33, 16)
-const pumpkin = new cutPlantTile('pumpkin',1, 3, 3, 3, 5, 3, 0, 33, 16)
-const lettuce = new cutPlantTile('lettuce',1, 8, 3, 8, 5, 8, 0, 33, 16)
+const carrot = new cutPlantTile('carrot', 1, 0, 3, 0, 5, 0, 0, 33, 16)
+const corn = new cutPlantTile('corn', 1, 4, 3, 4, 5, 4, 0, 33, 16)
+const yellow_flower = new cutPlantTile('yellow_flower', 1, 33, 3, 33, 4, 33, 0, 33, 16)
+const red_flower = new cutPlantTile('red_flower', 1, 18, 3, 18, 4, 18, 0, 33, 16)
+const blue_flower = new cutPlantTile('blue_flower', 1, 16, 3, 16, 4, 16, 0, 33, 16)
+const pumpkin = new cutPlantTile('pumpkin', 1, 3, 3, 3, 5, 3, 0, 33, 16)
+const lettuce = new cutPlantTile('lettuce', 1, 8, 3, 8, 5, 8, 0, 33, 16)
 
 
 class plantingBox {
-    constructor(plantType, createTime, stage, locationX, locationY) {
+    constructor(plantType, timeNow, stage, locationX, locationY) {
         this.plantType = plantType;
-        this.createTime = createTime
+        this.stageChangeAt = timeNow
         this.stage = stage;
         this.x = locationX
         this.y = locationY
@@ -223,7 +230,7 @@ class plantingBox {
 
 
 class cutTreeFrames {
-    constructor(name,f0X, f0Y, f1X, f1Y, f2X, f2Y, f3X, f3Y, size) {
+    constructor(name, f0X, f0Y, f1X, f1Y, f2X, f2Y, f3X, f3Y, size) {
         this.name = name
         this.frame0cutX = f0X;
         this.frame0cutY = f0Y;
@@ -237,12 +244,12 @@ class cutTreeFrames {
     }
 }
 
-const green_trees = new cutTreeFrames('green_trees',0, 3, 1, 3, 2, 3, 3, 3, 32)
-const brown_trees = new cutTreeFrames('brown_trees',0, 5, 1, 5, 2, 5, 3, 5, 32)
+const green_trees = new cutTreeFrames('green_trees', 0, 3, 1, 3, 2, 3, 3, 3, 32)
+const brown_trees = new cutTreeFrames('brown_trees', 0, 5, 1, 5, 2, 5, 3, 5, 32)
 
 
 class cutHouseTile {
-    constructor(name,X, Y, size) {
+    constructor(name, X, Y, size) {
         this.name = name
         this.cutLocationX = X;
         this.cutLocationY = Y;
@@ -257,24 +264,24 @@ const big_house = new cutHouseTile(1, 0, 94)
 
 // ===================================SET UP A MAP GRID ===================================================
 
-for (let x = 0; x < gameXGridNumber; x++) {
-    mapTileList.push([])
-}
-for (let x = 0; x < gameXGridNumber; x++) {
-    for (let y = 0; y < gameYGridNumber; y++) {
+// for (let x = 0; x < gameXGridNumber; x++) {
+//     mapTileList.push([])
+// }
+// for (let x = 0; x < gameXGridNumber; x++) {
+//     for (let y = 0; y < gameYGridNumber; y++) {
 
-        mapTileList[x][y] = sea
-    }
-}
+//         mapTileList[x][y] = sea
+//     }
+// }
 
 // add the first land
-mapTileList[5][5] = ground
+// mapTileList[5][5] = ground
 // add the first plant
-gameItemList[`x${10}y${10}`] = new plantingBox(carrot, Date.now(), 2, 10, 10)
-gameItemList[`x${11}y${11}`] = new plantingBox(carrot, Date.now(), 2, 11, 11)
+// gameItemList[`x${10}y${10}`] = new plantingBox(carrot, Date.now(), 2, 10, 10)
+// gameItemList[`x${11}y${11}`] = new plantingBox(carrot, Date.now(), 2, 11, 11)
 //add the plant to score checking group
-scoreCheckingGroups['group0'].push(`x${10}y${10}`)
-scoreCheckingGroups['group1'].push(`x${11}y${11}`)
+// scoreCheckingGroups['group0'].push(`x${10}y${10}`)
+// scoreCheckingGroups['group1'].push(`x${11}y${11}`)
 
 // ==============SET UP A MAP GRID END =================================================================
 
@@ -548,8 +555,8 @@ function highLightAddPlant(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer20.clientLeft) / (showGridSize*2));
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer20.clientTop) / (showGridSize*2));
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer20.clientLeft) / (showGridSize * 2));
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer20.clientTop) / (showGridSize * 2));
 
     //clear previous highlight 
     ctxLayer20.clearRect(0, 0, gameDisplayLayer20.width, gameDisplayLayer20.height)
@@ -593,8 +600,8 @@ function highLightRemovePlant(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer20.clientLeft) / (showGridSize*2));
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer20.clientTop) / (showGridSize*2));
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer20.clientLeft) / (showGridSize * 2));
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer20.clientTop) / (showGridSize * 2));
 
     //clear previous highlight 
     ctxLayer20.clearRect(0, 0, gameDisplayLayer20.width, gameDisplayLayer20.height)
@@ -625,8 +632,8 @@ function highLightAddLand(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer20.clientLeft) / (showGridSize*2));
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer20.clientTop) / (showGridSize*2));
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer20.clientLeft) / (showGridSize * 2));
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer20.clientTop) / (showGridSize * 2));
 
     //clear previous highlight 
     ctxLayer20.clearRect(0, 0, gameDisplayLayer20.width, gameDisplayLayer20.height)
@@ -657,8 +664,8 @@ function highLightRemoveLand(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer20.clientLeft) / (showGridSize*2));
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer20.clientTop) / (showGridSize*2));
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer20.clientLeft) / (showGridSize * 2));
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer20.clientTop) / (showGridSize * 2));
 
     //clear previous highlight 
     ctxLayer20.clearRect(0, 0, gameDisplayLayer20.width, gameDisplayLayer20.height)
@@ -696,8 +703,8 @@ function addLand(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer0.clientLeft) / (showGridSize*2));
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer0.clientTop) / (showGridSize*2));
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer0.clientLeft) / (showGridSize * 2));
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer0.clientTop) / (showGridSize * 2));
 
     //check if mouse in un available area
     if (mouseXGrid <= 0 || mouseYGrid <= 0 || mouseXGrid + 1 >= mapTileList.length || mouseYGrid + 1 >= mapTileList[mouseXGrid].length) {
@@ -726,8 +733,8 @@ function removeLand(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer0.clientLeft) / (showGridSize*2));
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer0.clientTop) / (showGridSize*2));
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer0.clientLeft) / (showGridSize * 2));
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer0.clientTop) / (showGridSize * 2));
 
     //check if mouse in un available area
     if (mouseXGrid <= 0 || mouseYGrid <= 0 || mouseXGrid + 1 >= mapTileList.length || mouseYGrid + 1 >= mapTileList[mouseXGrid].length) {
@@ -751,8 +758,8 @@ function addPlant(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer10.clientLeft) / (showGridSize*2));
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer10.clientTop) / (showGridSize*2));
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer10.clientLeft) / (showGridSize * 2));
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer10.clientTop) / (showGridSize * 2));
 
     //check if mouse in un available area
     if (Math.floor(mouseXGrid / (gameBaseGridSize / showGridSize)) <= 0 || Math.floor(mouseYGrid / (gameBaseGridSize / showGridSize)) <= 0 || Math.floor(mouseXGrid / (gameBaseGridSize / showGridSize)) + 1 >= gameXGridNumber || Math.floor(mouseYGrid / (gameBaseGridSize / showGridSize)) + 1 >= gameYGridNumber) {
@@ -783,8 +790,8 @@ function removePlant(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer10.clientLeft) / (showGridSize*2));
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer10.clientTop) / (showGridSize*2));
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer10.clientLeft) / (showGridSize * 2));
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer10.clientTop) / (showGridSize * 2));
 
     if (gameItemList[`x${mouseXGrid}y${mouseYGrid}`]) {
 
@@ -807,16 +814,19 @@ function removePlant(event) {
 
 
 //send player information JSON to server.
-async function saveToServer(userName) {
+async function saveToServer() {
     // const content = {};
     const requestRecord = await fetch(`/updateItem`, {
         method: "put",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({'user_name':userName, 'map':mapTileList, 'game_item_record':gameItemList}),
+        body: JSON.stringify({ 'map': mapTileList, 'game_item_record': gameItemList }),
     });
+
     const result = await requestRecord.json();
+
+
     if (result.message) {
         console.log(result.message);
     }
@@ -1105,9 +1115,9 @@ saveToServerButton.addEventListener("click", () => {
     //temporary testing
 
 
-    console.log(Object.keys(gameItemList))
-    console.log(scoreCheckingGroups)
-    console.log(gameItemList)
+    // console.log(Object.keys(gameItemList))
+    // console.log(scoreCheckingGroups)
+    // console.log(gameItemList)
 
 
 })

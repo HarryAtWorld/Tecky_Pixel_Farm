@@ -1,28 +1,46 @@
 import express from "express";
+import fs from "fs"
+import path from "path";
 
 //@ts-ignore
 import type { Request, Response } from "express";
 //@ts-ignore
 import { client } from "../main";
 
+
 export const plantsRoutes = express.Router();
 
 
+//provide JSON record to player
+plantsRoutes.get("/", (req, res) => {
+  console.log('login !received by get! Test');
+  const user = req.session["user"]
+  // res.json({ message: 'this will be game items json' })
+  res.sendFile(path.join(__dirname, `../gameJson/${user.id}.json`))
+});
 
-plantsRoutes.get("/", (req,res)=>{
-  console.log( 'login !received by get! Test');;
-  res.json({ message:'this will be game items json' })
 
-} );
 
-plantsRoutes.put("/", (req,res)=>{
 
-  console.log( 'update received by put! Test');
+//Update & save JSON from player
+plantsRoutes.put("/", (req, res) => {
 
-  console.log(Object.keys(req.body.game_item_record).length);
-  res.json({ message:'this will be game items json' })
+  console.log('update received by put! Test');
 
-} );
+  console.log(Object.keys(req.body));
+  const user = req.session["user"]
+
+  // console.log(user)
+  const tempContent =  req.body
+  let contentToWrite = JSON.stringify(tempContent)
+  // console.log(contentToWrite);
+  fs.writeFileSync(`./gameJson/${user.id}.json`, contentToWrite,{flag:'w'});
+
+  res.json({message:'saved!'})
+
+
+});
+
 
 
 // plantsRoutes.get("/", calculateScore);
