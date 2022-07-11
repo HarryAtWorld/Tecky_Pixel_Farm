@@ -4,7 +4,7 @@ import { client } from "../main";
 
 export const edit_name = express.Router();
 
-edit_name.patch("/", changeName);
+edit_name.put("/", changeName);
 
 // routers of edit user name
 async function changeName(req: Request, res: Response) {
@@ -12,11 +12,6 @@ async function changeName(req: Request, res: Response) {
   const user = req.session["user"];
   const new_name = req.body;
   console.log(user);
-  // const result = client.query(`select * from user_info where id = $1`,[
-  //     user.id
-  // ])
-
-  // check if no cookies no action
   if (!user) {
     return;
   }
@@ -27,6 +22,7 @@ async function changeName(req: Request, res: Response) {
   ]);
 
   if (!check_same_user_name) {
+    console.log("have same user name already");
     return;
   } else {
     // update query
