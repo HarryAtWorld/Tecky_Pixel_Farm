@@ -9,3 +9,6 @@ DELETE from relationship;
 DELETE from game_farm_data;
 delete from user_status;
 DELETE from user_info;
+
+insert into relationship (user_id_a, user_id_b)
+VALUES (1, 2);

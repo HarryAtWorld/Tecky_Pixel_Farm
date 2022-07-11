@@ -60,12 +60,14 @@ import { loginRoutes } from "./routers/loginRoutes";
 app.use(loginRoutes);
 import { rankingRoutes } from "./routers/rankingRoutes";
 app.use("/allPlayerRank", rankingRoutes);
+import { userinfoRoutes } from "./routers/userInfoRoutes";
+app.use("/userInfo", userinfoRoutes);
 import { friendRankRoutes } from "./routers/friendRankRoutes";
 app.use("/friendRank", friendRankRoutes);
 import { edit_name } from "./routers/editNameRoutes";
-app.use("/edit_name", edit_name);
+app.use("/name", edit_name);
 import { edit_password } from "./routers/editPasswordRoutes";
-app.use("./edit_password", edit_password);
+app.use("/password", edit_password);
 
 // express Static
 app.use(express.static(path.join(__dirname, "Public")));
