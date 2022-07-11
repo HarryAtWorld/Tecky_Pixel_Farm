@@ -13,7 +13,7 @@
 <body>
 
     <div class="container emp-profile">
-        <form method="post">
+        <div>
             <div class="row">
                 <div class="col-md-4">
                     <div class="profile-img">
@@ -38,6 +38,7 @@
                             <li class="nav-item">
                                 <a class="nav-link active" id="home-tab" data-toggle="tab" role="tab"
                                     aria-controls="home" aria-selected="true">About</a>
+                                    
                             </li>
                             <!-- <li class="nav-item">
                                 <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
@@ -59,7 +60,7 @@
                     <p>Friend List</p>
                     <div class="profile-work">
                         <!-- <p>Friend List</p> -->
-
+                        
                     </div>
                 </div>
                 <div class="col-md-8">
@@ -95,15 +96,20 @@
                                         
                                     </div>
                                 </div>
+                                
+                                
                             </div>
-                            <!-- <div class="row">
+                            <div class="row">
                                 <div class="col-md-6">
-                                    <label>Phone</label>
+                                    <label>Add friends</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <p>123 456 7890</p>
+                                    <form id="addfriends">
+                                        <input type="text" name="friendName" placeholder="Friend name" />
+                                        <input type="submit" name="AddFriend" value="Add Friend" />
+                                    </form>
                                 </div>
-                            </div> -->
+                            </div>
                             <!-- <div class="row">
                                 <div class="col-md-6">
                                     <label>Profession</label>
@@ -164,7 +170,7 @@
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
     <script src="./playerInfo.js"> </script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>

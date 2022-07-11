@@ -11,4 +11,4 @@ delete from user_status;
 DELETE from user_info;
 
 insert into relationship (user_id_a, user_id_b)
-VALUES (1, 2);
+VALUES (2, 3);
