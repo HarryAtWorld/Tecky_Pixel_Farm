@@ -1,7 +1,5 @@
 window.onload = async () => {
     loadUserName();
-    initChangeUserName();
-    initChangePassWord();
  }
  
  async function loadUserName() {
@@ -29,10 +27,11 @@ window.onload = async () => {
       if (!result.success) {
         alert(result.message);
         
+        
     
       } else {
        alert(result.message);
-        
+       window.location.href="./editProfile.html";
       }
     });
  }
@@ -57,7 +56,7 @@ window.onload = async () => {
     
       } else {
        alert(result.message);
-        
+       window.location.href="./editProfile.html";
       }
     });
  }
