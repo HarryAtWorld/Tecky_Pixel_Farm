@@ -108,8 +108,6 @@ mapTiles.onload = () => {
         plantTiles.onload = () => {
             house.onload = () => {
                 requestRecordAndDrawWorld()
-
-
             }
             house.src = './gameImages/house/houseImage.png'
         }
@@ -142,7 +140,8 @@ function drawWorld() {
     drawGround()
     drawGroundEdge()
     drawPlants()
-    randomGroupingPlants
+    randomGroupingPlants()
+    
 }
 
 //popUp message when enter game page
@@ -372,8 +371,10 @@ function drawPlants() {
 
     for (let key of sortedKeys) {
         drawPlantingBox(gameItemList[key].plantType, gameItemList[key].stage, gameItemList[key].x, gameItemList[key].y)
+
     }
 }
+
 
 
 // checking the map tiles and draw the edge map tiles

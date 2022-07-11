@@ -16,6 +16,12 @@ plantsRoutes.get("/", (req, res) => {
   console.log('login !received by get! Test');
   const user = req.session["user"]
   // res.json({ message: 'this will be game items json' })
+
+  //for new player, check if json existing, if not , copy the template 
+  if (!fs.existsSync(path.join(__dirname, `../gameJson/${user.id}.json`))) {
+    fs.copyFileSync(path.join(__dirname, `../gameJson/template.json`), path.join(__dirname, `../gameJson/${user.id}.json`));
+  }
+
   res.sendFile(path.join(__dirname, `../gameJson/${user.id}.json`))
 });
 
@@ -30,14 +36,17 @@ plantsRoutes.put("/", (req, res) => {
   console.log(Object.keys(req.body));
   const user = req.session["user"]
 
-  // console.log(user)
-  const tempContent =  req.body
-  let contentToWrite = JSON.stringify(tempContent)
+  // add the received time
+  req.body.lastCheckingTime = Date.now()
+
+  // const tempContent =  req.body
+  // console.log(tempContent);
+
+  let contentToWrite = JSON.stringify(req.body)
   // console.log(contentToWrite);
-  fs.writeFileSync(`./gameJson/${user.id}.json`, contentToWrite,{flag:'w'});
+  fs.writeFileSync(`./gameJson/${user.id}.json`, contentToWrite, { flag: 'w' });
 
-  res.json({message:'saved!'})
-
+  res.json({ message: 'saved!' })
 
 });
 
