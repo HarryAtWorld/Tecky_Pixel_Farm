@@ -58,6 +58,8 @@ app.use((req, res, next) => {
 // Router handler
 import { loginRoutes } from "./routers/loginRoutes";
 app.use(loginRoutes);
+import { friendRoutes } from "./routers/addFriendRoutes";
+app.use("/friend", friendRoutes);
 import { rankingRoutes } from "./routers/rankingRoutes";
 app.use("/allPlayerRank", rankingRoutes);
 import { userinfoRoutes } from "./routers/userInfoRoutes";

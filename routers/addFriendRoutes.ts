@@ -5,7 +5,7 @@ import { client } from "../main";
 
 export const friendRoutes = express.Router();
 
-friendRoutes.patch("/friend", addFriend);
+friendRoutes.post("/", addFriend);
 
 async function addFriend(req: Request, res: Response) {
   const user = req.session["user"];
