@@ -1,7 +1,7 @@
 window.onload = async () => {
     loadUserName();
-    // initChangeUserName();
-    // initChangePassWord();
+    initChangeUserName();
+    initChangePassWord();
  }
  
  async function loadUserName() {
@@ -16,6 +16,7 @@ window.onload = async () => {
       e.preventDefault();
       const form = e.target;
       const user_name = form.changeUsername.value;
+      console.log(user_name);
       
       const resp = await fetch("/name", {
         method: "PATCH",
