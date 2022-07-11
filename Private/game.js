@@ -188,8 +188,8 @@ const rightEdge = new cutMapTile('rightEdge', 2, 1, 16, 1)
 
 // stage 1 to 3 is life ,stage 4 is die.
 class cutPlantTile {
-    constructor(s0X, s0Y, s1X, s1Y, s2X, s2Y, s3X, s3Y, size) {
-
+    constructor(name,s0X, s0Y, s1X, s1Y, s2X, s2Y, s3X, s3Y, size) {
+        this.name = name
         this.stage0cutX = s0X;
         this.stage0cutY = s0Y;
         this.stage1cutX = s1X;
@@ -202,13 +202,13 @@ class cutPlantTile {
     }
 }
 
-const carrot = new cutPlantTile(1, 0, 3, 0, 5, 0, 0, 33, 16)
-const corn = new cutPlantTile(1, 4, 3, 4, 5, 4, 0, 33, 16)
-const yellow_flower = new cutPlantTile(1, 33, 3, 33, 4, 33, 0, 33, 16)
-const red_flower = new cutPlantTile(1, 18, 3, 18, 4, 18, 0, 33, 16)
-const blue_flower = new cutPlantTile(1, 16, 3, 16, 4, 16, 0, 33, 16)
-const pumpkin = new cutPlantTile(1, 3, 3, 3, 5, 3, 0, 33, 16)
-const lettuce = new cutPlantTile(1, 8, 3, 8, 5, 8, 0, 33, 16)
+const carrot = new cutPlantTile('carrot',1, 0, 3, 0, 5, 0, 0, 33, 16)
+const corn = new cutPlantTile('corn',1, 4, 3, 4, 5, 4, 0, 33, 16)
+const yellow_flower = new cutPlantTile('yellow_flower',1, 33, 3, 33, 4, 33, 0, 33, 16)
+const red_flower = new cutPlantTile('red_flower',1, 18, 3, 18, 4, 18, 0, 33, 16)
+const blue_flower = new cutPlantTile('blue_flower',1, 16, 3, 16, 4, 16, 0, 33, 16)
+const pumpkin = new cutPlantTile('pumpkin',1, 3, 3, 3, 5, 3, 0, 33, 16)
+const lettuce = new cutPlantTile('lettuce',1, 8, 3, 8, 5, 8, 0, 33, 16)
 
 
 class plantingBox {
@@ -223,7 +223,8 @@ class plantingBox {
 
 
 class cutTreeFrames {
-    constructor(f0X, f0Y, f1X, f1Y, f2X, f2Y, f3X, f3Y, size) {
+    constructor(name,f0X, f0Y, f1X, f1Y, f2X, f2Y, f3X, f3Y, size) {
+        this.name = name
         this.frame0cutX = f0X;
         this.frame0cutY = f0Y;
         this.frame1cutX = f1X;
@@ -236,12 +237,13 @@ class cutTreeFrames {
     }
 }
 
-const green_trees = new cutTreeFrames(0, 3, 1, 3, 2, 3, 3, 3, 32)
-const brown_trees = new cutTreeFrames(0, 5, 1, 5, 2, 5, 3, 5, 32)
+const green_trees = new cutTreeFrames('green_trees',0, 3, 1, 3, 2, 3, 3, 3, 32)
+const brown_trees = new cutTreeFrames('brown_trees',0, 5, 1, 5, 2, 5, 3, 5, 32)
 
 
 class cutHouseTile {
-    constructor(X, Y, size) {
+    constructor(name,X, Y, size) {
+        this.name = name
         this.cutLocationX = X;
         this.cutLocationY = Y;
         this.size = size
