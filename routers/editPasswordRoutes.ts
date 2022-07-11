@@ -8,7 +8,7 @@ export const edit_password = express.Router();
 
 edit_password.patch("/", changePassword);
 
-function changePassword(req: Request, res: Response) {
+async function changePassword(req: Request, res: Response) {
   const user = req.session["user"];
   if (!user) {
     return;
@@ -16,14 +16,14 @@ function changePassword(req: Request, res: Response) {
   const new_password = req.body;
   console.log(`this is new_password`);
   console.log(new_password);
-  const insert_new_name = new_password.password;
-  console.log(`this is insert_new_name`);
-  console.log(insert_new_name);
-  if (!insert_new_name) {
+  const insert_new_password = new_password.login_password;
+  console.log(`this is insert_new_password`);
+  console.log(insert_new_password);
+  const hashedPassword = await hashingPassword(insert_new_password);
+  if (!insert_new_password) {
     res.status(400).json({ message: "Please enter a new password" });
     return;
   } else {
-    const hashedPassword = hashingPassword(insert_new_name);
     client.query(`update user_info set login_password = $1 where id = $2`, [
       hashedPassword,
       user.id,
