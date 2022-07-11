@@ -1,10 +1,13 @@
 import express from "express";
+
 //@ts-ignore
 import type { Request, Response } from "express";
 //@ts-ignore
 import { client } from "../main";
 
 export const plantsRoutes = express.Router();
+
+
 
 plantsRoutes.get("/", (req,res)=>{
   console.log( 'login !received by get! Test');;
@@ -13,8 +16,10 @@ plantsRoutes.get("/", (req,res)=>{
 } );
 
 plantsRoutes.put("/", (req,res)=>{
+
   console.log( 'update received by put! Test');
-  console.log(req.body.game_item_record);
+
+  console.log(Object.keys(req.body.game_item_record).length);
   res.json({ message:'this will be game items json' })
 
 } );

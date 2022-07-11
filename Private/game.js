@@ -3,8 +3,8 @@ const recordTime = Date.now()
 
 // map grid to be 32X32 as 1 unit
 const gameBaseGridSize = 32
-const gameXGridNumber = 42
-const gameYGridNumber = 17
+const gameXGridNumber = 21 
+const gameYGridNumber = 10
 const gameImagesAreaHeight = gameBaseGridSize * gameYGridNumber //17*32 = 544 should match with css
 const gameImagesAreaWidth = gameBaseGridSize * gameXGridNumber //42*32 = 1344 should match with css
 
@@ -142,7 +142,7 @@ function drawWorld() {
 function loginMessage() {
     let popUpFrame = document.querySelector('#popUpFrame')
 
-    popUpFrame.style = 'left: 400px; top:100px;'
+    popUpFrame.style = 'left: 560px; top:150px;'
 
     popUpFrame.innerHTML = ` 
      <div id="loginPopUp"> 
@@ -268,13 +268,13 @@ for (let x = 0; x < gameXGridNumber; x++) {
 }
 
 // add the first land
-mapTileList[21][8] = ground
+mapTileList[5][5] = ground
 // add the first plant
-gameItemList[`x${42}y${16}`] = new plantingBox(carrot, Date.now(), 2, 42, 16)
-gameItemList[`x${43}y${17}`] = new plantingBox(carrot, Date.now(), 2, 43, 17)
+gameItemList[`x${10}y${10}`] = new plantingBox(carrot, Date.now(), 2, 10, 10)
+gameItemList[`x${11}y${11}`] = new plantingBox(carrot, Date.now(), 2, 11, 11)
 //add the plant to score checking group
-scoreCheckingGroups['group0'].push(`x${42}y${16}`)
-scoreCheckingGroups['group1'].push(`x${43}y${17}`)
+scoreCheckingGroups['group0'].push(`x${10}y${10}`)
+scoreCheckingGroups['group1'].push(`x${11}y${11}`)
 
 // ==============SET UP A MAP GRID END =================================================================
 
@@ -548,8 +548,8 @@ function highLightAddPlant(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer20.clientLeft) / showGridSize);
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer20.clientTop) / showGridSize);
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer20.clientLeft) / (showGridSize*2));
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer20.clientTop) / (showGridSize*2));
 
     //clear previous highlight 
     ctxLayer20.clearRect(0, 0, gameDisplayLayer20.width, gameDisplayLayer20.height)
@@ -593,8 +593,8 @@ function highLightRemovePlant(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer20.clientLeft) / showGridSize);
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer20.clientTop) / showGridSize);
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer20.clientLeft) / (showGridSize*2));
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer20.clientTop) / (showGridSize*2));
 
     //clear previous highlight 
     ctxLayer20.clearRect(0, 0, gameDisplayLayer20.width, gameDisplayLayer20.height)
@@ -625,8 +625,8 @@ function highLightAddLand(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer20.clientLeft) / showGridSize);
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer20.clientTop) / showGridSize);
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer20.clientLeft) / (showGridSize*2));
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer20.clientTop) / (showGridSize*2));
 
     //clear previous highlight 
     ctxLayer20.clearRect(0, 0, gameDisplayLayer20.width, gameDisplayLayer20.height)
@@ -657,8 +657,8 @@ function highLightRemoveLand(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer20.clientLeft) / showGridSize);
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer20.clientTop) / showGridSize);
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer20.clientLeft) / (showGridSize*2));
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer20.clientTop) / (showGridSize*2));
 
     //clear previous highlight 
     ctxLayer20.clearRect(0, 0, gameDisplayLayer20.width, gameDisplayLayer20.height)
@@ -696,8 +696,8 @@ function addLand(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer0.clientLeft) / showGridSize);
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer0.clientTop) / showGridSize);
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer0.clientLeft) / (showGridSize*2));
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer0.clientTop) / (showGridSize*2));
 
     //check if mouse in un available area
     if (mouseXGrid <= 0 || mouseYGrid <= 0 || mouseXGrid + 1 >= mapTileList.length || mouseYGrid + 1 >= mapTileList[mouseXGrid].length) {
@@ -726,8 +726,8 @@ function removeLand(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer0.clientLeft) / showGridSize);
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer0.clientTop) / showGridSize);
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer0.clientLeft) / (showGridSize*2));
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer0.clientTop) / (showGridSize*2));
 
     //check if mouse in un available area
     if (mouseXGrid <= 0 || mouseYGrid <= 0 || mouseXGrid + 1 >= mapTileList.length || mouseYGrid + 1 >= mapTileList[mouseXGrid].length) {
@@ -751,8 +751,8 @@ function addPlant(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer10.clientLeft) / showGridSize);
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer10.clientTop) / showGridSize);
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer10.clientLeft) / (showGridSize*2));
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer10.clientTop) / (showGridSize*2));
 
     //check if mouse in un available area
     if (Math.floor(mouseXGrid / (gameBaseGridSize / showGridSize)) <= 0 || Math.floor(mouseYGrid / (gameBaseGridSize / showGridSize)) <= 0 || Math.floor(mouseXGrid / (gameBaseGridSize / showGridSize)) + 1 >= gameXGridNumber || Math.floor(mouseYGrid / (gameBaseGridSize / showGridSize)) + 1 >= gameYGridNumber) {
@@ -783,8 +783,8 @@ function removePlant(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
 
     //covert to canvas XY gid, canvas left top to be 0,0. can direct use as index to mapTileList
-    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer10.clientLeft) / showGridSize);
-    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer10.clientTop) / showGridSize);
+    mouseXGrid = Math.floor(Math.round(event.clientX - bound.left - gameDisplayLayer10.clientLeft) / (showGridSize*2));
+    mouseYGrid = Math.floor(Math.round(event.clientY - bound.top - gameDisplayLayer10.clientTop) / (showGridSize*2));
 
     if (gameItemList[`x${mouseXGrid}y${mouseYGrid}`]) {
 
@@ -1084,7 +1084,7 @@ let rankingButton = document.querySelector('#rankingButton');
 rankingButton.addEventListener("click", () => {
 
     let popUpFrame = document.querySelector('#popUpFrame')
-    popUpFrame.style = 'left: 40px; top:-45px;'
+    popUpFrame.style = 'left: 40px; top:-40px;'
 
     popUpFrame.innerHTML = ` 
      <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">X</button> </div><iframe id="innerFrameContent" src="./ranking.html"></iframe> </div>`

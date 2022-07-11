@@ -15,7 +15,7 @@ body{
 
 
 #topPanel{
-    height: 60px;
+    height: 50px;
     width:1500px;
     margin: auto;
     background-color: white;
@@ -50,7 +50,7 @@ body{
     width:1520px;
     margin: auto;
     justify-content:space-between;
-    align-items: center;   
+    /* align-items: center;    */
     position: relative;   
     
 }
@@ -67,7 +67,7 @@ body{
 }
 #innerFrame{
     
-    height: 610px;
+    height: 640px;
     width:1400px;
     /* background-color: rgb(255, 255, 255); */
     border: solid 2px rgb(243, 0, 0);
@@ -79,8 +79,8 @@ body{
 }
 #loginPopUp{
     
-    height: 300px;
-    width:600px;
+    height: 250px;
+    width:400px;
     /* background-color: rgb(255, 255, 255); */
     border: solid 2px rgb(243, 0, 0);
     border-radius: 10px;
@@ -101,7 +101,7 @@ body{
 }
 
 #innerFrameContent{    
-    height: 595px;
+    height: 600px;
     width:1400px;  
     border: 0;    
     
@@ -110,35 +110,39 @@ body{
 /*==================game display ================*/
 
 #leftControlPanel{
-    height: 544px;
-    width: 80px;
+    height: 645px;
+    width: 75px;
     /* border: solid 1px rgb(33, 36, 221); */
     display: flexbox;
     background-color: white;
     border-radius: 10px;
+    margin-right: -4px;
+    margin-top: 10px;
+
 }
 
 #rightControlPanel{
-    height: 544px;
-    width: 80px;
+    height: 645px;
+    width: 75px;
     /* border: solid 1px rgb(50, 33, 202); */
     display: flexbox;
     background-color: white;
     border-radius: 10px;
+    margin-top: 10px;
 }
 
 
 #gameContainer{
       
-    height: 544px;  /* should match js ---->gameImagesAreaWidth*/
-    width: 1344px; /* should match js ---->gameImagesAreaWidth*/
+    height: 320px;  /* should match js ---->gameImagesAreaWidth*/
+    width: 672px; /* should match js ---->gameImagesAreaWidth*/
     /* border: solid 1px rgb(32, 233, 32); */
-    margin: 5px;
+    margin: 10px ;
     
     position: relative;     
-    image-rendering: pixelated;
+    image-rendering: pixelated;     
 
-    /* transform: scale(2) translateY(25%); */
+    transform: scale(2) translateY(25%) ;
 }
 
 #gameDisplayLayer0{
@@ -196,16 +200,22 @@ body{
     
 } 
 
+#leftControlPanel button{
+    min-height: 65px;
+    width: 65px;
+    margin: 10px 5px 5px 5px;   
+    border-radius: 10px;
+}
 
 #rightControlPanel button{
-    min-height: 70px;
-    min-width: 70px;
-    margin: 20px 5px 0px 5px;   
+    min-height: 65px;
+    width: 65px;
+    margin: 10px 5px 0px 5px;   
     border-radius: 10px;
 }
 
 #testImage{
-    width: 50px;
+    width: 40px;
 }
 
 /*============================================== Game Area End =================================*/
@@ -217,8 +227,8 @@ body{
     margin: auto;
     /* border: solid 1px rgb(67, 23, 224); */
     background-color: white;
-    border-radius: 10px;
-    padding: 0px 10px 0px 10px;
+    border-radius: 15px;
+    padding: 0px 5px 0px 5px;
 }
 
 

@@ -12,6 +12,8 @@ import dotenv from "dotenv";
 dotenv.config();
 // import grant from "grant";
 
+
+
 // SQL Client
 export const client = new pg.Client({
   database: process.env.DB_NAME,
@@ -23,7 +25,7 @@ client.connect();
 const app = express();
 // For json
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.json({limit : '50mb'}));
 
 // setup Cookies to User
 app.use(
