@@ -2,6 +2,7 @@
 import express from "express";
 import type { Request, Response } from "express";
 import { client } from "../main";
+import console from "console";
 
 export const friendRoutes = express.Router();
 
@@ -13,7 +14,13 @@ async function addFriend(req: Request, res: Response) {
     res.status(400).json({ success: false, message: "Not logged in" });
     return;
   }
-  const { friend_id } = req.body;
+  const { friendName } = req.body.rows[0].friendName;
+  console.log(`this is friendName`);
+  console.log(friendName);
+  const friend_id = await client.query(`select user_name from user_info where user_name = $1`, [
+    friendName,
+  ]);
+  console.log(`this is friend_id`);
   console.log(friend_id);
   // assume get request to addFriend, request the 'friend' user_id
   const dataA = await client.query(
@@ -26,10 +33,11 @@ async function addFriend(req: Request, res: Response) {
   );
 
   if (dataA.rows[0].user_id_a === undefined || dataB.rows[0].user_id_b === undefined) {
-    await client.query("INSERT INTO relationship (user_id_a, user_id_b) VALUES ($1, $2)", [
-      user.user_id,
-      friend_id,
-    ]);
+    const relationship = await client.query(
+      "INSERT INTO relationship (user_id_a, user_id_b) VALUES ($1, $2) RETURNING *",
+      [user.user_id, friend_id]
+    );
+    console.log(relationship);
     res.status(200).json({ success: true, message: "Friend added" });
   } else {
     res.status(400).json({ success: false, message: "Already is Friend" });
