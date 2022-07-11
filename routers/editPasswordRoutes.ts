@@ -2,6 +2,7 @@ import express from "express";
 import type { Request, Response } from "express";
 import { client } from "../main";
 import { hashingPassword } from "../hashing";
+import console from "console";
 
 export const edit_password = express.Router();
 
@@ -13,11 +14,16 @@ function changePassword(req: Request, res: Response) {
     return;
   }
   const new_password = req.body;
-  if (!new_password) {
+  console.log(`this is new_password`);
+  console.log(new_password);
+  const insert_new_name = new_password.password;
+  console.log(`this is insert_new_name`);
+  console.log(insert_new_name);
+  if (!insert_new_name) {
     res.status(400).json({ message: "Please enter a new password" });
     return;
   } else {
-    const hashedPassword = hashingPassword(new_password);
+    const hashedPassword = hashingPassword(insert_new_name);
     client.query(`update user_info set login_password = $1 where id = $2`, [
       hashedPassword,
       user.id,
