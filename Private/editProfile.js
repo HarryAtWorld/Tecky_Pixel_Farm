@@ -36,15 +36,6 @@ function initChangeUserName() {
 
     }
   });
-  const result = await resp.json();
-  if (!result.success) {
-    alert(result.message);
-
-
-  } else {
-    alert(result.message);
-
-  };
 }
 
 function initChangePassWord() {

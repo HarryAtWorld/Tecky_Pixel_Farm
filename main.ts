@@ -69,6 +69,8 @@ import { edit_name } from "./routers/editNameRoutes";
 app.use("/name", edit_name);
 import { edit_password } from "./routers/editPasswordRoutes";
 app.use("/password", edit_password);
+import { logoutRoute } from "./routers/logoutRoutes";
+app.use("/logout", logoutRoute);
 import { plantsRoutes } from "./routers/plantsRoutes";
 app.use("/requestRecord", plantsRoutes);
 app.use("/updateItem", plantsRoutes);
