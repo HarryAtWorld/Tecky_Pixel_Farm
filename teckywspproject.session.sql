@@ -45,12 +45,12 @@ CREATE TABLE user_status (
 );
 ----------------------------------------------------------------
 --
-insert into user_info (login_account, login_password, user_name)
-values ('alex@gmail.com', 'aaa111', 'alex');
-insert into user_info (login_account, login_password, user_name)
-values ('harry@gmail.com', 'harry', 'harry');
-insert into user_info (login_account, login_password, user_name)
-values ('jacky@gmail.com', 'jacky', 'jacky');
+-- insert into user_info (login_account, login_password, user_name)
+-- values ('alex@gmail.com', 'aaa111', 'alex');
+-- insert into user_info (login_account, login_password, user_name)
+-- values ('harry@gmail.com', 'harry', 'harry');
+-- insert into user_info (login_account, login_password, user_name)
+-- values ('jacky@gmail.com', 'jacky', 'jacky');
 --
 INSERT into plant_score_data (items_name)
 VALUES ('carrot');
