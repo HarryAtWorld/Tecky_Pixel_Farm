@@ -106,10 +106,11 @@ const house = new Image();
 mapTiles.onload = () => {
     trees.onload = () => {
         plantTiles.onload = () => {
-            house.onload = ()=>{
+            house.onload = () => {
+                requestRecordFromServer()
                 drawWorld();
                 loginMessage();
-            } 
+            }
             house.src = './gameImages/house/houseImage.png'
         }
         plantTiles.src = './gameImages/plants/plantsImage.png';
@@ -119,6 +120,17 @@ mapTiles.onload = () => {
 mapTiles.src = './gameImages/map/island.png';
 
 
+async function requestRecordFromServer() {
+    const requestRecord = await fetch(`/requestRecord/`, {
+        method: "get"
+    });
+    const result = await requestRecord.json();
+    if (result.message) {
+        console.log(result.message);
+    }
+}
+
+
 function drawWorld() {
     drawGround()
     drawGroundEdge()
@@ -126,10 +138,11 @@ function drawWorld() {
     randomGroupingPlants
 }
 
-function loginMessage(){
-    let popUpFrame= document.querySelector('#popUpFrame')
+//popUp message when enter game page
+function loginMessage() {
+    let popUpFrame = document.querySelector('#popUpFrame')
 
-    popUpFrame.style ='left: 400px; top:100px;'
+    popUpFrame.style = 'left: 400px; top:100px;'
 
     popUpFrame.innerHTML = ` 
      <div id="loginPopUp"> 
@@ -139,7 +152,7 @@ function loginMessage(){
 
     let closeButton = document.querySelector('#closeButton');
     closeButton.addEventListener("click", () => {
-        popUpFrame.innerHTML =''
+        popUpFrame.innerHTML = ''
     })
 }
 
@@ -175,8 +188,8 @@ const rightEdge = new cutMapTile('rightEdge', 2, 1, 16, 1)
 
 // stage 1 to 3 is life ,stage 4 is die.
 class cutPlantTile {
-    constructor(s0X, s0Y, s1X, s1Y, s2X, s2Y, s3X, s3Y, size) {
-
+    constructor(name,s0X, s0Y, s1X, s1Y, s2X, s2Y, s3X, s3Y, size) {
+        this.name = name
         this.stage0cutX = s0X;
         this.stage0cutY = s0Y;
         this.stage1cutX = s1X;
@@ -189,13 +202,13 @@ class cutPlantTile {
     }
 }
 
-const carrot = new cutPlantTile(1, 0, 3, 0, 5, 0, 0, 33, 16)
-const corn = new cutPlantTile(1, 4, 3, 4, 5, 4, 0, 33, 16)
-const yellow_flower = new cutPlantTile(1, 33, 3, 33, 4, 33, 0, 33, 16)
-const red_flower = new cutPlantTile(1, 18, 3, 18, 4, 18, 0, 33, 16)
-const blue_flower = new cutPlantTile(1, 16, 3, 16, 4, 16, 0, 33, 16)
-const pumpkin = new cutPlantTile(1, 3, 3, 3, 5, 3, 0, 33, 16)
-const lettuce = new cutPlantTile(1, 8, 3, 8, 5, 8, 0, 33, 16)
+const carrot = new cutPlantTile('carrot',1, 0, 3, 0, 5, 0, 0, 33, 16)
+const corn = new cutPlantTile('corn',1, 4, 3, 4, 5, 4, 0, 33, 16)
+const yellow_flower = new cutPlantTile('yellow_flower',1, 33, 3, 33, 4, 33, 0, 33, 16)
+const red_flower = new cutPlantTile('red_flower',1, 18, 3, 18, 4, 18, 0, 33, 16)
+const blue_flower = new cutPlantTile('blue_flower',1, 16, 3, 16, 4, 16, 0, 33, 16)
+const pumpkin = new cutPlantTile('pumpkin',1, 3, 3, 3, 5, 3, 0, 33, 16)
+const lettuce = new cutPlantTile('lettuce',1, 8, 3, 8, 5, 8, 0, 33, 16)
 
 
 class plantingBox {
@@ -210,7 +223,8 @@ class plantingBox {
 
 
 class cutTreeFrames {
-    constructor(f0X, f0Y, f1X, f1Y, f2X, f2Y, f3X, f3Y, size) {
+    constructor(name,f0X, f0Y, f1X, f1Y, f2X, f2Y, f3X, f3Y, size) {
+        this.name = name
         this.frame0cutX = f0X;
         this.frame0cutY = f0Y;
         this.frame1cutX = f1X;
@@ -223,12 +237,13 @@ class cutTreeFrames {
     }
 }
 
-const green_trees = new cutTreeFrames(0, 3, 1, 3, 2, 3, 3, 3, 32)
-const brown_trees = new cutTreeFrames(0, 5, 1, 5, 2, 5, 3, 5, 32)
+const green_trees = new cutTreeFrames('green_trees',0, 3, 1, 3, 2, 3, 3, 3, 32)
+const brown_trees = new cutTreeFrames('brown_trees',0, 5, 1, 5, 2, 5, 3, 5, 32)
 
 
 class cutHouseTile {
-    constructor(X, Y, size) {
+    constructor(name,X, Y, size) {
+        this.name = name
         this.cutLocationX = X;
         this.cutLocationY = Y;
         this.size = size
@@ -789,19 +804,21 @@ function removePlant(event) {
     }
 }
 
+
+
 //send player information JSON to server.
 async function saveToServer(userName) {
-    const content = [userName, mapTileList, gameItemList];
-    const resp = await fetch(`/gameSave/${userName}`, {
-        method: "PUT",
+    // const content = {};
+    const requestRecord = await fetch(`/updateItem`, {
+        method: "put",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ content }),
+        body: JSON.stringify({'user_name':userName, 'map':mapTileList, 'game_item_record':gameItemList}),
     });
-    const result = await resp.json();
-    if (result.success) {
-        console.log('saved');
+    const result = await requestRecord.json();
+    if (result.message) {
+        console.log(result.message);
     }
 
 }
@@ -878,15 +895,18 @@ for (let i = 0; i < Object.keys(scoreCheckingGroups).length; i++) {
         // after onload, show the score adding animation
         showTextToItems(checkingGroup)
 
+        gameScore += scoreCheckingGroups[checkingGroup].length * 1
+        displayScore.innerText = `Score:${gameScore}`
+
 
         // set up regular 10s checking for score and stage
         let regularChecking = setInterval(() => {
             showTextToItems(checkingGroup)
 
             // add score action here
-            gameScore += scoreCheckingGroups[checkingGroup].length*1
+            gameScore += scoreCheckingGroups[checkingGroup].length * 1
             displayScore.innerText = `Score:${gameScore}`
-            
+
             //change plant stage here
 
         }, 10000)
@@ -913,7 +933,7 @@ function showTextToItems(checkingGroup) {
             clearLayer(ctxLayer40)
             for (let key of scoreCheckingGroups[checkingGroup]) {
                 ctxLayer40.fillText(`+1`, gameItemList[key].x * 16, gameItemList[key].y * 16 - yMove + 16)
-                
+
             }
 
         } else {
@@ -1042,57 +1062,52 @@ removePlantButton.addEventListener("click", () => {
     }
 })
 
+// button for popUP of player info page
+// let playerInfoButton = document.querySelector('#playerInfoButton');
+// playerInfoButton.addEventListener("click", () => {
 
-// button for save to server
-let saveToServerButton = document.querySelector('#saveToServer');
-saveToServerButton.addEventListener("click", () => {
-    // saveToServer('Player101')
+//     let popUpFrame = document.querySelector('#popUpFrame')
+//     popUpFrame.style = 'left: 40px; top:-45px;'
 
-    //temporary testing
+//     popUpFrame.innerHTML = ` 
+//      <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">X</button> </div><iframe id="innerFrameContent" src="./playerInfo.html"></iframe> </div>`
 
+//     let closeButton = document.querySelector('#closeButton');
+//     closeButton.addEventListener("click", () => {
+//         popUpFrame.innerHTML = ''
+//     })
 
-    console.log(Object.keys(gameItemList))
-    console.log(scoreCheckingGroups)
+// })
 
-
-})
-
-
-let playerInfoButton = document.querySelector('#playerInfoButton');
-playerInfoButton.addEventListener("click", () => {
-
-    //temporary testing
-
-    let popUpFrame= document.querySelector('#popUpFrame')
-    popUpFrame.style ='left: 40px; top:-45px;'
-
-    popUpFrame.innerHTML = ` 
-     <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">X</button> </div><iframe id="innerFrameContent" src="./playerInfo.html"></iframe> </div>`
-
-    let closeButton = document.querySelector('#closeButton');
-    closeButton.addEventListener("click", () => {
-        popUpFrame.innerHTML =''
-    })
-
-
-})
-
+// button for popUP of ranking page
 let rankingButton = document.querySelector('#rankingButton');
 rankingButton.addEventListener("click", () => {
 
-    //temporary testing
-
-    let popUpFrame= document.querySelector('#popUpFrame')
-    popUpFrame.style ='left: 40px; top:-45px;'
+    let popUpFrame = document.querySelector('#popUpFrame')
+    popUpFrame.style = 'left: 40px; top:-45px;'
 
     popUpFrame.innerHTML = ` 
      <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">X</button> </div><iframe id="innerFrameContent" src="./ranking.html"></iframe> </div>`
 
     let closeButton = document.querySelector('#closeButton');
     closeButton.addEventListener("click", () => {
-        popUpFrame.innerHTML =''
+        popUpFrame.innerHTML = ''
     })
-
 
 })
 
+
+// button for save to server
+let saveToServerButton = document.querySelector('#saveToServer');
+saveToServerButton.addEventListener("click", () => {
+    saveToServer('Player101')
+
+    //temporary testing
+
+
+    console.log(Object.keys(gameItemList))
+    console.log(scoreCheckingGroups)
+    console.log(gameItemList)
+
+
+})

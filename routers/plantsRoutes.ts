@@ -6,7 +6,24 @@ import { client } from "../main";
 
 export const plantsRoutes = express.Router();
 
-plantsRoutes.get("/", calculateScore);
+plantsRoutes.get("/", (req,res)=>{
+  console.log( 'login !received by get! Test');;
+  res.json({ message:'this will be game items json' })
+
+} );
+
+plantsRoutes.put("/", (req,res)=>{
+  console.log( 'update received by put! Test');
+  console.log(req.body.game_item_record);
+  res.json({ message:'this will be game items json' })
+
+} );
+
+
+// plantsRoutes.get("/", calculateScore);
+
+
+
 
 // async function getGameData(req: Request, res: Response) {
 //   const gameJsonDataFromFE = req.body;
