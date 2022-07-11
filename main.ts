@@ -60,6 +60,8 @@ import { loginRoutes } from "./routers/loginRoutes";
 app.use(loginRoutes);
 import { rankingRoutes } from "./routers/rankingRoutes";
 app.use("/allPlayerRank", rankingRoutes);
+import { userinfoRoutes } from "./routers/userInfoRoutes";
+app.use("/userInfo", userinfoRoutes);
 import { friendRankRoutes } from "./routers/friendRankRoutes";
 app.use("/friendRank", friendRankRoutes);
 import { edit_name } from "./routers/editNameRoutes";

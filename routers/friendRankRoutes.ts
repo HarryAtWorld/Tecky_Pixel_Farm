@@ -2,7 +2,6 @@ import express from "express";
 import type { Request, Response } from "express";
 import { client } from "../main";
 import { friendRow } from "../interfaceModels";
-import console from "console";
 
 export const friendRankRoutes = express.Router();
 
