@@ -20,6 +20,10 @@ async function addFriend(req: Request, res: Response) {
   const friend_id = await client.query(`select user_name from user_info where user_name = $1`, [
     friendName,
   ]);
+  if (!friend_id.rows) {
+    res.status(400).json({ success: false, message: "Player not found" });
+    return;
+  }
   console.log(`this is friend_id`);
   console.log(friend_id);
   // assume get request to addFriend, request the 'friend' user_id
