@@ -24,7 +24,7 @@ async function findAllFriend(my_id: number) {
     [my_id]
   );
   const fd_b = myFriends_rowB.rows;
-  console.log(`My fd in row_b : ${fd_b}`);
+  console.log(`My fd in row_a : ${fd_b}`);
 
   let friends_result: string[] = [];
   if (fd_b !== undefined) {
