@@ -1,5 +1,6 @@
 window.onload = async () => {
   loadUserName();
+  initChangeUserName();
 }
 
 async function loadUserName() {
@@ -31,7 +32,7 @@ function initChangeUserName() {
 
     } else {
       alert(result.message);
-
+      window.location.href = "./editProfile.html";
     }
   });
 }
@@ -56,7 +57,7 @@ function initChangePassWord() {
 
     } else {
       alert(result.message);
-
+      window.location.href = "./editProfile.html";
     }
   });
 }
