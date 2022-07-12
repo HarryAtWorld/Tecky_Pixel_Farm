@@ -2,7 +2,6 @@
 import express from "express";
 import type { Request, Response } from "express";
 import { client } from "../main";
-import console from "console";
 
 export const friendRoutes = express.Router();
 
@@ -29,12 +28,14 @@ async function addFriend(req: Request, res: Response) {
     friendName,
   ]);
   console.log(`this is friend_id`);
-  console.log(temp_friend_id.rows[0].id);
-  const friend_id = temp_friend_id.rows[0].id;
-  if (!friend_id) {
+  // console.log(temp_friend_id);
+  console.log(temp_friend_id.rows[0]);
+  // if no user, it will return underfined
+  if (!temp_friend_id.rows[0]) {
     res.status(400).json({ success: false, message: "Player not found" });
     return;
   } else {
+    const friend_id = temp_friend_id.rows[0].id;
     const temp_checking = await client.query(
       `SELECT * FROM relationship where user_id_a = $1 AND user_id_b = $2 OR user_id_b = $1 AND user_id_a = $2;`,
       [user.id, friend_id]

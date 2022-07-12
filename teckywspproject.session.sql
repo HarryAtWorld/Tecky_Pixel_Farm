@@ -18,7 +18,7 @@ CREATE TABLE plant_score_data (
     stage_1_life INTEGER,
     stage_2_score INTEGER,
     stage_2_life INTEGER,
-    stage_3_score INTEGER    
+    stage_3_score INTEGER
 );
 -- game_farm_data table --
 CREATE TABLE game_farm_data(
@@ -55,28 +55,109 @@ CREATE TABLE user_status (
 -- insert into user_info (login_account, login_password, user_name)
 -- values ('jacky@gmail.com', 'jacky', 'jacky');
 --
-INSERT into plant_score_data (items_name,stage_0_score,stage_0_life,stage_1_score,stage_1_life,stage_2_score,stage_2_life,stage_3_score)
-VALUES ('carrot',1,40,2,40,3,30,0);
-INSERT into plant_score_data (items_name,stage_0_score,stage_0_life,stage_1_score,stage_1_life,stage_2_score,stage_2_life,stage_3_score)
-VALUES ('corn',1,40,2,40,3,30,0);
-INSERT into plant_score_data (items_name,stage_0_score,stage_0_life,stage_1_score,stage_1_life,stage_2_score,stage_2_life,stage_3_score)
-VALUES ('yellow_flower',1,20,2,20,3,20,0);
-INSERT into plant_score_data (items_name,stage_0_score,stage_0_life,stage_1_score,stage_1_life,stage_2_score,stage_2_life,stage_3_score)
-VALUES ('red_flower',1,20,2,20,3,20,0);
-INSERT into plant_score_data (items_name,stage_0_score,stage_0_life,stage_1_score,stage_1_life,stage_2_score,stage_2_life,stage_3_score)
-VALUES ('blue_flower',1,20,2,20,3,20,0);
-INSERT into plant_score_data (items_name,stage_0_score,stage_0_life,stage_1_score,stage_1_life,stage_2_score,stage_2_life,stage_3_score)
-VALUES ('pumpkin',1,40,2,40,3,30,0);
-INSERT into plant_score_data (items_name,stage_0_score,stage_0_life,stage_1_score,stage_1_life,stage_2_score,stage_2_life,stage_3_score)
-VALUES ('lettuce',1,40,2,40,3,30,0);
-INSERT into plant_score_data (items_name,stage_0_score,stage_0_life,stage_1_score,stage_1_life,stage_2_score,stage_2_life,stage_3_score)
-VALUES ('green_trees',2,60,3,600,5,6000,0);
-INSERT into plant_score_data (items_name,stage_0_score,stage_0_life,stage_1_score,stage_1_life,stage_2_score,stage_2_life,stage_3_score)
-VALUES ('brown_trees',2,60,3,600,5,6000,0);
-INSERT into plant_score_data (items_name,stage_0_score)
-VALUES ('small_house',-5);
-INSERT into plant_score_data (items_name,stage_0_score)
-VALUES ('big_house',-15);
+INSERT into plant_score_data (
+        items_name,
+        stage_0_score,
+        stage_0_life,
+        stage_1_score,
+        stage_1_life,
+        stage_2_score,
+        stage_2_life,
+        stage_3_score
+    )
+VALUES ('carrot', 1, 40, 2, 40, 3, 30, 0);
+INSERT into plant_score_data (
+        items_name,
+        stage_0_score,
+        stage_0_life,
+        stage_1_score,
+        stage_1_life,
+        stage_2_score,
+        stage_2_life,
+        stage_3_score
+    )
+VALUES ('corn', 1, 40, 2, 40, 3, 30, 0);
+INSERT into plant_score_data (
+        items_name,
+        stage_0_score,
+        stage_0_life,
+        stage_1_score,
+        stage_1_life,
+        stage_2_score,
+        stage_2_life,
+        stage_3_score
+    )
+VALUES ('yellow_flower', 1, 20, 2, 20, 3, 20, 0);
+INSERT into plant_score_data (
+        items_name,
+        stage_0_score,
+        stage_0_life,
+        stage_1_score,
+        stage_1_life,
+        stage_2_score,
+        stage_2_life,
+        stage_3_score
+    )
+VALUES ('red_flower', 1, 20, 2, 20, 3, 20, 0);
+INSERT into plant_score_data (
+        items_name,
+        stage_0_score,
+        stage_0_life,
+        stage_1_score,
+        stage_1_life,
+        stage_2_score,
+        stage_2_life,
+        stage_3_score
+    )
+VALUES ('blue_flower', 1, 20, 2, 20, 3, 20, 0);
+INSERT into plant_score_data (
+        items_name,
+        stage_0_score,
+        stage_0_life,
+        stage_1_score,
+        stage_1_life,
+        stage_2_score,
+        stage_2_life,
+        stage_3_score
+    )
+VALUES ('pumpkin', 1, 40, 2, 40, 3, 30, 0);
+INSERT into plant_score_data (
+        items_name,
+        stage_0_score,
+        stage_0_life,
+        stage_1_score,
+        stage_1_life,
+        stage_2_score,
+        stage_2_life,
+        stage_3_score
+    )
+VALUES ('lettuce', 1, 40, 2, 40, 3, 30, 0);
+INSERT into plant_score_data (
+        items_name,
+        stage_0_score,
+        stage_0_life,
+        stage_1_score,
+        stage_1_life,
+        stage_2_score,
+        stage_2_life,
+        stage_3_score
+    )
+VALUES ('green_trees', 2, 60, 3, 600, 5, 6000, 0);
+INSERT into plant_score_data (
+        items_name,
+        stage_0_score,
+        stage_0_life,
+        stage_1_score,
+        stage_1_life,
+        stage_2_score,
+        stage_2_life,
+        stage_3_score
+    )
+VALUES ('brown_trees', 2, 60, 3, 600, 5, 6000, 0);
+INSERT into plant_score_data (items_name, stage_0_score)
+VALUES ('small_house', -5);
+INSERT into plant_score_data (items_name, stage_0_score)
+VALUES ('big_house', -15);
 --
 Insert into game_farm_data (user_id)
 VALUES (1);

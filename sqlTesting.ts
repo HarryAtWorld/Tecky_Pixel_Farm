@@ -1,7 +1,7 @@
 import pg from "pg";
 import dotenv from "dotenv";
 //@ts-ignore
-import console from "console";
+import console, { table } from "console";
 // import type { Request, Response } from "express";
 //@ts-ignore
 import { friendRow } from "./interfaceModels";
