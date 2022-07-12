@@ -6,6 +6,7 @@ import { client } from "../main";
 export const friendRoutes = express.Router();
 
 friendRoutes.post("/", addFriend);
+friendRoutes.delete("/", deleteFriend);
 
 async function addFriend(req: Request, res: Response) {
   const user = req.session["user"];
@@ -53,6 +54,53 @@ async function addFriend(req: Request, res: Response) {
     } else {
       res.status(400).json({ success: false, message: "Already is Friend" });
       return;
+    }
+  }
+}
+
+async function deleteFriend(req: Request, res: Response) {
+  const user = req.session["user"];
+  if (!user) {
+    res.status(400).json({ success: false, message: "Not logged in" });
+    return;
+  }
+
+  const friendName = req.body;
+  console.log(`Waiting to delete:`);
+  console.log(friendName);
+
+  if (!friendName) {
+    res.status(400).json({ success: false, message: `Don't play the unfriend function!!!` });
+    return;
+  }
+
+  const unfd_id = await (
+    await client.query(`select id from user_info where user_name = $1`, [friendName])
+  ).rows;
+  console.log(unfd_id);
+
+  if (!unfd_id) {
+    res
+      .status(400)
+      .json({ success: false, message: "Is it your illusion? We don't have this player." });
+    return;
+  } else {
+    const friendResult = await client.query(
+      `select * from relationship where user_id_a = $1 and user_id_b = $2 or user_id_b = $1 and user_id_a = $2`,
+      [user.id, unfd_id]
+    );
+    if (!friendResult) {
+      res
+        .status(400)
+        .json({ success: false, message: "...Don't ff too much, he or she is not your friend." });
+      return;
+    } else {
+      const unfdReturning = await client.query(
+        `delete from relationship where id = $1 RETURNING *`,
+        [friendResult.rows[0].id]
+      );
+      console.log(unfdReturning);
+      res.status(200).json({ success: false, message: "You are friendship Slayer." });
     }
   }
 }

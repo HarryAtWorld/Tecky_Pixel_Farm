@@ -12,8 +12,6 @@ import dotenv from "dotenv";
 dotenv.config();
 // import grant from "grant";
 
-
-
 // SQL Client
 export const client = new pg.Client({
   database: process.env.DB_NAME,
@@ -25,7 +23,7 @@ client.connect();
 const app = express();
 // For json
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json({limit : '50mb'}));
+app.use(express.json({ limit: "50mb" }));
 
 // setup Cookies to User
 app.use(
@@ -60,7 +58,7 @@ app.use((req, res, next) => {
 // Router handler
 import { loginRoutes } from "./routers/loginRoutes";
 app.use(loginRoutes);
-import { friendRoutes } from "./routers/addFriendRoutes";
+import { friendRoutes } from "./routers/friendRoutes";
 app.use("/friend", friendRoutes);
 import { rankingRoutes } from "./routers/rankingRoutes";
 app.use("/allPlayerRank", rankingRoutes);
@@ -87,7 +85,7 @@ app.use(isLoggedInStatic, express.static(path.join(__dirname, "Private")));
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, "Public", "404.html"));
 });
- 
+
 const port = 8080;
 app.listen(port, () => {
   console.log(`server started, http://localhost:${port}`);
