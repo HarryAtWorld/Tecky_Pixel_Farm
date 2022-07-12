@@ -56,14 +56,18 @@ app.use((req, res, next) => {
 // app.use(grantExpress as express.RequestHandler);
 
 // Router handler
+// login, register
 import { loginRoutes } from "./routers/loginRoutes";
 app.use(loginRoutes);
+// add friend routes and unfriend routes
 import { friendRoutes } from "./routers/friendRoutes";
 app.use("/friend", friendRoutes);
+// allPlayerRank route
 import { rankingRoutes } from "./routers/rankingRoutes";
 app.use("/allPlayerRank", rankingRoutes);
 import { userinfoRoutes } from "./routers/userInfoRoutes";
 app.use("/userInfo", userinfoRoutes);
+// FriendRank and show friend routers
 import { friendRankRoutes } from "./routers/friendRankRoutes";
 app.use("/friendRank", friendRankRoutes);
 //  edit_name
