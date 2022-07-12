@@ -5,6 +5,7 @@ window.onload = () => {
   loadUserName2();
   loadUserEmail();
   addFriends();
+  deleteFriends();
 };
 
 async function loadUserName() {
@@ -67,6 +68,32 @@ function addFriends() {
     
     const resp = await fetch("/friend", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ friendName }),
+    });
+    const result = await resp.json();
+    if (!result.success) {
+      alert(result.message);
+      window.location.href =("./playerInfo.html");
+  
+    } else {
+     alert(result.message);
+      window.location.href = "./playerInfo.html";
+    }
+  });
+}
+
+function deleteFriends() {
+  document.querySelector("#deletefriends").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const friendName = form.friendName.value;
+    console.log(friendName);
+    
+    const resp = await fetch("/friend", {
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
