@@ -1,6 +1,7 @@
 import express from "express";
 import type { Request, Response } from "express";
 import { client } from "../main";
+import console from "console";
 
 export const friendRoutes = express.Router();
 
@@ -70,7 +71,7 @@ async function deleteFriend(req: Request, res: Response) {
     return;
   }
 
-  const friendName = req.body;
+  const friendName = req.body.friendName;
   console.log(`Waiting to delete:`);
   console.log(friendName);
 
@@ -81,26 +82,33 @@ async function deleteFriend(req: Request, res: Response) {
   }
 
   // getting target user_id
-  const unfd_id = await (
-    await client.query(`select id from user_info where user_name = $1`, [friendName])
-  ).rows;
-  console.log(unfd_id);
+  const unfd_id = await client.query(`select id from user_info where user_name = $1`, [friendName]);
+  // console.log(unfd_id);
+  console.log(`unfd targt user id:`);
+  console.log(unfd_id.rows);
 
   // if no this user or input wrong name
-  if (!unfd_id) {
+  if (!unfd_id.rows[0]) {
     res
       .status(400)
       .json({ success: false, message: "Is it your illusion? We don't have this player." });
     return;
   } else {
+    console.log(`Start unfriend`);
+    console.log(unfd_id.rows[0].id);
+    const unFDTarget = unfd_id.rows[0].id;
     // unfd logic start
     // getting friendship info
     const friendResult = await client.query(
-      `select * from relationship where user_id_a = $1 and user_id_b = $2 or user_id_b = $1 and user_id_a = $2`,
-      [user.id, unfd_id]
+      `SELECT * from relationship 
+      WHERE user_id_a = $1 AND user_id_b = $2 
+      OR user_id_b = $1 AND user_id_a = $2`,
+      [user.id, unFDTarget]
     );
+    console.log(friendResult.rows[0]);
+
     // if target is exist but not is user's friend then return
-    if (!friendResult) {
+    if (!friendResult.rows[0]) {
       res
         .status(400)
         .json({ success: false, message: "...Don't ff too much, he or she is not your friend." });
