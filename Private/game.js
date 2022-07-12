@@ -1074,11 +1074,11 @@ removePlantButton.addEventListener("click", () => {
 })
 
 // button for popUP of player info page
-let playerInfoButton = document.querySelector('#playerInfoButton2');
+let playerInfoButton = document.querySelector('#playerInfoButton');
 playerInfoButton.addEventListener("click", () => {
 
     let popUpFrame = document.querySelector('#popUpFrame')
-    popUpFrame.style = 'left: 40px; top:-45px;'
+    popUpFrame.style = 'left: 40px; top:-40px;'
 
     popUpFrame.innerHTML = ` 
      <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">X</button> </div><iframe id="innerFrameContent" src="./playerInfo.html"></iframe> </div>`
@@ -1106,6 +1106,31 @@ rankingButton.addEventListener("click", () => {
     })
 
 })
+
+// button for popUP of fdRanking page
+let fdRankingButton = document.querySelector('#fdRankingButton');
+fdRankingButton.addEventListener("click", () => {
+
+    let popUpFrame = document.querySelector('#popUpFrame')
+    popUpFrame.style = 'left: 40px; top:-40px;'
+
+    popUpFrame.innerHTML = ` 
+     <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">X</button> </div><iframe id="innerFrameContent" src="./fdRanking.html"></iframe> </div>`
+
+    let closeButton = document.querySelector('#closeButton');
+    closeButton.addEventListener("click", () => {
+        popUpFrame.innerHTML = ''
+    })
+
+})
+
+
+
+
+
+
+
+
 
 
 // button for save to server
