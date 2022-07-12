@@ -18,6 +18,13 @@ async function addFriend(req: Request, res: Response) {
   const { friendName } = req.body;
   console.log(`this is friendName`);
   console.log(friendName);
+
+  // checking if input empty
+  if (!friendName) {
+    res.status(400).json({ success: false, message: "Empty?! Who is your friend? Q_Q" });
+    return;
+  }
+
   const temp_friend_id = await client.query(`select id from user_info where user_name = $1`, [
     friendName,
   ]);

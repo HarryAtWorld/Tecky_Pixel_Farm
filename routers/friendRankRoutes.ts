@@ -9,13 +9,16 @@ friendRankRoutes.get("/", friends_ranking);
 
 export async function friends_ranking(req: Request, res: Response) {
   const user = req.session["user"];
-  console.log(`passed friends_ranking my id : ${user.id}`);
+  console.log(`passed friends_ranking my i97867d : ${user.id}`);
   const fd_result = await findAllFriend(user.id);
   console.log(fd_result);
   res.json(fd_result);
 }
 
+// function for findAllFriend
 async function findAllFriend(my_id: number) {
+  let friends_result: string[] = [];
+
   const myFriends_rowB = await client.query<friendRow>(
     `select user_id_a
   from relationship
@@ -25,7 +28,6 @@ async function findAllFriend(my_id: number) {
   const fd_b = myFriends_rowB.rows;
   console.log(`My fd in row_a : ${fd_b}`);
 
-  let friends_result: string[] = [];
   if (fd_b !== undefined) {
     for (let row of fd_b) {
       let result = await client.query(
@@ -44,6 +46,7 @@ async function findAllFriend(my_id: number) {
       // console.log(friends_result);
     }
   }
+
   const myFriends_rowA = await client.query<friendRow>(
     `select user_id_b
   from relationship
