@@ -1,22 +1,46 @@
 import express from "express";
 import fs from "fs"
 import path from "path";
+import { client } from "../main";
 
 //@ts-ignore
 import type { Request, Response } from "express";
 //@ts-ignore
-import { client } from "../main";
+
 
 
 export const plantsRoutes = express.Router();
 
 
 //provide JSON record to player
-plantsRoutes.get("/", (req, res) => {
+plantsRoutes.get("/", async (req, res) => {
   console.log('login !received by get! Test');
   const user = req.session["user"]
+
+  let playerGameItemRecord = JSON.parse(fs.readFileSync(path.join(__dirname, `../gameJson/${user.id}.json`), { encoding: 'utf8' }))
+
+  const lastScoreRecord = await client.query(
+    `SELECT score FROM game_farm_data where user_id = $1`, [user.id]
+  );
+
+  //add last score record to json before send to user
+  playerGameItemRecord.lastScoreRecord = lastScoreRecord.rows[0]
+
+  const scoreFactor = await client.query(
+    `SELECT * FROM plant_score_data `
+  );
+
+  let scoreFactorList = {} 
+  for (let factor of scoreFactor.rows) {
+    scoreFactorList[factor.items_name] = factor
+  }
+//add score factor to json before send to user
+  playerGameItemRecord.scoreFactorList = scoreFactorList
+
+  fs.writeFileSync(path.join(__dirname, `../gameJson/${user.id}.json`), JSON.stringify(playerGameItemRecord), { flag: 'w' });
+
   res.sendFile(path.join(__dirname, `../gameJson/${user.id}.json`))
-  
+
 });
 
 

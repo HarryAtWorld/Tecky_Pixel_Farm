@@ -1,5 +1,6 @@
 
 import fs from "fs"
+// import path from 'path'
 
 
 //@ts-ignore
@@ -38,7 +39,7 @@ export async function calculateScore() {
         let lastScore = player.score
         let tempScore = 0
 
-        
+
         console.log('plyer', player.id, 'now score:', lastScore)
 
 
@@ -55,11 +56,23 @@ export async function calculateScore() {
 
 
             //check stage
-            let timeDuring = (checkingTimeNow - itemStageChangeTime) / 1000
+            let timeDuring = Math.round((checkingTimeNow - itemStageChangeTime) / 1000)
+
+
+            // console.log('itemStageChangeTime:',itemStageChangeTime)
 
             // change item stage with checking
             if (timeDuring > scoreFactorList[itemName][`stage_${itemStage}_life`] && itemStage < 3) {
-                itemStage += 1
+                // itemStage += 1
+                
+
+                playerGameItemRecord.game_item_record[gameItem].stageChangeAt = checkingTimeNow
+                playerGameItemRecord.game_item_record[gameItem].stage += 1
+
+                console.log('===========================changed stage to:', playerGameItemRecord.game_item_record[gameItem].stage)
+                //update item 'stageChangeAt' on Json         
+                fs.writeFileSync(`./gameJson/${player.id}.json`, JSON.stringify(playerGameItemRecord), { flag: 'w' });
+
             }
 
             //check how may score should be added for  this item during last 10second

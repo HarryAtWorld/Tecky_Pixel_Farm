@@ -12,8 +12,9 @@ let showGridSize = gameBaseGridSize //this will be changed in other function
 
 let mapTileList = []
 let gameItemList = {}
+let scoreFactorList ={}
 let landCount = 0
-let gameScore = 1000
+let gameScore = 0
 let displayScore = document.querySelector('#gameScore')
 let ctxLayer40Alpha = 0.9
 
@@ -119,20 +120,27 @@ mapTiles.src = './gameImages/map/island.png';
 
 
 async function requestRecordAndDrawWorld() {
+
+    // fetch record from server
     const requestRecord = await fetch(`/requestRecord/`, {
         method: "get"
     });
     const result = await requestRecord.json();
 
-    if (result) {
-        console.log(result);
-    }
-
+    // fill in data to this js
     mapTileList = result.map
     gameItemList = result.game_item_record
+    gameScore = result.lastScoreRecord.score
 
+    for (let factor in result.scoreFactorList) {
+        scoreFactorList[factor] = result.scoreFactorList[`${factor}`]        
+    }  
+
+    
+  
     drawWorld();
     loginMessage();
+    startCalculateScore()
 }
 
 
@@ -895,7 +903,7 @@ function clearButtonHighLight() {
 //===========================Score Calculation ================================================
 
 
-
+function startCalculateScore(){
 for (let i = 0; i < Object.keys(scoreCheckingGroups).length; i++) {
     let textContent = '+3'
     let checkingGroup = `group${i}`
@@ -906,7 +914,7 @@ for (let i = 0; i < Object.keys(scoreCheckingGroups).length; i++) {
         // after onload, show the score adding animation
         showTextToItems(checkingGroup)
 
-        gameScore += scoreCheckingGroups[checkingGroup].length * 1
+        
         displayScore.innerText = `Score:${gameScore}`
 
 
@@ -915,14 +923,43 @@ for (let i = 0; i < Object.keys(scoreCheckingGroups).length; i++) {
             showTextToItems(checkingGroup)
 
             // add score action here
-            gameScore += scoreCheckingGroups[checkingGroup].length * 1
+            // gameScore += scoreCheckingGroups[checkingGroup].length * 1
+            // displayScore.innerText = `Score:${gameScore}`
+
+            let checkingTimeNow = Date.now()
+
+
+            for (let gameItem of scoreCheckingGroups[checkingGroup]) {
+
+               
+                
+
+                let itemName = gameItemList[gameItem].plantType.name
+                let itemStage =  gameItemList[gameItem].stage
+                let itemStageChangeTime = gameItemList[gameItem].stageChangeAt
+                let timeDuring = Math.round((checkingTimeNow - itemStageChangeTime) / 1000)
+
+                
+                //change plant stage with checking
+                if (timeDuring > scoreFactorList[itemName][`stage_${itemStage}_life`] && itemStage < 3){
+                    gameItemList[gameItem].stage +=1
+                    gameItemList[gameItem].stageChangeAt = checkingTimeNow
+                    console.log('===========================changed stage to:', gameItemList[gameItem].stage)                    
+                }
+                gameScore += scoreFactorList[itemName][`stage_${itemStage}_score`]
+                
+
+            }
+            clearLayer(ctxLayer10)
+            drawPlants()
             displayScore.innerText = `Score:${gameScore}`
 
-            //change plant stage here
+            
 
         }, 10000)
     }, i * 1000)
 
+}
 }
 
 function showTextToItems(checkingGroup) {
@@ -943,7 +980,8 @@ function showTextToItems(checkingGroup) {
             ctxLayer40.font = "12px Arial";
             clearLayer(ctxLayer40)
             for (let key of scoreCheckingGroups[checkingGroup]) {
-                ctxLayer40.fillText(`+1`, gameItemList[key].x * 16, gameItemList[key].y * 16 - yMove + 16)
+                // let text = scoreFactorList[gameItemList[key].plantType.name][`stage_${gameItemList[key].Stage}_score`]
+                ctxLayer40.fillText('+?', gameItemList[key].x * 16, gameItemList[key].y * 16 - yMove + 16)
 
             }
 
