@@ -124,6 +124,13 @@ body{
     
 }
 
+#closeButtonArea button{
+    cursor: pointer;
+   
+   
+    
+}
+
 #innerFrameContent{    
     height: 600px;
     width:1350px;  
@@ -153,6 +160,7 @@ body{
     background-color: white;
     border-radius: 10px;
     margin-top: 10px;
+    
 }
 
 
@@ -236,6 +244,7 @@ body{
     width: 65px;
     margin: 10px 5px 0px 5px;   
     border-radius: 10px;
+    cursor: pointer;
 }
 
 #testImage{
