@@ -1,6 +1,3 @@
-/* *{
-    box-sizing: border-box;
-} */
 
 body{
     background-color: rgb(144,195, 216); /*this is the sea color*/
@@ -168,9 +165,9 @@ body{
       
     height: 320px;  /* should match js ---->gameImagesAreaWidth*/
     width: 672px; /* should match js ---->gameImagesAreaWidth*/
-    /* border: solid 1px rgb(32, 233, 32); */
+    border: solid 2px rgb(228, 243, 13);
     margin: 10px ;
-    
+    border-radius: 10px;
     position: relative;     
     image-rendering: pixelated;     
 
@@ -214,7 +211,7 @@ body{
     
    
     position: absolute; 
-    left: 0;
+    left: ;
     top: 0;
     z-index: 30;
     border-radius: 10px;
@@ -223,7 +220,7 @@ body{
 
 #gameDisplayLayer40{
     
-    border: solid 1px rgb(228, 243, 13);
+    /* border: solid 1px rgb(228, 243, 13); */
     position: absolute; 
     left: 0;
     top: 0;

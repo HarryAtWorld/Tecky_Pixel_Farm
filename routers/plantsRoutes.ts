@@ -3,6 +3,8 @@ import fs from "fs"
 import path from "path";
 import { client } from "../main";
 
+
+
 //@ts-ignore
 import type { Request, Response } from "express";
 //@ts-ignore
@@ -52,18 +54,21 @@ plantsRoutes.put("/", (req, res) => {
 
   console.log('update received by put! Test');
 
-  console.log(Object.keys(req.body));
+  console.log('update json received:',Object.keys(req.body));
   const user = req.session["user"]
 
   let lastCheckingTimeRecord = JSON.parse(fs.readFileSync(path.join(__dirname, `../gameJson/${user.id}.json`), { encoding: 'utf8' })).lastCheckingTime
-  console.log(lastCheckingTimeRecord);
+ 
 
   req.body.lastCheckingTime = lastCheckingTimeRecord
   let contentToWrite = JSON.stringify(req.body)
   // console.log(contentToWrite);
   fs.writeFileSync(path.join(__dirname, `../gameJson/${user.id}.json`), contentToWrite, { flag: 'w' });
-
+ 
   res.json({ message: 'saved!' })
+
+
+  
 
 });
 
