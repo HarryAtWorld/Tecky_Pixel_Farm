@@ -72,7 +72,7 @@ body{
     /* background-color: rgb(255, 255, 255); */
     border: solid 2px rgb(243, 0, 0);
     border-radius: 10px;
-    background-color: rgb(240, 240, 240);
+    background-color: rgb(236, 236, 236);
     padding: 20px;
     
     
@@ -93,16 +93,40 @@ body{
 
 #closeButtonArea{
     /* background-color: rgb(199, 15, 15); */
-    justify-content:end;
+    
     display: flex;
     justify-content: end;
+    height: 25px;
+
+ 
+}
+
+#closeButton{
+    /* background-color: rgb(199, 15, 15); */
+    /* justify-content:end;
+    display: flex;
+    justify-content: end; */
+
+    /* border: none; */
+    background-color: white;
+    border-radius: 13px;
+    width: fit-content;
+    min-width: 25px;
+    /* height: 10px;     */
+    font-weight: 600;
+    color: #6c757d;
+    cursor: pointer;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 3px;
+    
    
     
 }
 
 #innerFrameContent{    
     height: 600px;
-    width:1400px;  
+    width:1350px;  
     border: 0;    
     
 }

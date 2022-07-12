@@ -152,8 +152,8 @@ function loginMessage() {
 
     popUpFrame.innerHTML = ` 
      <div id="loginPopUp"> 
-     <div id="closeButtonArea"><button id="closeButton">X</button></div>
-     <div><h1>Welcome Back</h1></div>
+     <div id="closeButtonArea"><button id="closeButton">Close</button></div>
+     <div><h1>Welcome to Pixel Farm </h1></div>
      </div>`
 
     let closeButton = document.querySelector('#closeButton');
@@ -1081,7 +1081,7 @@ playerInfoButton.addEventListener("click", () => {
     popUpFrame.style = 'left: 40px; top:-45px;'
 
     popUpFrame.innerHTML = ` 
-     <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">X</button> </div><iframe id="innerFrameContent" src="./playerInfo.html"></iframe> </div>`
+     <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">Back to Game</button> </div><iframe id="innerFrameContent" src="./playerInfo.html"></iframe> </div>`
 
     let closeButton = document.querySelector('#closeButton');
     closeButton.addEventListener("click", () => {
@@ -1098,7 +1098,7 @@ rankingButton.addEventListener("click", () => {
     popUpFrame.style = 'left: 40px; top:-40px;'
 
     popUpFrame.innerHTML = ` 
-     <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">X</button> </div><iframe id="innerFrameContent" src="./ranking.html"></iframe> </div>`
+     <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">Back to Game</button> </div><iframe id="innerFrameContent" src="./ranking.html"></iframe> </div>`
 
     let closeButton = document.querySelector('#closeButton');
     closeButton.addEventListener("click", () => {
