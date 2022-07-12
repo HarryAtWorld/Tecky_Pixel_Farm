@@ -4,6 +4,8 @@ import { isLoggedInAPI } from "../guards";
 import { client } from "../main";
 import console from "console";
 import { hashingPassword, checkPassword } from "../hashing";
+import fs from 'fs';
+import path from 'path';
 
 export const loginRoutes = express.Router();
 
@@ -75,6 +77,14 @@ async function register(req: Request, res: Response) {
     // console.log(`returning of insert: `);
     // console.log(data);
     const temp_ac = data.rows[0].id;
+
+    //for new player, check if json existing, if not , copy the template 
+    if (!fs.existsSync(path.join(__dirname, `./gameJson/${temp_ac}.json`))) {
+      let templateJson = JSON.parse(fs.readFileSync(`./gameJson/template.json`, { encoding: 'utf8' }))
+      templateJson.lastCheckingTime = Date.now()
+      fs.writeFileSync(`./gameJson/${temp_ac}.json`, JSON.stringify(templateJson), { flag: 'w' });
+    }
+
     // console.log(`passed temp_ac, result: ${temp_ac}`);
     //@ts-ignore
     const createPlayerData = await client.query(

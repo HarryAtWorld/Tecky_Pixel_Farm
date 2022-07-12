@@ -1090,7 +1090,7 @@ playerInfoButton.addEventListener("click", () => {
 
 })
 
-// button for popUP of ranking page
+// button for popUP of world ranking page
 let rankingButton = document.querySelector('#rankingButton');
 rankingButton.addEventListener("click", () => {
 
@@ -1115,7 +1115,7 @@ fdRankingButton.addEventListener("click", () => {
     popUpFrame.style = 'left: 40px; top:-40px;'
 
     popUpFrame.innerHTML = ` 
-     <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">X</button> </div><iframe id="innerFrameContent" src="./fdRanking.html"></iframe> </div>`
+     <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">Back to Game</button> </div><iframe id="innerFrameContent" src="./fdRanking.html"></iframe> </div>`
 
     let closeButton = document.querySelector('#closeButton');
     closeButton.addEventListener("click", () => {
@@ -1123,10 +1123,6 @@ fdRankingButton.addEventListener("click", () => {
     })
 
 })
-
-
-
-
 
 
 

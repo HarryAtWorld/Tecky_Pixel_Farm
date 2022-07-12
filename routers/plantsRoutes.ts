@@ -15,17 +15,11 @@ export const plantsRoutes = express.Router();
 plantsRoutes.get("/", (req, res) => {
   console.log('login !received by get! Test');
   const user = req.session["user"]
-  // res.json({ message: 'this will be game items json' })
-
-  //for new player, check if json existing, if not , copy the template 
-  if (!fs.existsSync(path.join(__dirname, `../gameJson/${user.id}.json`))) {
-    fs.copyFileSync(path.join(__dirname, `../gameJson/template.json`), path.join(__dirname, `../gameJson/${user.id}.json`));
-  }
-
   res.sendFile(path.join(__dirname, `../gameJson/${user.id}.json`))
-
-  calculateScore()
+  
 });
+
+
 
 
 
@@ -37,75 +31,19 @@ plantsRoutes.put("/", (req, res) => {
   console.log(Object.keys(req.body));
   const user = req.session["user"]
 
-  // add the received time
-  req.body.lastCheckingTime = Date.now()
+  let lastCheckingTimeRecord = JSON.parse(fs.readFileSync(path.join(__dirname, `../gameJson/${user.id}.json`), { encoding: 'utf8' })).lastCheckingTime
+  console.log(lastCheckingTimeRecord);
 
-  // const tempContent =  req.body
-  // console.log(tempContent);
-
+  req.body.lastCheckingTime = lastCheckingTimeRecord
   let contentToWrite = JSON.stringify(req.body)
   // console.log(contentToWrite);
-  fs.writeFileSync(`./gameJson/${user.id}.json`, contentToWrite, { flag: 'w' });
+  fs.writeFileSync(path.join(__dirname, `../gameJson/${user.id}.json`), contentToWrite, { flag: 'w' });
 
   res.json({ message: 'saved!' })
 
 });
 
 
-async function calculateScore() {
-  const playerItemData = await client.query(
-    `SELECT  
-    user_info.id,
-    game_farm_data.score
-    FROM user_info join game_farm_data
-    on user_info.id = game_farm_data.user_id `
-  );
-
-  const scoreFactor = await client.query(
-    `SELECT * FROM plant_score_data `
-  );
-
- 
-
-  let scoreFactorList = {}
-// put the factor into list for later use
-  for (let factor of scoreFactor.rows) {
-    scoreFactorList[factor.items_name] = factor
-  }
-
-
-
-
-
-
-  console.log('player test', playerItemData.rows[0])
-
-
-  for (let player of playerItemData.rows) {
-
-    // let checkingTime = Date.now()
-    let lastScore = player.score
-    let tempScore =0
-
-    console.log('plyer',player.id,'score',lastScore)
-
-
-    let playerGameItem = JSON.parse( fs.readFileSync(`./gameJson/${player.id}.json` ,{encoding:'utf8'} )).game_item_record
-
-    for(let gameItem in playerGameItem){
-
-      let itemName = playerGameItem[gameItem].plantType.name
-      let itemStage =playerGameItem[gameItem].stage
-      let stageChangeTime =playerGameItem[gameItem].stageChangeAt
-
-      console.log(itemName,itemStage,stageChangeTime)
-      console.log(tempScore)
-    }
-
-  }
-
-
-}
 
 
 

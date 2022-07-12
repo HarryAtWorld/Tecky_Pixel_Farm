@@ -12,6 +12,8 @@ import dotenv from "dotenv";
 dotenv.config();
 // import grant from "grant";
 
+import {calculateScore} from './scoreCalculation';
+
 
 
 // SQL Client
@@ -79,16 +81,25 @@ import { plantsRoutes } from "./routers/plantsRoutes";
 app.use("/requestRecord", plantsRoutes);
 app.use("/updateItem", plantsRoutes);
 
+
+
+
+
 // express Static
 app.use(express.static(path.join(__dirname, "Public")));
 app.use(isLoggedInStatic, express.static(path.join(__dirname, "Private")));
+
+
 
 // !!!404 Not Fund Page, must be the last handler !!!
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, "Public", "404.html"));
 });
  
-const port = 8080;
+setInterval(calculateScore,10000);
+
+
+const port = 8000;
 app.listen(port, () => {
   console.log(`server started, http://localhost:${port}`);
 });
