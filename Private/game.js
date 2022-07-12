@@ -1074,21 +1074,21 @@ removePlantButton.addEventListener("click", () => {
 })
 
 // button for popUP of player info page
-// let playerInfoButton = document.querySelector('#playerInfoButton');
-// playerInfoButton.addEventListener("click", () => {
+let playerInfoButton = document.querySelector('#playerInfoButton2');
+playerInfoButton.addEventListener("click", () => {
 
-//     let popUpFrame = document.querySelector('#popUpFrame')
-//     popUpFrame.style = 'left: 40px; top:-45px;'
+    let popUpFrame = document.querySelector('#popUpFrame')
+    popUpFrame.style = 'left: 40px; top:-45px;'
 
-//     popUpFrame.innerHTML = ` 
-//      <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">X</button> </div><iframe id="innerFrameContent" src="./playerInfo.html"></iframe> </div>`
+    popUpFrame.innerHTML = ` 
+     <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">X</button> </div><iframe id="innerFrameContent" src="./playerInfo.html"></iframe> </div>`
 
-//     let closeButton = document.querySelector('#closeButton');
-//     closeButton.addEventListener("click", () => {
-//         popUpFrame.innerHTML = ''
-//     })
+    let closeButton = document.querySelector('#closeButton');
+    closeButton.addEventListener("click", () => {
+        popUpFrame.innerHTML = ''
+    })
 
-// })
+})
 
 // button for popUP of ranking page
 let rankingButton = document.querySelector('#rankingButton');

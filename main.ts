@@ -87,7 +87,7 @@ app.use(isLoggedInStatic, express.static(path.join(__dirname, "Private")));
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, "Public", "404.html"));
 });
-
+ 
 const port = 8080;
 app.listen(port, () => {
   console.log(`server started, http://localhost:${port}`);
