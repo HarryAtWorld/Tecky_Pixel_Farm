@@ -21,12 +21,15 @@ function loginPage(req: Request, res: Response) {
 }
 
 async function login(req: Request, res: Response) {
+  // getting user login input
   const { login_account, login_password } = req.body;
   console.log(login_account, login_password);
+  // empty checking
   if (!login_account || !login_password) {
     res.status(400).json({ success: false, message: "invalid username/password" });
     return;
   }
+  // select from sql by login_account, getting all information
   const user = (
     await client.query(
       /*sql */ `
@@ -35,10 +38,15 @@ async function login(req: Request, res: Response) {
       [login_account]
     )
   ).rows[0];
+
+  // if no result -> not yet register -> return
   if (!user) {
     res.status(400).json({ success: false, message: "invalid username/password" });
     return;
   }
+
+  // checking password, if match -> set session
+  // checking hashed password
   const match = await checkPassword(login_password, user.login_password);
   if (match) {
     req.session["user"] = {
@@ -48,34 +56,38 @@ async function login(req: Request, res: Response) {
     };
     res.json({ success: true, message: "Login successful, Welcome" });
   } else {
+    // password not match -> return
     res.status(400).json({ success: false, message: "Invalid username/password" });
   }
 }
 
 async function register(req: Request, res: Response) {
+  // getting input from user
   const { user_name, login_account, login_password } = req.body;
   console.log(user_name, login_account, login_password);
 
+  // empty checking
   if (!user_name || !login_account || !login_password) {
     res.status(400).json({ success: false, message: "Missing Information" });
     return;
   }
   console.log(`passed check empty`);
 
+  // same username or login_account checking
   const checkAccount = await client.query(
     `SELECT * FROM user_info WHERE user_name = $1 OR login_account = $2`,
     [user_name, login_account]
   );
   console.log(`passed checkAccount, result: ${checkAccount.rows[0]}`);
 
+  // if passed guards -> insert data into database -> create new account
   if (checkAccount.rows[0] === undefined) {
+    // hashing password
     const hashedPassword = await hashingPassword(login_password);
     const data = await client.query(
       `INSERT INTO user_info (user_name, login_account, login_password) VALUES ($1, $2, $3) RETURNING id`,
       [user_name, login_account, hashedPassword]
     );
-    // console.log(`returning of insert: `);
-    // console.log(data);
     const temp_ac = data.rows[0].id;
 
     //for new player, check if json existing, if not , copy the template 
@@ -93,7 +105,7 @@ async function register(req: Request, res: Response) {
       [temp_ac]
     );
     console.log(`created playerData`);
-    // console.log(createPlayerData);
+    console.log(createPlayerData);
 
     res.status(200).json({ success: true, message: "Account created successfully" });
   } else {

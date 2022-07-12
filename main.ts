@@ -12,10 +12,13 @@ import dotenv from "dotenv";
 dotenv.config();
 // import grant from "grant";
 
+<<<<<<< HEAD
 import {calculateScore} from './scoreCalculation';
 
 
 
+=======
+>>>>>>> f2982b49276e2aa25648f336a1e02973a67ea211
 // SQL Client
 export const client = new pg.Client({
   database: process.env.DB_NAME,
@@ -27,7 +30,7 @@ client.connect();
 const app = express();
 // For json
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json({limit : '50mb'}));
+app.use(express.json({ limit: "50mb" }));
 
 // setup Cookies to User
 app.use(
@@ -60,14 +63,18 @@ app.use((req, res, next) => {
 // app.use(grantExpress as express.RequestHandler);
 
 // Router handler
+// login, register
 import { loginRoutes } from "./routers/loginRoutes";
 app.use(loginRoutes);
-import { friendRoutes } from "./routers/addFriendRoutes";
+// add friend routes and unfriend routes
+import { friendRoutes } from "./routers/friendRoutes";
 app.use("/friend", friendRoutes);
+// allPlayerRank route
 import { rankingRoutes } from "./routers/rankingRoutes";
 app.use("/allPlayerRank", rankingRoutes);
 import { userinfoRoutes } from "./routers/userInfoRoutes";
 app.use("/userInfo", userinfoRoutes);
+// FriendRank and show friend routers
 import { friendRankRoutes } from "./routers/friendRankRoutes";
 app.use("/friendRank", friendRankRoutes);
 //  edit_name
@@ -95,11 +102,16 @@ app.use(isLoggedInStatic, express.static(path.join(__dirname, "Private")));
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, "Public", "404.html"));
 });
+<<<<<<< HEAD
  
 setInterval(calculateScore,10000);
 
 
 const port = 8000;
+=======
+
+const port = 8080;
+>>>>>>> f2982b49276e2aa25648f336a1e02973a67ea211
 app.listen(port, () => {
   console.log(`server started, http://localhost:${port}`);
 });
