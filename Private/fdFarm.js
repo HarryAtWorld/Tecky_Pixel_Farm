@@ -38,8 +38,8 @@ async function loadSgFriends() {
 
   for (const data of datas) {
     htmlStr += /*html*/ `
-      <tr id=${data.user_id} class="suggest-friends">
-      <td class="ID">${data.user_id}</td>
+      <tr id=${data.id} class="suggest-friends">
+      <td class="ID">${data.id}</td>
       <td class="name">${data.user_name}</td>
       <td></td>
       </tr>
@@ -69,8 +69,8 @@ async function addTRClickEvent() {
 
         });
         const result = await resp.json();
-        console.log(result.status)
-        if (result.status === 200){
+        console.log(resp.status)
+        if (resp.status == 200) {
           window.location.href = "./fdGame.html";
         } else {
           window.location.href = "./fdFarm.html";
