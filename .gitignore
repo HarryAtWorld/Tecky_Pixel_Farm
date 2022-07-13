@@ -1,7 +1,11 @@
 node_modules
+gameJson
 package-lock.json
 .env
 .DS_Store
 .prettierrc
+<<<<<<< HEAD
 .vscode
 .gameJson
+=======
+>>>>>>> 704e2dc2f4a8838899943be9d1fd0c91375f759f

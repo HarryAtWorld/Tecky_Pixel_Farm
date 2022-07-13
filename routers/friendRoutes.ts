@@ -1,7 +1,6 @@
 import express from "express";
 import type { Request, Response } from "express";
 import { client } from "../main";
-import console from "console";
 
 export const friendRoutes = express.Router();
 

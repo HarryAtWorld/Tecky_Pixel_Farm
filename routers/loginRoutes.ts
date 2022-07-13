@@ -4,8 +4,8 @@ import { isLoggedInAPI } from "../guards";
 import { client } from "../main";
 import console from "console";
 import { hashingPassword, checkPassword } from "../hashing";
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
 
 export const loginRoutes = express.Router();
 
@@ -49,11 +49,15 @@ async function login(req: Request, res: Response) {
   // checking hashed password
   const match = await checkPassword(login_password, user.login_password);
   if (match) {
+    // temp_data_id -> for go to fd_farm -> defaults undefined
+    let temp_data_id;
     req.session["user"] = {
       id: user.id,
       user_name: user.user_name,
       login_account: user.login_account,
+      fd_farm: temp_data_id,
     };
+    console.log(req.session["user"]);
     res.json({ success: true, message: "Login successful, Welcome" });
   } else {
     // password not match -> return
@@ -90,12 +94,20 @@ async function register(req: Request, res: Response) {
     );
     const temp_ac = data.rows[0].id;
 
-    //for new player, check if json existing, if not , copy the template 
+    //for new player, check if json existing, if not , copy the template
     if (!fs.existsSync(path.join(__dirname, `./gameJson/${temp_ac}.json`))) {
+<<<<<<< HEAD
       let templateJson = JSON.parse(fs.readFileSync(`./gameJson/template.json`, { encoding: 'utf8' }))
       templateJson.lastCheckingTime = Date.now()
       templateJson.landCount = 1
       fs.writeFileSync(`./gameJson/${temp_ac}.json`, JSON.stringify(templateJson), { flag: 'w' });
+=======
+      let templateJson = JSON.parse(
+        fs.readFileSync(`./gameJson/template.json`, { encoding: "utf8" })
+      );
+      templateJson.lastCheckingTime = Date.now();
+      fs.writeFileSync(`./gameJson/${temp_ac}.json`, JSON.stringify(templateJson), { flag: "w" });
+>>>>>>> 704e2dc2f4a8838899943be9d1fd0c91375f759f
     }
 
     // console.log(`passed temp_ac, result: ${temp_ac}`);

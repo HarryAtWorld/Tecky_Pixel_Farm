@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "project",
+            "database": "teckywspproject",
+            "username": "proclient",
+            "password": "1234"
+        }
+    ]
+}

@@ -237,3 +237,25 @@ client.connect();
 // const diffOfTime = (new Date().getTime() - new Date(create_at).getTime()) / 1000;
 // console.log(`${diffOfTime} s`); // return as seconds
 // ////////////////////////////////////////////////////////////////////
+
+async function a() {
+  const suggestFriend = await client.query(
+    `SELECT * 
+    FROM user_info 
+    WHERE 
+    id != $1 
+    AND id 
+    NOT IN (
+      SELECT user_id_b 
+      FROM relationship 
+      WHERE user_id_a = $1) OR 
+      NOT IN (
+        SELECT user_id_a 
+        FROM relationship 
+        WHERE user_id_b = $1)`,
+    [4]
+  );
+  return suggestFriend;
+}
+
+console.log(a());
