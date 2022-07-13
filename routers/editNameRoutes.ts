@@ -30,11 +30,8 @@ async function changeName(req: Request, res: Response) {
   const check_same_user_name = await client.query(`select * from user_info where user_name = $1`, [
     insert_new_name,
   ]);
-
-  if (!check_same_user_name) {
-    console.log("Have same user name already");
-    return;
-  } else {
+  console.log(check_same_user_name.rows[0]);
+  if (!check_same_user_name.rows[0]) {
     // update query
     const temp_info = await client.query(
       `update user_info set user_name = $1 where id = $2 RETURNING *`,
@@ -50,6 +47,10 @@ async function changeName(req: Request, res: Response) {
     console.log(`Passed update user_info: ${new_name}`);
     console.log(req.session["user"]);
     res.status(200).json({ success: true, message: "Updated user_name successfully" });
+  } else {
+    console.log("Have same user name already");
+    res.status(400).json({ success: false, message: "User name already exists" });
+    return;
   }
 }
 
