@@ -32,11 +32,11 @@ plantsRoutes.get("/", async (req, res) => {
     `SELECT * FROM plant_score_data `
   );
 
-  let scoreFactorList = {} 
+  let scoreFactorList = {}
   for (let factor of scoreFactor.rows) {
     scoreFactorList[factor.items_name] = factor
   }
-//add score factor to json before send to user
+  //add score factor to json before send to user
   playerGameItemRecord.scoreFactorList = scoreFactorList
 
   fs.writeFileSync(path.join(__dirname, `../gameJson/${user.id}.json`), JSON.stringify(playerGameItemRecord), { flag: 'w' });
@@ -50,25 +50,46 @@ plantsRoutes.get("/", async (req, res) => {
 
 
 //Update & save JSON from player
-plantsRoutes.put("/", (req, res) => {
+plantsRoutes.put("/", async (req, res) => {
 
   console.log('update received by put! Test');
 
-  console.log('update json received:',Object.keys(req.body));
+  console.log('update json received:', Object.keys(req.body));
   const user = req.session["user"]
 
-  let lastCheckingTimeRecord = JSON.parse(fs.readFileSync(path.join(__dirname, `../gameJson/${user.id}.json`), { encoding: 'utf8' })).lastCheckingTime
- 
+  let lastRecord = JSON.parse(fs.readFileSync(path.join(__dirname, `../gameJson/${user.id}.json`), { encoding: 'utf8' }))
+  let lastCheckingTimeRecord = lastRecord.lastCheckingTime
+  let lastlandCount = lastRecord.landCount
 
+  //check land count change for reduce score
+  let newLandCount = 0
+
+  for (let x of req.body.map) {    
+    for (let y in x) {
+      if (x[y].tileType === 'ground') {
+        newLandCount += 1
+      }
+    }
+  }  
+
+  let reduceScore = (newLandCount - lastlandCount) * 100
+
+  if (reduceScore > 0) {
+    await client.query(
+      `update game_farm_data set score = score - $1 where user_id = $2 `,
+      [reduceScore,user.id]
+    );     
+  }
+ 
+// add latest data to json
   req.body.lastCheckingTime = lastCheckingTimeRecord
+  req.body.landCount = newLandCount
+
   let contentToWrite = JSON.stringify(req.body)
   // console.log(contentToWrite);
   fs.writeFileSync(path.join(__dirname, `../gameJson/${user.id}.json`), contentToWrite, { flag: 'w' });
- 
+
   res.json({ message: 'saved!' })
-
-
-  
 
 });
 

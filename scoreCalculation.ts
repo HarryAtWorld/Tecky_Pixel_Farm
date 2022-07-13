@@ -58,7 +58,7 @@ export async function calculateScore() {
                 playerGameItemRecord.game_item_record[gameItem].stage += 1
 
                 console.log(itemName,gameItem,'changed stage to:', playerGameItemRecord.game_item_record[gameItem].stage)
-                console.log('changed stage to:', itemStage)
+                // console.log('changed stage to:', itemStage) //<=====why this later then above 1 loop?
                 //update item 'stageChangeAt' on Json         
                 fs.writeFileSync(`./gameJson/${player.id}.json`, JSON.stringify(playerGameItemRecord), { flag: 'w' });
 
@@ -66,9 +66,13 @@ export async function calculateScore() {
 
             //check how may score should be added for  this item during last 10second
             let itemScore = scoreFactorList[itemName][`stage_${playerGameItemRecord.game_item_record[gameItem].stage}_score`]
+            
+            if (playerGameItemRecord.game_item_record[gameItem].stage == 3) {
+                continue
+            }
             tempScore += itemScore
         }
-
+        
         let newScore = lastScore + tempScore
 
         await client.query(

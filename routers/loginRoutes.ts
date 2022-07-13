@@ -94,6 +94,7 @@ async function register(req: Request, res: Response) {
     if (!fs.existsSync(path.join(__dirname, `./gameJson/${temp_ac}.json`))) {
       let templateJson = JSON.parse(fs.readFileSync(`./gameJson/template.json`, { encoding: 'utf8' }))
       templateJson.lastCheckingTime = Date.now()
+      templateJson.landCount = 1
       fs.writeFileSync(`./gameJson/${temp_ac}.json`, JSON.stringify(templateJson), { flag: 'w' });
     }
 
