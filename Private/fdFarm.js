@@ -38,15 +38,15 @@ async function loadSgFriends() {
 
   for (const data of datas) {
     htmlStr += /*html*/ `
-      <tr id=${data.id} class="suggest-friends">
+      <div id=${data.id} class="suggest-friends">
       <td class="ID">${data.id}</td>
       <td class="name">${data.user_name}</td>
       <td></td>
-      </tr>
+      </div>
       `;
   }
   document.querySelector("#SgFriendsTable").innerHTML = htmlStr;
-  addTRClickEvent()
+  // addTRClickEvent()
 }
 
 

@@ -55,7 +55,7 @@ td, th {
 
 tbody th {
 	background-color: #2ea879;
-}
+} 
 tbody tr:nth-child(2n-1) {
     background-color: #f5f5f5;
     transition: all .125s ease-in-out;
@@ -67,3 +67,25 @@ tbody tr:hover {
 td.rank {
 	text-transform: capitalize;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
