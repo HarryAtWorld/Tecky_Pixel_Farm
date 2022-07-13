@@ -3,4 +3,8 @@ package-lock.json
 .env
 .DS_Store
 .prettierrc
+<<<<<<< HEAD
 
+=======
+gameJson
+>>>>>>> e4bc26ede69a6f49664f16e11ff0c6fe868cc697

@@ -16,7 +16,11 @@ async function loadRanking() {
   let i = 1
   for (const data of datas) {
     htmlStr += /*html*/ `
+<<<<<<< HEAD
       <tr id=${data.user_id} class="friends">
+=======
+      <tr>
+>>>>>>> e4bc26ede69a6f49664f16e11ff0c6fe868cc697
       <td class="rank">${i}</td>
       <td class="name">${data.user_name}</td>
       <td class="score">${data.score}</td>
@@ -25,6 +29,7 @@ async function loadRanking() {
     i++
   }
   document.querySelector("#rankTable").innerHTML = htmlStr;
+<<<<<<< HEAD
   addTRClickEvent()
 }
 
@@ -39,6 +44,19 @@ async function loadSgFriends() {
   for (const data of datas) {
     htmlStr += /*html*/ `
       <tr id=${data.user_id} class="suggest-friends">
+=======
+}
+
+async function loadSgFriends() {
+  const resp = await fetch("/friendRank");
+  console.log(`passed fetch, ${resp}`);
+  const datas = await resp.json();
+  let htmlStr = "";
+
+  for (const data of datas) {
+    htmlStr += /*html*/ `
+      <tr>
+>>>>>>> e4bc26ede69a6f49664f16e11ff0c6fe868cc697
       <td class="ID">${data.user_id}</td>
       <td class="name">${data.user_name}</td>
       <td></td>
@@ -46,6 +64,7 @@ async function loadSgFriends() {
       `;
   }
   document.querySelector("#SgFriendsTable").innerHTML = htmlStr;
+<<<<<<< HEAD
   addTRClickEvent()
 }
 
@@ -83,4 +102,7 @@ async function addTRClickEvent(){
   )
 }
   ;
+=======
+}
+>>>>>>> e4bc26ede69a6f49664f16e11ff0c6fe868cc697
 
