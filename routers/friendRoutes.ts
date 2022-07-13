@@ -36,13 +36,18 @@ async function addFriend(req: Request, res: Response) {
   if (!temp_friend_id.rows[0]) {
     res.status(400).json({ success: false, message: "Player not found" });
     return;
+  } else if (temp_friend_id.rows[0].id === user.id) {
+    res.status(400).json({ success: false, message: "Don't be narcissism, that is yourself!!!" });
+    return;
   } else {
     // add Friend logic start
     const friend_id = temp_friend_id.rows[0].id;
 
     // checking is it already fd
     const temp_checking = await client.query(
-      `SELECT * FROM relationship where user_id_a = $1 AND user_id_b = $2 OR user_id_b = $1 AND user_id_a = $2;`,
+      `SELECT * FROM relationship 
+      where user_id_a = $1 AND user_id_b = $2 
+      OR user_id_b = $1 AND user_id_a = $2;`,
       [user.id, friend_id]
     );
     const isFdCheck = temp_checking.rows[0];
