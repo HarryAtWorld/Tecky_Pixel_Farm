@@ -11,11 +11,11 @@ export const goToFriendFarm = express.Router();
 goToFriendFarm.get("/", goFarm);
 
 async function goFarm(req: Request, res: Response) {
-  const target = req.body;
+  const { user_id } = req.body;
   console.log(`Ready to Fd Farm`);
-  console.log(target);
+  console.log(user_id);
   res
     .status(400)
     .json({ success: true })
-    .sendFile(path.join(__dirname, `../gameJson/${target.id}.json`));
+    .sendFile(path.join(__dirname, `../gameJson/${user_id.id}.json`));
 }
