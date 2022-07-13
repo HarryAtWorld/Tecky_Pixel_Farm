@@ -8,7 +8,7 @@ import { client } from "../main";
 
 export const goToFriendFarm = express.Router();
 
-goToFriendFarm.get("/", goFarm);
+goToFriendFarm.post("/", goFarm);
 
 async function goFarm(req: Request, res: Response) {
   const { user_id } = req.body;

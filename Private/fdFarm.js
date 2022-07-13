@@ -61,7 +61,7 @@ async function addTRClickEvent() {
         // const user_name = form.changeUsername.value;
         console.log(user_id);
         const resp = await fetch("/friendFarm", {
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
