@@ -12,13 +12,10 @@ import dotenv from "dotenv";
 dotenv.config();
 // import grant from "grant";
 
-<<<<<<< HEAD
 import {calculateScore} from './scoreCalculation';
 
 
 
-=======
->>>>>>> f2982b49276e2aa25648f336a1e02973a67ea211
 // SQL Client
 export const client = new pg.Client({
   database: process.env.DB_NAME,
@@ -102,16 +99,11 @@ app.use(isLoggedInStatic, express.static(path.join(__dirname, "Private")));
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, "Public", "404.html"));
 });
-<<<<<<< HEAD
  
 setInterval(calculateScore,10000);
 
 
-const port = 8000;
-=======
-
 const port = 8080;
->>>>>>> f2982b49276e2aa25648f336a1e02973a67ea211
 app.listen(port, () => {
   console.log(`server started, http://localhost:${port}`);
 });
