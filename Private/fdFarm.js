@@ -69,10 +69,14 @@ async function addTRClickEvent() {
 
         });
         const result = await resp.json();
-        if (result.success) {
+        console.log(result.status)
+        if (result.status === 200){
           window.location.href = "./fdGame.html";
-
+        } else {
+          window.location.href = "./fdFarm.html";
         }
+
+
       })
     }
   )
