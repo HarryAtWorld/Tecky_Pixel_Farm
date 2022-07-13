@@ -1,48 +1,47 @@
 
 window.onload = () => {
 
-    loadRanking();
-    loadSgFriends();
-    
-  };
- 
+  loadRanking();
+  loadSgFriends();
+
+};
 
 
- async function loadRanking() {
-    const resp = await fetch("/friendRank");
-    console.log(`passed fetch, ${resp}`);
-    const datas = await resp.json();
-    let htmlStr = "";
-    let i = 1
-    for (const data of datas) {
-      htmlStr += /*html*/ `
+
+async function loadRanking() {
+  const resp = await fetch("/friendRank");
+  console.log(`passed fetch, ${resp}`);
+  const datas = await resp.json();
+  let htmlStr = "";
+  let i = 1
+  for (const data of datas) {
+    htmlStr += /*html*/ `
       <tr>
       <td class="rank">${i}</td>
       <td class="name">${data.user_name}</td>
       <td class="score">${data.score}</td>
       </tr>
       `;
-      i++
-    }
-    document.querySelector("#rankTable").innerHTML = htmlStr;
+    i++
   }
+  document.querySelector("#rankTable").innerHTML = htmlStr;
+}
 
-  async function loadSgFriends() {
-    const resp = await fetch("/friendRank");
-    console.log(`passed fetch, ${resp}`);
-    const datas = await resp.json();
-    let htmlStr = "";
+async function loadSgFriends() {
+  const resp = await fetch("/friendRank");
+  console.log(`passed fetch, ${resp}`);
+  const datas = await resp.json();
+  let htmlStr = "";
 
-    for (const data of datas) {
-      htmlStr += /*html*/ `
+  for (const data of datas) {
+    htmlStr += /*html*/ `
       <tr>
-      <td class="ID">${data.id}</td>
+      <td class="ID">${data.user_id}</td>
       <td class="name">${data.user_name}</td>
       <td class="score">${data.score}</td>
       </tr>
       `;
-    }
-    document.querySelector("#SgFriendsTable").innerHTML = htmlStr;
   }
+  document.querySelector("#SgFriendsTable").innerHTML = htmlStr;
+}
 
- 
