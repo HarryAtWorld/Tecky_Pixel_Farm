@@ -36,7 +36,7 @@ let scoreCheckingGroups = {
 
 let temp_mapTileList;
 let temp_gameItemList;
-let temp_landCount;
+let temp_landCount = 0;
 let temp_scoreCheckingGroups;
 let temp_addedLandList = [];
 let temp_addedPlantList = [];
@@ -988,12 +988,12 @@ function addPlant(event) {
 
     } else if (temp_mapTileList[Math.floor(mouseXGrid * (showGridSize / gameBaseGridSize))][Math.floor(mouseYGrid * (showGridSize / gameBaseGridSize))].tileType === 'ground') {
         temp_gameItemList[`x${mouseXGrid}y${mouseYGrid}`] = new plantingBox(currentSelectedPlant, Date.now(), 0, mouseXGrid, mouseYGrid)
-        
+
         temp_drawPlants()
         let randomGrouping = Math.floor(Math.random() * 10)
         temp_scoreCheckingGroups[`group${randomGrouping}`].push(`x${mouseXGrid}y${mouseYGrid}`)
         temp_addedPlantList.push(`x${mouseXGrid}y${mouseYGrid}`)
-            
+
 
     }
 }
@@ -1017,7 +1017,7 @@ function removePlant(event) {
                 temp_scoreCheckingGroups[group] = temp_scoreCheckingGroups[group].filter(e => e !== `x${mouseXGrid}y${mouseYGrid}`)
                 temp_addedPlantList = temp_addedPlantList.filter(e => e !== `x${mouseXGrid}y${mouseYGrid}`)
                 break
-            }            
+            }
         }
     }
 
@@ -1333,7 +1333,7 @@ addLandButton.addEventListener("click", () => {
         isEditModeOn = false
         addLandButton.style = 'background-color:rgb(240,240,240);'
         gameDisplayLayer15.style = 'background-color: ;'
-        saveChecking()
+        askForSave()
     } else {
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         addLandButton.style = 'background-color:rgb(220,50,50);'
@@ -1369,7 +1369,7 @@ removeLandButton.addEventListener("click", () => {
         isEditModeOn = false
         removeLandButton.style = 'background-color:rgb(240,240,240);'
         gameDisplayLayer15.style = 'background-color: ;'
-        saveChecking()
+        askForSave()
     } else {
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         removeLandButton.style = 'background-color:rgb(220,50,50);'
@@ -1405,7 +1405,7 @@ selectCarrotButton.addEventListener("click", () => {
         isEditModeOn = false
         selectCarrotButton.style = 'background-color:rgb(240,240,240);'
         gameDisplayLayer15.style = 'background-color: ;'
-        saveChecking()
+        askForSave()
     } else {
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         selectCarrotButton.style = 'background-color:rgb(220,50,50);'
@@ -1440,7 +1440,7 @@ selectCornButton.addEventListener("click", () => {
         isEditModeOn = false
         selectCornButton.style = 'background-color:rgb(240,240,240);'
         gameDisplayLayer15.style = 'background-color: ;'
-        saveChecking()
+        askForSave()
     } else {
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         selectCornButton.style = 'background-color:rgb(220,50,50);'
@@ -1475,7 +1475,7 @@ selectPumpkinButton.addEventListener("click", () => {
         isEditModeOn = false
         selectPumpkinButton.style = 'background-color:rgb(240,240,240);'
         gameDisplayLayer15.style = 'background-color: ;'
-        saveChecking()
+        askForSave()
     } else {
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         selectPumpkinButton.style = 'background-color:rgb(220,50,50);'
@@ -1510,7 +1510,7 @@ selectLettuceButton.addEventListener("click", () => {
         isEditModeOn = false
         selectLettuceButton.style = 'background-color:rgb(240,240,240);'
         gameDisplayLayer15.style = 'background-color: ;'
-        saveChecking()
+        askForSave()
     } else {
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         selectLettuceButton.style = 'background-color:rgb(220,50,50);'
@@ -1546,7 +1546,7 @@ selectYellowFlowerButton.addEventListener("click", () => {
         isEditModeOn = false
         selectYellowFlowerButton.style = 'background-color:rgb(240,240,240);'
         gameDisplayLayer15.style = 'background-color: ;'
-        saveChecking()
+        askForSave()
     } else {
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         selectYellowFlowerButton.style = 'background-color:rgb(220,50,50);'
@@ -1581,7 +1581,7 @@ selectRedFlowerButton.addEventListener("click", () => {
         isEditModeOn = false
         selectRedFlowerButton.style = 'background-color:rgb(240,240,240);'
         gameDisplayLayer15.style = 'background-color: ;'
-        saveChecking()
+        askForSave()
     } else {
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         selectRedFlowerButton.style = 'background-color:rgb(220,50,50);'
@@ -1616,7 +1616,7 @@ selectBlueFlowerButton.addEventListener("click", () => {
         isEditModeOn = false
         selectBlueFlowerButton.style = 'background-color:rgb(240,240,240);'
         gameDisplayLayer15.style = 'background-color: ;'
-        saveChecking()
+        askForSave()
     } else {
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         selectBlueFlowerButton.style = 'background-color:rgb(220,50,50);'
@@ -1651,7 +1651,7 @@ selectTreeButton.addEventListener("click", () => {
         isEditModeOn = false
         selectTreeButton.style = 'background-color:rgb(240,240,240);'
         gameDisplayLayer15.style = 'background-color: ;'
-        saveChecking()
+        askForSave()
     } else {
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         selectTreeButton.style = 'background-color:rgb(220,50,50);'
@@ -1687,7 +1687,7 @@ removePlantButton.addEventListener("click", () => {
         isEditModeOn = false
         removePlantButton.style = 'background-color:rgb(240,240,240);'
         gameDisplayLayer15.style = 'background-color: ;'
-        saveChecking()
+        askForSave()
     } else {
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         removePlantButton.style = 'background-color:rgb(220,50,50);'
@@ -1705,48 +1705,87 @@ removePlantButton.addEventListener("click", () => {
 
 //edit mode temp functions======================================================
 
-function saveChecking() {
-    console.log('changed save?')
+function askForSave() {
 
-    if (true) {
-        //reduce score according to the added land list
-        gameScore -= temp_addedLandList.length * 100
+    let popUpFrame = document.querySelector('#popUpFrame')
 
+    popUpFrame.style = 'left: 560px; top:200px;'
 
-        
-        //reset the added plant's stageChangeTime according to the added plant list
-        for (let plant of temp_addedPlantList) {
-            // console.log(temp_gameItemList)
-            temp_gameItemList[plant].stageChangeAt = Date.now()
-        }
+    popUpFrame.innerHTML = ` 
+     <div id="saveEditPopUp"> 
+     <div><h1> Save Change?</h1></div>
+     <div id="YesNoButtonArea"><button id="yesButton">YES</button><button id="noButton">NO</button></div>
+     
+     </div>`
 
-        
+    let yesButton = document.querySelector('#yesButton');
+    yesButton.addEventListener("click", () => {
+        okSave()
+        popUpFrame.innerHTML = ''
+    })
 
-        //change temp data to current data
-        mapTileList = temp_mapTileList;
-        gameItemList = temp_gameItemList;
-        landCount = temp_landCount;
-        scoreCheckingGroups = temp_scoreCheckingGroups;
+    let noButton = document.querySelector('#noButton');
+    noButton.addEventListener("click", () => {
 
-        temp_mapTileList =[]
-        temp_gameItemList ={}
-        temp_landCount =0
-        temp_scoreCheckingGroups={}
+        temp_mapTileList = []
+        temp_gameItemList = {}
+        temp_landCount = 0
+        temp_scoreCheckingGroups = {}
         temp_addedPlantList = []
-        temp_addedLandList =[]
-
+        temp_addedLandList = []
 
         clearLayer(ctxLayer15)
         clearLayer(ctxLayer16)
 
-        drawGround()
-        drawGroundEdge()
-        drawPlants()
-        displayScore.innerText = `Score:${gameScore}`
+        popUpFrame.innerHTML = ''
+    })
 
-        saveToServer()
 
+}
+
+
+function okSave() {
+    console.log('changed save?')
+
+
+    //reduce score according to the added land list
+    gameScore -= temp_addedLandList.length * 100
+
+
+
+    //reset the added plant's stageChangeTime according to the added plant list
+    for (let plant of temp_addedPlantList) {
+        // console.log(temp_gameItemList)
+        temp_gameItemList[plant].stageChangeAt = Date.now()
     }
+
+
+
+    //change temp data to current data
+    mapTileList = temp_mapTileList;
+    gameItemList = temp_gameItemList;
+    landCount = temp_landCount;
+    scoreCheckingGroups = temp_scoreCheckingGroups;
+
+    temp_mapTileList = []
+    temp_gameItemList = {}
+    temp_landCount = 0
+    temp_scoreCheckingGroups = {}
+    temp_addedPlantList = []
+    temp_addedLandList = []
+
+
+    clearLayer(ctxLayer15)
+    clearLayer(ctxLayer16)
+
+    drawGround()
+    drawGroundEdge()
+    drawPlants()
+    displayScore.innerText = `Score:${gameScore}`
+
+    saveToServer()
+
+
 
 
 

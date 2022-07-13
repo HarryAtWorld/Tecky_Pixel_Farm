@@ -84,8 +84,20 @@ body{
     background-color: rgb(240, 240, 240);
     padding: 20px;
     text-align: center;
+       
+}
+
+#saveEditPopUp{
     
-    
+    height: 150px;
+    width:400px;
+    /* background-color: rgb(255, 255, 255); */
+    border: solid 2px rgb(243, 0, 0);
+    border-radius: 10px;
+    background-color: rgb(240, 240, 240);
+    padding: 20px;
+    text-align: center;
+       
 }
 
 #closeButtonArea{
@@ -97,6 +109,38 @@ body{
 
  
 }
+
+#YesNoButtonArea{
+    /* background-color: rgb(199, 15, 15); */
+    
+    display: flex;
+    justify-content: space-evenly;
+    height: 25px;
+    font-weight: 600;
+    margin-top: 50px;
+
+ 
+}
+
+#YesNoButtonArea button{
+    cursor: pointer;   
+    /* background-color: white; */
+    border-radius: 13px;
+    width: fit-content;
+    min-width: 25px;
+    /* height: 10px;     */
+    font-weight: 600;
+    /* color: #6c757d; */
+    cursor: pointer;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 3px; 
+    
+    
+}
+
+
+
 
 #closeButton{
     /* background-color: rgb(199, 15, 15); */
@@ -122,9 +166,7 @@ body{
 }
 
 #closeButtonArea button{
-    cursor: pointer;
-   
-   
+    cursor: pointer;    
     
 }
 
