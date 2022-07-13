@@ -24,6 +24,9 @@ async function getFDSuggestion(req: Request, res: Response) {
             )
     ORDER BY random()
     limit 5;`);
-  console.log(data_suggestion);
-  res.json(data_suggestion);
+  console.log(`This is data of fd suggestion`);
+  console.log(data_suggestion.rows);
+
+  const resp = data_suggestion.rows;
+  res.json(resp);
 }
