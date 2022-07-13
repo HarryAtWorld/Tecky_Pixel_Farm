@@ -12,8 +12,9 @@ let showGridSize = gameBaseGridSize //this will be changed in other function
 
 let mapTileList = []
 let gameItemList = {}
+let scoreFactorList = {}
 let landCount = 0
-let gameScore = 1000
+let gameScore = 0
 let displayScore = document.querySelector('#gameScore')
 let ctxLayer40Alpha = 0.9
 
@@ -119,20 +120,27 @@ mapTiles.src = './gameImages/map/island.png';
 
 
 async function requestRecordAndDrawWorld() {
+
+    // fetch record from server
     const requestRecord = await fetch(`/requestRecord/`, {
         method: "get"
     });
     const result = await requestRecord.json();
 
-    if (result) {
-        console.log(result);
-    }
-
+    // fill in data to this js
     mapTileList = result.map
     gameItemList = result.game_item_record
+    gameScore = result.lastScoreRecord.score
+
+    for (let factor in result.scoreFactorList) {
+        scoreFactorList[factor] = result.scoreFactorList[`${factor}`]
+    }
+
+
 
     drawWorld();
     loginMessage();
+    startCalculateScore()
 }
 
 
@@ -141,7 +149,7 @@ function drawWorld() {
     drawGroundEdge()
     drawPlants()
     randomGroupingPlants()
-    
+
 }
 
 //popUp message when enter game page
@@ -312,13 +320,13 @@ function showGrid(gridSize) {
     ctxLayer30.lineWidth = 1;
     ctxLayer30.strokeStyle = 'rgb(255,255,255)';
     ctxLayer30.setLineDash([4, 2])
-    for (let x = 0; x < gameXGridNumber * (gameBaseGridSize / gridSize); x++) {
+    for (let x = 0; x < gameXGridNumber * (gameBaseGridSize / gridSize)+1; x++) {
         ctxLayer30.beginPath();
         ctxLayer30.moveTo(x * gridSize, 0)
         ctxLayer30.lineTo(x * gridSize, gameYGridNumber * gameBaseGridSize)
         ctxLayer30.stroke();
     }
-    for (let y = 0; y < gameYGridNumber * (gameBaseGridSize / gridSize); y++) {
+    for (let y = 0; y < gameYGridNumber * (gameBaseGridSize / gridSize)+1; y++) {
         ctxLayer30.beginPath();
         ctxLayer30.moveTo(0, y * gridSize)
         ctxLayer30.lineTo(gameXGridNumber * gameBaseGridSize, y * gridSize)
@@ -895,34 +903,78 @@ function clearButtonHighLight() {
 //===========================Score Calculation ================================================
 
 
+function startCalculateScore() {
+    for (let i = 0; i < Object.keys(scoreCheckingGroups).length; i++) {
+        let checkingGroup = `group${i}`
 
-for (let i = 0; i < Object.keys(scoreCheckingGroups).length; i++) {
-    let textContent = '+3'
-    let checkingGroup = `group${i}`
+        setTimeout(() => {
+            // after onload, show the score start calculate
+            let checkingTimeNow = Date.now()
 
-    setTimeout(() => {
-        // console.log(i, scoreCheckingGroups[`group${i}`])
+            for (let gameItem of scoreCheckingGroups[checkingGroup]) {
+                let itemName = gameItemList[gameItem].plantType.name
+                let itemStage = gameItemList[gameItem].stage
+                let itemStageChangeTime = gameItemList[gameItem].stageChangeAt
+                let timeDuring = Math.round((checkingTimeNow - itemStageChangeTime) / 1000)
 
-        // after onload, show the score adding animation
-        showTextToItems(checkingGroup)
+                //change plant stage with checking
+                if (timeDuring > scoreFactorList[itemName][`stage_${itemStage}_life`] && itemStage < 3) {
+                    gameItemList[gameItem].stage += 1
+                    gameItemList[gameItem].stageChangeAt = checkingTimeNow
 
-        gameScore += scoreCheckingGroups[checkingGroup].length * 1
-        displayScore.innerText = `Score:${gameScore}`
+                    //redraw all plant
+                    clearLayer(ctxLayer10)
+                    drawPlants()
 
+                    // console.log('===========================changed stage to:', gameItemList[gameItem].stage)
+                }
 
-        // set up regular 10s checking for score and stage
-        let regularChecking = setInterval(() => {
+                if(gameItemList[gameItem].stage == 3){
+                    continue
+                }
+                gameScore += scoreFactorList[itemName][`stage_${itemStage}_score`]
+            }            
             showTextToItems(checkingGroup)
-
-            // add score action here
-            gameScore += scoreCheckingGroups[checkingGroup].length * 1
             displayScore.innerText = `Score:${gameScore}`
 
-            //change plant stage here
 
-        }, 10000)
-    }, i * 1000)
+            // set up regular 10s checking for score and stage
+            let regularChecking = setInterval(() => {
 
+                let checkingTimeNow = Date.now()
+
+                for (let gameItem of scoreCheckingGroups[checkingGroup]) {
+                    let itemName = gameItemList[gameItem].plantType.name
+                    let itemStage = gameItemList[gameItem].stage
+                    let itemStageChangeTime = gameItemList[gameItem].stageChangeAt
+                    let timeDuring = Math.round((checkingTimeNow - itemStageChangeTime) / 1000)
+
+                    //change plant stage with checking
+                    if (timeDuring > scoreFactorList[itemName][`stage_${itemStage}_life`] && itemStage < 3) {
+                        gameItemList[gameItem].stage += 1
+                        gameItemList[gameItem].stageChangeAt = checkingTimeNow
+
+                        //redraw all plant
+                        clearLayer(ctxLayer10)
+                        drawPlants()
+
+                        // console.log('===========================changed stage to:', gameItemList[gameItem].stage)
+                    }
+
+                    if(gameItemList[gameItem].stage == 3){
+                        continue
+                    }
+                    gameScore += scoreFactorList[itemName][`stage_${itemStage}_score`]
+                }
+                showTextToItems(checkingGroup)
+                displayScore.innerText = `Score:${gameScore}`
+
+            }, 10000)
+
+
+        }, i * 1000)
+
+    }
 }
 
 function showTextToItems(checkingGroup) {
@@ -943,7 +995,12 @@ function showTextToItems(checkingGroup) {
             ctxLayer40.font = "12px Arial";
             clearLayer(ctxLayer40)
             for (let key of scoreCheckingGroups[checkingGroup]) {
-                ctxLayer40.fillText(`+1`, gameItemList[key].x * 16, gameItemList[key].y * 16 - yMove + 16)
+                let scoreToAdd = scoreFactorList[gameItemList[key].plantType.name][`stage_${gameItemList[key].stage}_score`]
+                if (scoreToAdd == 0) {
+                    continue
+                }
+                let textToShow = `+${scoreToAdd}`
+                ctxLayer40.fillText(textToShow, gameItemList[key].x * 16, gameItemList[key].y * 16 - yMove + 16)
 
             }
 
@@ -1123,6 +1180,34 @@ fdRankingButton.addEventListener("click", () => {
     })
 
 })
+
+// button for popUP of fdFarm page
+let fdFarmButton = document.querySelector('#fdFarmButton');
+fdFarmButton.addEventListener("click", () => {
+
+    let popUpFrame = document.querySelector('#popUpFrame')
+    popUpFrame.style = 'left: 40px; top:-40px;'
+
+    popUpFrame.innerHTML = ` 
+     <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">Back to Game</button> </div><iframe id="innerFrameContent" src="./fdFarm.html"></iframe> </div>`
+
+    let closeButton = document.querySelector('#closeButton');
+    closeButton.addEventListener("click", () => {
+        popUpFrame.innerHTML = ''
+    })
+
+})
+
+
+
+
+
+
+
+
+
+
+
 
 
 

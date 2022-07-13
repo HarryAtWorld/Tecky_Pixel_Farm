@@ -12,8 +12,15 @@ import dotenv from "dotenv";
 dotenv.config();
 // import grant from "grant";
 
+<<<<<<< HEAD
 import { calculateScore } from "./scoreCalculation";
 
+=======
+import {calculateScore} from './scoreCalculation';
+
+
+
+>>>>>>> 77b91bbb9ceb638d792eebdb6b949b84e8edb233
 // SQL Client
 export const client = new pg.Client({
   database: process.env.DB_NAME,
@@ -37,10 +44,10 @@ app.use(
   })
 );
 // print the access massage
-app.use((req, res, next) => {
-  console.log(`ip: ${req.ip} accessed the path: ${req.path} by method: ${req.method}`);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log(`ip: ${req.ip} accessed the path: ${req.path} by method: ${req.method}`);
+//   next();
+// });
 
 // const grantExpress = grant.express({
 //   defaults: {
@@ -91,9 +98,16 @@ app.use(isLoggedInStatic, express.static(path.join(__dirname, "Private")));
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, "Public", "404.html"));
 });
+<<<<<<< HEAD
 
 setInterval(calculateScore, 10000);
 
+=======
+ 
+setInterval(calculateScore,10000);
+
+
+>>>>>>> 77b91bbb9ceb638d792eebdb6b949b84e8edb233
 const port = 8080;
 app.listen(port, () => {
   console.log(`server started, http://localhost:${port}`);
