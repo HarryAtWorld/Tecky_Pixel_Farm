@@ -18,6 +18,8 @@ let gameScore = 0
 let displayScore = document.querySelector('#gameScore')
 let ctxLayer40Alpha = 0.9
 
+
+
 let scoreCheckingGroups = {
     group0: [],
     group1: [],
@@ -37,16 +39,24 @@ let scoreCheckingGroups = {
 let actionStopList = {
     isStopAddLand: true,
     isStopRemoveLand: true,
-    isStopAddPlant: true,
+    isStopAddCarrot: true,
+    isStopAddCorn: true,
+    isStopAddPumpkin: true,
+    isStopAddLettuce: true,
+    isStopAddYellowFlower: true,
+    isStopAddRedFlower: true,
+    isStopAddBlueFlower: true,
+
+
     isStopRemovePlant: true
 }
 
-let editButtonList = {
-    addLandButton: "background-color:rgb(240,240,240);",
-    removeLandButton: "background-color:rgb(240,240,240);",
-    addPlantButton: "background-color:rgb(240,240,240);",
-    removePlantButton: "background-color:rgb(240,240,240);"
-}
+// let editButtonList = {
+//     addLandButton: "background-color:rgb(240,240,240);",
+//     removeLandButton: "background-color:rgb(240,240,240);",
+//     addPlantButton: "background-color:rgb(240,240,240);",
+//     removePlantButton: "background-color:rgb(240,240,240);"
+// }
 
 
 //==========================================Mouse Press Detect================================
@@ -320,13 +330,13 @@ function showGrid(gridSize) {
     ctxLayer30.lineWidth = 1;
     ctxLayer30.strokeStyle = 'rgb(255,255,255)';
     ctxLayer30.setLineDash([4, 2])
-    for (let x = 0; x < gameXGridNumber * (gameBaseGridSize / gridSize)+1; x++) {
+    for (let x = 0; x < gameXGridNumber * (gameBaseGridSize / gridSize) + 1; x++) {
         ctxLayer30.beginPath();
         ctxLayer30.moveTo(x * gridSize, 0)
         ctxLayer30.lineTo(x * gridSize, gameYGridNumber * gameBaseGridSize)
         ctxLayer30.stroke();
     }
-    for (let y = 0; y < gameYGridNumber * (gameBaseGridSize / gridSize)+1; y++) {
+    for (let y = 0; y < gameYGridNumber * (gameBaseGridSize / gridSize) + 1; y++) {
         ctxLayer30.beginPath();
         ctxLayer30.moveTo(0, y * gridSize)
         ctxLayer30.lineTo(gameXGridNumber * gameBaseGridSize, y * gridSize)
@@ -762,6 +772,9 @@ function removeLand(event) {
     }
 }
 
+//set what plant to add
+let currentSelectedPlant = pumpkin
+
 //add plant with checking
 function addPlant(event) {
     let bound = gameDisplayLayer0.getBoundingClientRect();
@@ -778,7 +791,7 @@ function addPlant(event) {
 
     if (gameItemList[`x${mouseXGrid}y${mouseYGrid}`]) {
         if (gameItemList[`x${mouseXGrid}y${mouseYGrid}`].stage === 3) {
-            gameItemList[`x${mouseXGrid}y${mouseYGrid}`] = new plantingBox(carrot, Date.now(), 0, mouseXGrid, mouseYGrid)
+            gameItemList[`x${mouseXGrid}y${mouseYGrid}`] = new plantingBox(currentSelectedPlant, Date.now(), 0, mouseXGrid, mouseYGrid)
             clearLayer(ctxLayer10)
             drawPlants()
             let randomGrouping = Math.floor(Math.random() * 10)
@@ -786,7 +799,7 @@ function addPlant(event) {
         }
 
     } else if (mapTileList[Math.floor(mouseXGrid * (showGridSize / gameBaseGridSize))][Math.floor(mouseYGrid * (showGridSize / gameBaseGridSize))].tileType === 'ground') {
-        gameItemList[`x${mouseXGrid}y${mouseYGrid}`] = new plantingBox(carrot, Date.now(), 0, mouseXGrid, mouseYGrid)
+        gameItemList[`x${mouseXGrid}y${mouseYGrid}`] = new plantingBox(currentSelectedPlant, Date.now(), 0, mouseXGrid, mouseYGrid)
         clearLayer(ctxLayer10)
         drawPlants()
         let randomGrouping = Math.floor(Math.random() * 10)
@@ -890,13 +903,21 @@ function stopActionsExceptThis(exceptedAction) {
 
 // clear the red highlight on edit buttons
 function clearButtonHighLight() {
-    for (let button in editButtonList) {
-        editButtonList[button] = 'background-color:rgb(240,240,240);'
-    }
-    addLandButton.style = editButtonList['addLandButton']
-    removeLandButton.style = editButtonList['removeLandButton']
-    addPlantButton.style = editButtonList['addPlantButton']
-    removePlantButton.style = editButtonList['removePlantButton']
+
+    addLandButton.style = 'background-color:rgb(240,240,240);'
+    removeLandButton.style = 'background-color:rgb(240,240,240);'
+    editPlantButton.style = 'background-color:rgb(240,240,240);'
+    removePlantButton.style = 'background-color:rgb(240,240,240);'
+
+    selectCarrotButton.style = 'background-color:rgb(240,240,240);'
+    selectCornButton.style = 'background-color:rgb(240,240,240);'
+    selectPumpkinButton.style = 'background-color:rgb(240,240,240);'
+    selectLettuceButton.style = 'background-color:rgb(240,240,240);'
+    selectYellowFlowerButton.style = 'background-color:rgb(240,240,240);'
+    selectRedFlowerButton.style = 'background-color:rgb(240,240,240);'
+    selectBlueFlowerButton.style = 'background-color:rgb(240,240,240);'
+    selectTreeButton.style = 'background-color:rgb(240,240,240);'
+
 }
 
 
@@ -929,11 +950,11 @@ function startCalculateScore() {
                     // console.log('===========================changed stage to:', gameItemList[gameItem].stage)
                 }
 
-                if(gameItemList[gameItem].stage == 3){
+                if (gameItemList[gameItem].stage == 3) {
                     continue
                 }
                 gameScore += scoreFactorList[itemName][`stage_${itemStage}_score`]
-            }            
+            }
             showTextToItems(checkingGroup)
             displayScore.innerText = `Score:${gameScore}`
 
@@ -961,7 +982,7 @@ function startCalculateScore() {
                         // console.log('===========================changed stage to:', gameItemList[gameItem].stage)
                     }
 
-                    if(gameItemList[gameItem].stage == 3){
+                    if (gameItemList[gameItem].stage == 3) {
                         continue
                     }
                     gameScore += scoreFactorList[itemName][`stage_${itemStage}_score`]
@@ -1081,33 +1102,35 @@ removeLandButton.addEventListener("click", () => {
 
 
 
-// button for add plant
-let addPlantButton = document.querySelector('#addPlant');
-addPlantButton.addEventListener("click", () => {
-    clearAllMouseListener()
-    clearLayer(ctxLayer30)
+// // button for add plant
+// let addPlantButton = document.querySelector('#addPlant');
+// addPlantButton.addEventListener("click", () => {
+//     clearAllMouseListener()
+//     clearLayer(ctxLayer30)
 
-    stopActionsExceptThis('isStopAddPlant')
-    clearButtonHighLight('addPlantButton')
+//     stopActionsExceptThis('isStopAddPlant')
+//     clearButtonHighLight('addPlantButton')
 
-    actionStopList.isStopAddPlant = !actionStopList.isStopAddPlant;
+//     actionStopList.isStopAddPlant = !actionStopList.isStopAddPlant;
 
-    showGridSize = 16
+//     showGridSize = 16
 
-    if (actionStopList.isStopAddPlant) {
-        clearAllMouseListener()
-        clearLayer(ctxLayer30)
-        addPlantButton.style = 'background-color:rgb(240,240,240);'
-    } else {
-        addPlantButton.style = 'background-color:rgb(220,50,50);'
-        showGrid(showGridSize)
-        startAddPlant()
-    }
-})
+//     if (actionStopList.isStopAddPlant) {
+//         clearAllMouseListener()
+//         clearLayer(ctxLayer30)
+//         addPlantButton.style = 'background-color:rgb(240,240,240);'
+//     } else {
+//         addPlantButton.style = 'background-color:rgb(220,50,50);'
+//         showGrid(showGridSize)
+//         startAddPlant()
+//     }
+// })
+
+
 
 // button for remove plant
-let removePlantButton = document.querySelector('#removePlant');
-removePlantButton.addEventListener("click", () => {
+let editPlantButton = document.querySelector('#editPlant');
+editPlantButton.addEventListener("click", () => {
 
     clearAllMouseListener()
     clearLayer(ctxLayer30)
@@ -1199,4 +1222,218 @@ saveToServerButton.addEventListener("click", () => {
     // console.log(gameItemList)
 
 
+})
+
+
+// button for change the selected plant=====================================================================
+
+
+
+
+let selectCarrotButton = document.querySelector('#addCarrot');
+selectCarrotButton.addEventListener("click", () => {
+    currentSelectedPlant = carrot
+    clearAllMouseListener()
+    clearLayer(ctxLayer30)
+
+    stopActionsExceptThis('isStopAddCarrot')
+    clearButtonHighLight()
+    showGridSize = 16
+
+    actionStopList.isStopAddCarrot = !actionStopList.isStopAddCarrot;
+
+    if (actionStopList.isStopAddCarrot) {
+        clearAllMouseListener()
+        clearLayer(ctxLayer30)
+        selectCarrotButton.style = 'background-color:rgb(240,240,240);'
+    } else {
+        selectCarrotButton.style = 'background-color:rgb(220,50,50);'
+        showGrid(showGridSize)
+        startAddPlant()
+    }
+})
+
+let selectCornButton = document.querySelector('#addCorn');
+selectCornButton.addEventListener("click", () => {
+    currentSelectedPlant = corn
+    clearAllMouseListener()
+    clearLayer(ctxLayer30)
+
+    stopActionsExceptThis('isStopAddCorn')
+    clearButtonHighLight()
+    showGridSize = 16
+
+    actionStopList.isStopAddCorn = !actionStopList.isStopAddCorn;
+
+    if (actionStopList.isStopAddCorn) {
+        clearAllMouseListener()
+        clearLayer(ctxLayer30)
+        selectCornButton.style = 'background-color:rgb(240,240,240);'
+    } else {
+        selectCornButton.style = 'background-color:rgb(220,50,50);'
+        showGrid(showGridSize)
+        startAddPlant()
+    }
+})
+
+let selectPumpkinButton = document.querySelector('#addPumpkin');
+selectPumpkinButton.addEventListener("click", () => {
+    currentSelectedPlant = pumpkin
+    clearAllMouseListener()
+    clearLayer(ctxLayer30)
+
+    stopActionsExceptThis('isStopAddPumpkin')
+    clearButtonHighLight()
+    showGridSize = 16
+
+    actionStopList.isStopAddPumpkin = !actionStopList.isStopAddPumpkin;
+
+    if (actionStopList.isStopAddPumpkin) {
+        clearAllMouseListener()
+        clearLayer(ctxLayer30)
+        selectPumpkinButton.style = 'background-color:rgb(240,240,240);'
+    } else {
+        selectPumpkinButton.style = 'background-color:rgb(220,50,50);'
+        showGrid(showGridSize)
+        startAddPlant()
+    }
+})
+
+let selectLettuceButton = document.querySelector('#addLettuce');
+selectLettuceButton.addEventListener("click", () => {
+    currentSelectedPlant = lettuce
+    clearAllMouseListener()
+    clearLayer(ctxLayer30)
+
+    stopActionsExceptThis('isStopAddLettuce')
+    clearButtonHighLight()
+    showGridSize = 16
+
+    actionStopList.isStopAddLettuce = !actionStopList.isStopAddLettuce;
+
+    if (actionStopList.isStopAddLettuce) {
+        clearAllMouseListener()
+        clearLayer(ctxLayer30)
+        selectLettuceButton.style = 'background-color:rgb(240,240,240);'
+    } else {
+        selectLettuceButton.style = 'background-color:rgb(220,50,50);'
+        showGrid(showGridSize)
+        startAddPlant()
+    }
+})
+
+let selectYellowFlowerButton = document.querySelector('#addYellowFlower');
+selectYellowFlowerButton.addEventListener("click", () => {
+    currentSelectedPlant = yellow_flower
+    clearAllMouseListener()
+    clearLayer(ctxLayer30)
+
+    stopActionsExceptThis('isStopAddYellowFlower')
+    clearButtonHighLight()
+    showGridSize = 16
+
+    actionStopList.isStopAddYellowFlower = !actionStopList.isStopAddYellowFlower;
+
+    if (actionStopList.isStopAddYellowFlower) {
+        clearAllMouseListener()
+        clearLayer(ctxLayer30)
+        selectYellowFlowerButton.style = 'background-color:rgb(240,240,240);'
+    } else {
+        selectYellowFlowerButton.style = 'background-color:rgb(220,50,50);'
+        showGrid(showGridSize)
+        startAddPlant()
+    }
+})
+
+let selectRedFlowerButton = document.querySelector('#addRedFlower');
+selectRedFlowerButton.addEventListener("click", () => {
+    currentSelectedPlant = red_flower    
+    clearAllMouseListener()
+    clearLayer(ctxLayer30)
+
+    stopActionsExceptThis('isStopAddRedFlower')
+    clearButtonHighLight()
+    showGridSize = 16
+
+    actionStopList.isStopAddRedFlower = !actionStopList.isStopAddRedFlower;
+
+    if (actionStopList.isStopAddRedFlower) {
+        clearAllMouseListener()
+        clearLayer(ctxLayer30)
+        selectRedFlowerButton.style = 'background-color:rgb(240,240,240);'
+    } else {
+        selectRedFlowerButton.style = 'background-color:rgb(220,50,50);'
+        showGrid(showGridSize)
+        startAddPlant()
+    }
+})
+
+let selectBlueFlowerButton = document.querySelector('#addBlueFlower');
+selectBlueFlowerButton.addEventListener("click", () => {
+    currentSelectedPlant = blue_flower
+    clearAllMouseListener()
+    clearLayer(ctxLayer30)
+
+    stopActionsExceptThis('isStopAddBlueFlower')
+    clearButtonHighLight()
+    showGridSize = 16
+
+    actionStopList.isStopAddBlueFlower = !actionStopList.isStopAddBlueFlower;
+
+    if (actionStopList.isStopAddBlueFlower) {
+        clearAllMouseListener()
+        clearLayer(ctxLayer30)
+        selectBlueFlowerButton.style = 'background-color:rgb(240,240,240);'
+    } else {
+        selectBlueFlowerButton.style = 'background-color:rgb(220,50,50);'
+        showGrid(showGridSize)
+        startAddPlant()
+    }
+})
+
+let selectTreeButton = document.querySelector('#addTree');
+selectTreeButton.addEventListener("click", () => {
+    currentSelectedPlant = green_trees
+    clearAllMouseListener()
+    clearLayer(ctxLayer30)
+
+    stopActionsExceptThis('isStopAddTree')
+    clearButtonHighLight()
+    showGridSize = 16
+
+    actionStopList.isStopAddTree = !actionStopList.isStopAddTree;
+
+    if (actionStopList.isStopAddTree) {
+        clearAllMouseListener()
+        clearLayer(ctxLayer30)
+        selectTreeButton.style = 'background-color:rgb(240,240,240);'
+    } else {
+        selectTreeButton.style = 'background-color:rgb(220,50,50);'
+        showGrid(showGridSize)
+        startAddPlant()
+    }
+})
+
+let removePlantButton = document.querySelector('#removePlant');
+removePlantButton.addEventListener("click", () => {
+
+    clearAllMouseListener()
+    clearLayer(ctxLayer30)
+
+    stopActionsExceptThis('isStopRemovePlant')
+    clearButtonHighLight('removePlantButton')
+
+    actionStopList.isStopRemovePlant = !actionStopList.isStopRemovePlant;
+
+    showGridSize = 16
+
+    if (actionStopList.isStopRemovePlant) {
+        clearAllMouseListener()
+        clearLayer(ctxLayer30)
+        removePlantButton.style = 'background-color:rgb(240,240,240);'
+    } else {
+        removePlantButton.style = 'background-color:rgb(220,50,50);'
+        showGrid(showGridSize)
+        startRemovePlant()
+    }
 })
