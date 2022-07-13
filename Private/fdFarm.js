@@ -9,7 +9,7 @@ window.onload = () => {
 
 
 async function loadRanking() {
-  const resp = await fetch("/friendFarm");
+  const resp = await fetch("/friendRank");
   console.log(`passed fetch, ${resp}`);
   const datas = await resp.json();
   let htmlStr = "";
@@ -60,13 +60,8 @@ async function addTRClickEvent() {
 
         // const user_name = form.changeUsername.value;
         console.log(user_id);
-<<<<<<< HEAD
   
         const resp = await fetch("/friendFarm", {
-=======
-
-        const resp = await fetch("/name", {
->>>>>>> 90461b3527c244417564780db8d47a1c19c6476a
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -87,9 +82,5 @@ async function addTRClickEvent() {
     }
   )
 }
-<<<<<<< HEAD
   ;
-=======
-;
->>>>>>> 90461b3527c244417564780db8d47a1c19c6476a
 
