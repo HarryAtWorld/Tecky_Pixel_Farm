@@ -14,8 +14,5 @@ async function goFarm(req: Request, res: Response) {
   const { user_id } = req.body;
   console.log(`Ready to Fd Farm`);
   console.log(user_id);
-  res
-    .status(400)
-    .json({ success: true })
-    .sendFile(path.join(__dirname, `../gameJson/${user_id.id}.json`));
+  res.status(200).sendFile(path.join(__dirname, `../gameJson/${user_id}.json`));
 }
