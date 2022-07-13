@@ -40,7 +40,7 @@ export async function calculateScore() {
 
         let playerGameItemRecord = JSON.parse(fs.readFileSync(`./gameJson/${player.id}.json`, { encoding: 'utf8' }))
         let playerGameItem = playerGameItemRecord.game_item_record
-        
+
         // check each item of player's items
         for (let gameItem in playerGameItem) {
 
@@ -49,15 +49,15 @@ export async function calculateScore() {
             let itemStageChangeTime = playerGameItem[gameItem].stageChangeAt
 
             //check stage
-            let timeDuring = Math.round((checkingTimeNow - itemStageChangeTime) / 1000)            
+            let timeDuring = Math.round((checkingTimeNow - itemStageChangeTime) / 1000)
 
             // change item stage with checking
-            if (timeDuring > scoreFactorList[itemName][`stage_${itemStage}_life`] && itemStage < 3) {                
+            if (timeDuring > scoreFactorList[itemName][`stage_${itemStage}_life`] && itemStage < 3) {
 
                 playerGameItemRecord.game_item_record[gameItem].stageChangeAt = checkingTimeNow
                 playerGameItemRecord.game_item_record[gameItem].stage += 1
 
-                console.log(itemName,gameItem,'changed stage to:', playerGameItemRecord.game_item_record[gameItem].stage)
+                console.log(itemName, gameItem, 'changed stage to:', playerGameItemRecord.game_item_record[gameItem].stage)
                 // console.log('changed stage to:', itemStage) //<=====why this later then above 1 loop?
                 //update item 'stageChangeAt' on Json         
                 fs.writeFileSync(`./gameJson/${player.id}.json`, JSON.stringify(playerGameItemRecord), { flag: 'w' });
@@ -66,13 +66,13 @@ export async function calculateScore() {
 
             //check how may score should be added for  this item during last 10second
             let itemScore = scoreFactorList[itemName][`stage_${playerGameItemRecord.game_item_record[gameItem].stage}_score`]
-            
+
             if (playerGameItemRecord.game_item_record[gameItem].stage == 3) {
                 continue
             }
             tempScore += itemScore
         }
-        
+
         let newScore = lastScore + tempScore
 
         await client.query(
@@ -82,16 +82,20 @@ export async function calculateScore() {
 
 
 
-        // below for server console.log use , can be deleted.
-        const playerItemData2 = await client.query(
-            `SELECT  
-          user_info.id,
-          game_farm_data.score
-          FROM user_info join game_farm_data
-          on user_info.id = game_farm_data.user_id `
-        );
-        console.log('plyer', player.id, 'now score:', playerItemData2.rows[0].score)
+
 
     }
+
+    // below for server console.log use , can be deleted.
+    const playerItemData2 = await client.query(
+        `SELECT  
+      user_info.id,
+      game_farm_data.score
+      FROM user_info join game_farm_data
+      on user_info.id = game_farm_data.user_id `
+    );
+
+    for( let player of playerItemData2.rows)
+    console.log('plyer', player.id, 'now score:', player.score)
 
 }

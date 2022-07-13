@@ -73,7 +73,7 @@ plantsRoutes.put("/", async (req, res) => {
   }  
 
   let reduceScore = (newLandCount - lastlandCount) * 100
-
+ console.log(user.id)
   if (reduceScore > 0) {
     await client.query(
       `update game_farm_data set score = score - $1 where user_id = $2 `,
