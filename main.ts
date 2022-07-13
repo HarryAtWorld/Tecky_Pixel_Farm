@@ -12,13 +12,7 @@ import dotenv from "dotenv";
 dotenv.config();
 // import grant from "grant";
 
-<<<<<<< HEAD
-import {calculateScore} from './scoreCalculation';
-
-
-=======
 import { calculateScore } from "./scoreCalculation";
->>>>>>> 704e2dc2f4a8838899943be9d1fd0c91375f759f
 
 // SQL Client
 export const client = new pg.Client({
@@ -101,14 +95,8 @@ app.use(isLoggedInStatic, express.static(path.join(__dirname, "Private")));
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, "Public", "404.html"));
 });
-<<<<<<< HEAD
- 
-setInterval(calculateScore,10000);
-
-=======
 
 setInterval(calculateScore, 10000);
->>>>>>> 704e2dc2f4a8838899943be9d1fd0c91375f759f
 
 const port = 8080;
 app.listen(port, () => {

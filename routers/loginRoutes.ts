@@ -96,18 +96,10 @@ async function register(req: Request, res: Response) {
 
     //for new player, check if json existing, if not , copy the template
     if (!fs.existsSync(path.join(__dirname, `./gameJson/${temp_ac}.json`))) {
-<<<<<<< HEAD
       let templateJson = JSON.parse(fs.readFileSync(`./gameJson/template.json`, { encoding: 'utf8' }))
       templateJson.lastCheckingTime = Date.now()
       templateJson.landCount = 1
       fs.writeFileSync(`./gameJson/${temp_ac}.json`, JSON.stringify(templateJson), { flag: 'w' });
-=======
-      let templateJson = JSON.parse(
-        fs.readFileSync(`./gameJson/template.json`, { encoding: "utf8" })
-      );
-      templateJson.lastCheckingTime = Date.now();
-      fs.writeFileSync(`./gameJson/${temp_ac}.json`, JSON.stringify(templateJson), { flag: "w" });
->>>>>>> 704e2dc2f4a8838899943be9d1fd0c91375f759f
     }
 
     // console.log(`passed temp_ac, result: ${temp_ac}`);
