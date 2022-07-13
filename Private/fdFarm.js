@@ -50,30 +50,35 @@ async function loadSgFriends() {
 }
 
 
-async function addTRClickEvent(){
+async function addTRClickEvent() {
   document.querySelectorAll("tr").forEach(
-    elem => { 
+    elem => {
       elem.addEventListener("click", async (e) => {
         e.preventDefault();
         // console.log("target.id: ", e.currentTarget.getAttribute("id"));
         const user_id = e.currentTarget.getAttribute("id");
-        
+
         // const user_name = form.changeUsername.value;
         console.log(user_id);
+<<<<<<< HEAD
   
         const resp = await fetch("/friendFarm", {
+=======
+
+        const resp = await fetch("/name", {
+>>>>>>> 90461b3527c244417564780db8d47a1c19c6476a
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ user_id }),
-  
+
         });
         const result = await resp.json();
         if (!result.success) {
           alert(result.message);
-  
-  
+
+
         } else {
           alert(result.message);
           window.location.href = "./editProfile.html";
@@ -82,5 +87,9 @@ async function addTRClickEvent(){
     }
   )
 }
+<<<<<<< HEAD
   ;
+=======
+;
+>>>>>>> 90461b3527c244417564780db8d47a1c19c6476a
 
