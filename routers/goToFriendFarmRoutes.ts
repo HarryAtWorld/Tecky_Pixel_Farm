@@ -12,5 +12,10 @@ goToFriendFarm.get("/", goFarm);
 
 async function goFarm(req: Request, res: Response) {
   const target = req.body;
-  res.sendFile(path.join(__dirname, `../gameJson/${target.id}.json`));
+  console.log(`Ready to Fd Farm`);
+  console.log(target);
+  res
+    .status(400)
+    .json({ success: true })
+    .sendFile(path.join(__dirname, `../gameJson/${target.id}.json`));
 }
