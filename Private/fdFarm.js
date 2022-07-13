@@ -69,13 +69,9 @@ async function addTRClickEvent() {
 
         });
         const result = await resp.json();
-        if (!result.success) {
-          alert(result.message);
+        if (result.success) {
+          window.location.href = "./fdGame.html";
 
-
-        } else {
-          alert(result.message);
-          window.location.href = "./editProfile.html";
         }
       })
     }
