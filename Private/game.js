@@ -1181,6 +1181,34 @@ fdRankingButton.addEventListener("click", () => {
 
 })
 
+// button for popUP of fdFarm page
+let fdFarmButton = document.querySelector('#fdFarmButton');
+fdFarmButton.addEventListener("click", () => {
+
+    let popUpFrame = document.querySelector('#popUpFrame')
+    popUpFrame.style = 'left: 40px; top:-40px;'
+
+    popUpFrame.innerHTML = ` 
+     <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">Back to Game</button> </div><iframe id="innerFrameContent" src="./fdFarm.html"></iframe> </div>`
+
+    let closeButton = document.querySelector('#closeButton');
+    closeButton.addEventListener("click", () => {
+        popUpFrame.innerHTML = ''
+    })
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
