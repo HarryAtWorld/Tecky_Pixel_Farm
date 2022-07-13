@@ -38,7 +38,9 @@ table {
     width: 100%;
     background: #fff;
 }
-
+.friends{
+	cursor: pointer;
+}
 th {
     background-color: #326295;
     font-weight: bold;
