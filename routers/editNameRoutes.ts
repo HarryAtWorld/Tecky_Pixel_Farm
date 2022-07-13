@@ -11,10 +11,21 @@ edit_name.patch("/", changeName);
 async function changeName(req: Request, res: Response) {
   // get the session
   const user = req.session["user"];
+  if (!user) {
+    res.status(400).json({ success: false, message: "Not logged in" });
+    return;
+  }
+
   const new_name = req.body;
   console.log(user);
+  console.log(`this is new_name from req.body: `);
+  console.log(new_name.user_name);
+  if (!new_name.user_name) {
+    console.log(`is empty`);
+    res.status(400).json({ success: false, message: "Please Enter new name, no one is no name!!" });
+    return;
+  }
   const insert_new_name = new_name.user_name;
-
   // check user name is it already exists
   const check_same_user_name = await client.query(`select * from user_info where user_name = $1`, [
     insert_new_name,
