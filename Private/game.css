@@ -25,18 +25,37 @@ body{
     padding: 0px 10px 0px 10px;
 }
 
+#playerInfo{
+    display: flex;
+    width: 600px;
+    margin: 0px;
+
+}
+
+#playerIcon{
+    height: 45px;
+    margin: 0px;
+    margin-top: 3px;
+
+}
+
 #topPanel .playerInfo{
-    width:200px;
+    width:100px;
     height:25px;
-    border:1px solid #495057;
+    border:2px solid #495057;
     text-align: center; 
     line-height: 22px;
     overflow:hidden;
     border-radius: 20px;
     color: black;
-    margin-top: 20px;
+    margin-top: 12px;
     cursor: pointer;
     
+    
+}
+
+#gameScore{
+    margin: 15px 12px 12px 10px;
     
 }
 

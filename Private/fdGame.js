@@ -157,7 +157,7 @@ async function requestRecordAndDrawWorld() {
     for (let factor in result.scoreFactorList) {
         scoreFactorList[factor] = result.scoreFactorList[`${factor}`]
     }
-    displayScore.innerHTML = `${playerName} &emsp;&emsp; Score:${gameScore}`
+    displayScore.innerHTML = `&emsp;${playerName} &emsp;&emsp; Score:${gameScore}`
 
 
     drawWorld();
@@ -223,6 +223,7 @@ class cutPlantTile {
     }
 }
 
+
 const carrot = new cutPlantTile('carrot', 1, 0, 3, 0, 5, 0, 0, 33, 16)
 const corn = new cutPlantTile('corn', 1, 4, 3, 4, 5, 4, 0, 33, 16)
 const yellow_flower = new cutPlantTile('yellow_flower', 1, 33, 3, 33, 4, 33, 0, 33, 16)
@@ -230,7 +231,7 @@ const red_flower = new cutPlantTile('red_flower', 1, 18, 3, 18, 4, 18, 0, 33, 16
 const blue_flower = new cutPlantTile('blue_flower', 1, 16, 3, 16, 4, 16, 0, 33, 16)
 const pumpkin = new cutPlantTile('pumpkin', 1, 3, 3, 3, 5, 3, 0, 33, 16)
 const lettuce = new cutPlantTile('lettuce', 1, 8, 3, 8, 5, 8, 0, 33, 16)
-
+const tree = new cutPlantTile('green_trees', 0, 5, 0, 6, 0, 7, 0, 10, 32)
 
 class plantingBox {
     constructor(plantType, timeNow, stage, locationX, locationY) {
@@ -243,23 +244,23 @@ class plantingBox {
 }
 
 
-class cutTreeFrames {
-    constructor(name, f0X, f0Y, f1X, f1Y, f2X, f2Y, f3X, f3Y, size) {
-        this.name = name
-        this.frame0cutX = f0X;
-        this.frame0cutY = f0Y;
-        this.frame1cutX = f1X;
-        this.frame1cutY = f1Y;
-        this.frame2cutX = f2X;
-        this.frame2cutY = f2Y;
-        this.frame3cutX = f3X;
-        this.frame3cutY = f3Y;
-        this.size = size
-    }
-}
+// class cutTreeFrames {
+//     constructor(name, f0X, f0Y, f1X, f1Y, f2X, f2Y, f3X, f3Y, size) {
+//         this.name = name
+//         this.frame0cutX = f0X;
+//         this.frame0cutY = f0Y;
+//         this.frame1cutX = f1X;
+//         this.frame1cutY = f1Y;
+//         this.frame2cutX = f2X;
+//         this.frame2cutY = f2Y;
+//         this.frame3cutX = f3X;
+//         this.frame3cutY = f3Y;
+//         this.size = size
+//     }
+// }
 
-const green_trees = new cutTreeFrames('green_trees', 0, 3, 1, 3, 2, 3, 3, 3, 32)
-const brown_trees = new cutTreeFrames('brown_trees', 0, 5, 1, 5, 2, 5, 3, 5, 32)
+// const green_trees = new cutTreeFrames('green_trees', 0, 3, 1, 3, 2, 3, 3, 3, 32)
+// const brown_trees = new cutTreeFrames('brown_trees', 0, 5, 1, 5, 2, 5, 3, 5, 32)
 
 
 class cutHouseTile {
@@ -293,11 +294,18 @@ function drawPlantingBox(plant, stageNumber, displayGridX, displayGridY) {
     ctxLayer10.drawImage(plantTiles, plant[`stage${stageNumber}cutX`] * plant.size, plant[`stage${stageNumber}cutY`] * plant.size, plant.size, plant.size, displayGridX * 16, displayGridY * 16, plant.size, plant.size);
 }
 
-function drawTree(treeType, frameNumber, displayGridX, displayGridY) {
+function drawTreeBox(plant, stageNumber, displayGridX, displayGridY) {
     // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
     //grid to be 32px X 32px
-    ctxLayer10.drawImage(trees, treeType[`frame${frameNumber}cutX`] * treeType.size, treeType[`frame${frameNumber}cutY`] * treeType.size, treeType.size, treeType.size, (displayGridX * treeType.size) - (treeType.size * 0.25), (displayGridY * treeType.size) - (treeType.size / 2), treeType.size, treeType.size);
+    ctxLayer10.drawImage(plantTiles, plant[`stage${stageNumber}cutX`] * plant.size, plant[`stage${stageNumber}cutY`] * plant.size, plant.size, plant.size, displayGridX * 16, displayGridY * 16, plant.size, plant.size);
 }
+
+
+// function drawTree(treeType, frameNumber, displayGridX, displayGridY) {
+//     // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+//     //grid to be 32px X 32px
+//     ctxLayer10.drawImage(trees, treeType[`frame${frameNumber}cutX`] * treeType.size, treeType[`frame${frameNumber}cutY`] * treeType.size, treeType.size, treeType.size, (displayGridX * treeType.size) - (treeType.size * 0.25), (displayGridY * treeType.size) - (treeType.size / 2), treeType.size, treeType.size);
+// }
 
 // draw the ground tile according the mapTileList
 function drawGround() {
@@ -325,7 +333,11 @@ function drawPlants() {
     })
 
     for (let key of sortedKeys) {
-        drawPlantingBox(gameItemList[key].plantType, gameItemList[key].stage, gameItemList[key].x, gameItemList[key].y)
+        if (gameItemList[key].plantType.name == 'green_trees') {
+            drawTreeBox(gameItemList[key].plantType, gameItemList[key].stage, (gameItemList[key].x) - 0.5, (gameItemList[key].y) - 1)
+        } else {
+            drawPlantingBox(gameItemList[key].plantType, gameItemList[key].stage, gameItemList[key].x, gameItemList[key].y)
+        }
 
     }
 }
@@ -451,21 +463,3 @@ function clearLayer(ctxLayer) {
     ctxLayer.clearRect(0, 0, gameImagesAreaWidth, gameImagesAreaHeight)
 }
 
-//check the map tile is next to another map tile or not
-function isNextToGround(mouseXGrid, mouseYGrid) {
-    let top = temp_mapTileList[mouseXGrid][mouseYGrid - 1].tileValue
-    let bottom = temp_mapTileList[mouseXGrid][mouseYGrid + 1].tileValue
-    let left = temp_mapTileList[mouseXGrid - 1][mouseYGrid].tileValue
-    let right = temp_mapTileList[mouseXGrid + 1][mouseYGrid].tileValue
-    let rightTop = temp_mapTileList[mouseXGrid + 1][mouseYGrid - 1].tileValue
-    let leftTop = temp_mapTileList[mouseXGrid - 1][mouseYGrid - 1].tileValue
-    let rightBottom = temp_mapTileList[mouseXGrid + 1][mouseYGrid + 1].tileValue
-    let leftBottom = temp_mapTileList[mouseXGrid - 1][mouseYGrid + 1].tileValue
-    let quickCheck = top + bottom + left + right + rightTop + rightBottom + leftTop + leftBottom
-
-    if (quickCheck == 0) {
-        return false
-    } else {
-        return true
-    }
-}
