@@ -75,6 +75,10 @@ async function findAllFriend(my_id: number) {
       // console.log(friends_result);
     }
   }
+  // friends_result.sort((a,b) => b.score - a.score);
+  // console.log(`Sorting`);
+  // friends_result.sort();
   // console.log(friends_result);
+  // console.log(`End sorting`);
   return friends_result;
 }
