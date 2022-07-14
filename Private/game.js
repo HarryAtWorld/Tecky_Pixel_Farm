@@ -19,6 +19,7 @@ let displayScore = document.querySelector('#gameScore')
 let ctxLayer40Alpha = 0.9
 //set what plant to add
 
+let playerName = 'plyer';
 
 let scoreCheckingGroups = {
     group0: [],
@@ -151,15 +152,14 @@ mapTiles.src = './gameImages/map/island.png';
 async function requestRecordAndDrawWorld() {
 
     // fetch record from server
-    const requestRecord = await fetch(`/requestRecord/`, {
-        method: "get"
-    });
+    const requestRecord = await fetch(`/requestRecord/`);
     const result = await requestRecord.json();
 
     // fill in data to this js
     mapTileList = result.map
     gameItemList = result.game_item_record
     gameScore = result.lastScoreRecord.score
+    playerName = result.playerName
 
     for (let factor in result.scoreFactorList) {
         scoreFactorList[factor] = result.scoreFactorList[`${factor}`]
@@ -1149,7 +1149,7 @@ function startCalculateScore() {
                 gameScore += scoreFactorList[itemName][`stage_${itemStage}_score`]
             }
             showTextToItems(checkingGroup)
-            displayScore.innerText = `Score:${gameScore}`
+            displayScore.innerText = `${playerName}   Score:${gameScore}`
 
 
             // set up regular 10s checking for score and stage
@@ -1181,7 +1181,7 @@ function startCalculateScore() {
                     gameScore += scoreFactorList[itemName][`stage_${itemStage}_score`]
                 }
                 showTextToItems(checkingGroup)
-                displayScore.innerText = `Score:${gameScore}`
+                displayScore.innerText =`${playerName}   Score:${gameScore}`
 
             }, 10000)
 
@@ -1292,10 +1292,10 @@ let fdFarmButton = document.querySelector('#fdFarmButton');
 fdFarmButton.addEventListener("click", () => {
 
     let popUpFrame = document.querySelector('#popUpFrame')
-    popUpFrame.style = 'left: 40px; top:-40px;'
+    popUpFrame.style = 'left: 10px; top:-40px;'
 
     popUpFrame.innerHTML = ` 
-     <div id="innerFrame"> <div id="closeButtonArea"><button id="closeButton">Back to Game</button> </div><iframe id="innerFrameContent" src="./fdFarm.html"></iframe> </div>`
+     <div id="innerFrame_fdFarm"> <iframe id="innerFrameContent_fdFarm" src="./fdFarm.html"></iframe><div id="closeButtonArea_fdFarm"><button id="closeButton">X</button> </div> </div>`
 
     let closeButton = document.querySelector('#closeButton');
     closeButton.addEventListener("click", () => {
@@ -1305,11 +1305,11 @@ fdFarmButton.addEventListener("click", () => {
 })
 
 
-// button for save to server
-let saveToServerButton = document.querySelector('#saveToServer');
-saveToServerButton.addEventListener("click", () => {
-    saveToServer()
-})
+// // button for save to server
+// let saveToServerButton = document.querySelector('#saveToServer');
+// saveToServerButton.addEventListener("click", () => {
+//     saveToServer()
+// })
 
 
 // Left side button panel  for edit the farm =====================================================
@@ -1781,7 +1781,7 @@ function okSave() {
     drawGround()
     drawGroundEdge()
     drawPlants()
-    displayScore.innerText = `Score:${gameScore}`
+    displayScore.innerText = `${playerName}   Score:${gameScore}`
 
     saveToServer()
 

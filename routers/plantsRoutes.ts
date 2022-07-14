@@ -28,6 +28,13 @@ plantsRoutes.get("/", async (req, res) => {
   //add last score record to json before send to user
   playerGameItemRecord.lastScoreRecord = lastScoreRecord.rows[0]
 
+  const userName = await client.query(
+    `SELECT user_name FROM user_info where id = $1`, [user.id]
+  );
+  playerGameItemRecord.playerName = userName.rows[0].user_name
+
+  console.log(userName.rows[0])
+
   const scoreFactor = await client.query(
     `SELECT * FROM plant_score_data `
   );

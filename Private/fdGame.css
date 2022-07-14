@@ -1,0 +1,124 @@
+
+body{
+    /* background-color: rgb(144,195, 216);  */
+    font-family: Arial, Helvetica, sans-serif;
+
+}
+
+#topPanel{
+    height: 50px;
+    width:1200px;
+    margin: auto;
+    background-color: white;
+
+    display: flex;
+    justify-content: space-between;
+    /* border: solid 1px rgb(33, 36, 221); */
+    border-radius: 10px;
+    
+    padding: 0px 10px 0px 10px;
+}
+
+#gameArea{
+    /* background-color: rgb(17, 148, 204);  */
+    display: flex;
+    width:1350px;
+    height: 640px;
+    margin:0;
+    justify-content:space-between;
+    /* align-items: center;    */
+    /* position: relative;    */
+    padding: 0;
+    
+}
+
+
+#gameContainer{
+      
+    height: 160px;  /* should match js ---->gameImagesAreaWidth*/
+    width: 336px; /* should match js ---->gameImagesAreaWidth*/
+    /* border: solid 2px rgb(228, 243, 13); */
+    padding: 0;
+    
+    border-radius: 10px;
+    position: relative;     
+    image-rendering: pixelated;     
+
+    transform: scale(2) translateY(25%) ;
+}
+
+#gameDisplayLayer0{
+    background-color: rgb(144,195, 216);
+    border: solid 1px rgb(32, 233, 32);
+    position: absolute; 
+    left: 83px;
+    top: 0;
+    z-index: 0;  
+    border-radius: 10px;
+    
+}
+
+#gameDisplayLayer10{
+    
+    border: solid 1px rgb(228, 15, 15);
+    position: absolute; 
+    left: 83px;
+    top: 0;
+    z-index: 10;
+    border-radius: 10px;
+    
+}
+
+#gameDisplayLayer15{
+    
+    /* border: solid 1px rgb(238, 238, 238); */
+    position: absolute; 
+    left: 83px;
+    top: 0;
+    z-index: 15;
+    border-radius: 10px;
+    
+}
+#gameDisplayLayer16{
+    
+    /* border: solid 1px rgb(238, 238, 238); */
+    position: absolute; 
+    left: 83px;
+    top: 0;
+    z-index: 16;
+    border-radius: 10px;
+    
+}
+
+#gameDisplayLayer20{
+    
+    /* border: solid 1px rgb(233, 9, 166); */
+    position: absolute; 
+    left: 83px;
+    top: 0;
+    z-index: 20;
+    border-radius: 10px;
+    
+} 
+
+#gameDisplayLayer30{
+    
+   
+    position: absolute; 
+    left: 83px;
+    top: 0;
+    z-index: 30;
+    border-radius: 10px;
+    
+} 
+
+#gameDisplayLayer40{
+    
+    /* border: solid 1px rgb(228, 243, 13); */
+    position: absolute; 
+    left: 83px;
+    top: 0;
+    z-index: 40;
+    border-radius: 10px;
+    
+} 

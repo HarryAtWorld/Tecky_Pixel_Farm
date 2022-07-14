@@ -71,9 +71,30 @@ body{
     border-radius: 10px;
     background-color: rgb(236, 236, 236);
     padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+   justify-content: center;    
+    
+}
+
+#innerFrame_fdFarm{
+    
+    height: 670px;
+    width:fit-content;
+    /* background-color: rgb(255, 255, 255); */
+    border: solid 2px rgb(243, 0, 0);
+    border-radius: 10px;
+    background-color: rgb(236, 236, 236);
+    padding: 10px;
+
+    display: flex;
+    /* flex-direction: column; */
+   /* justify-content: center; */
     
     
 }
+
 #loginPopUp{
     
     height: 250px;
@@ -106,9 +127,24 @@ body{
     display: flex;
     justify-content: end;
     height: 25px;
+    width: 100%;
 
  
 }
+
+#closeButtonArea_fdFarm{
+    /* background-color: rgb(199, 15, 15); */
+    
+    display: flex;
+    justify-content: end;
+    height: 25px;
+    width: fit-content;
+    margin:0
+    
+
+ 
+}
+
 
 #YesNoButtonArea{
     /* background-color: rgb(199, 15, 15); */
@@ -171,8 +207,14 @@ body{
 }
 
 #innerFrameContent{    
-    height: 600px;
-    width:1350px;  
+    height:100%;
+    width:100%;  
+    border: 0;    
+    
+}
+#innerFrameContent_fdFarm{    
+    height:120%;
+    width:1430px;  
     border: 0;    
     
 }
@@ -298,7 +340,7 @@ body{
     
    
     position: absolute; 
-    left: ;
+    left: 0;
     top: 0;
     z-index: 30;
     border-radius: 10px;
@@ -311,7 +353,7 @@ body{
     position: absolute; 
     left: 0;
     top: 0;
-    z-index: 40;
+    z-index: 14; /* move down to layer 14 to not show on edit mode*/
     border-radius: 10px;
     
 } 
