@@ -23,7 +23,7 @@ function loginPage(req: Request, res: Response) {
 async function login(req: Request, res: Response) {
   // getting user login input
   const { login_account, login_password } = req.body;
-  console.log(login_account, login_password);
+  console.log(login_account);
   // empty checking
   if (!login_account || !login_password) {
     res.status(400).json({ success: false, message: "invalid username/password" });
@@ -49,6 +49,7 @@ async function login(req: Request, res: Response) {
   // checking hashed password
   const match = await checkPassword(login_password, user.login_password);
   if (match) {
+    console.log(`password matched`);
     // temp_data_id -> for go to fd_farm -> defaults undefined
     let temp_data_id;
     req.session["user"] = {
@@ -68,7 +69,7 @@ async function login(req: Request, res: Response) {
 async function register(req: Request, res: Response) {
   // getting input from user
   const { user_name, login_account, login_password } = req.body;
-  console.log(user_name, login_account, login_password);
+  console.log(user_name, login_account);
 
   // empty checking
   if (!user_name || !login_account || !login_password) {
@@ -88,6 +89,7 @@ async function register(req: Request, res: Response) {
   if (checkAccount.rows[0] === undefined) {
     // hashing password
     const hashedPassword = await hashingPassword(login_password);
+    // console.log(hashedPassword);
     const data = await client.query(
       `INSERT INTO user_info (user_name, login_account, login_password) VALUES ($1, $2, $3) RETURNING id`,
       [user_name, login_account, hashedPassword]
@@ -96,10 +98,12 @@ async function register(req: Request, res: Response) {
 
     //for new player, check if json existing, if not , copy the template
     if (!fs.existsSync(path.join(__dirname, `./gameJson/${temp_ac}.json`))) {
-      let templateJson = JSON.parse(fs.readFileSync(`./gameJson/template.json`, { encoding: 'utf8' }))
-      templateJson.lastCheckingTime = Date.now()
-      templateJson.landCount = 1
-      fs.writeFileSync(`./gameJson/${temp_ac}.json`, JSON.stringify(templateJson), { flag: 'w' });
+      let templateJson = JSON.parse(
+        fs.readFileSync(`./gameJson/template.json`, { encoding: "utf8" })
+      );
+      templateJson.lastCheckingTime = Date.now();
+      templateJson.landCount = 1;
+      fs.writeFileSync(`./gameJson/${temp_ac}.json`, JSON.stringify(templateJson), { flag: "w" });
     }
 
     // console.log(`passed temp_ac, result: ${temp_ac}`);
@@ -110,7 +114,7 @@ async function register(req: Request, res: Response) {
       [temp_ac]
     );
     console.log(`created playerData`);
-    console.log(createPlayerData);
+    console.log(createPlayerData.rows);
 
     res.status(200).json({ success: true, message: "Account created successfully" });
   } else {
