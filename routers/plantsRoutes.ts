@@ -14,6 +14,25 @@ import type { Request, Response } from "express";
 export const plantsRoutes = express.Router();
 
 
+//provide latest Score to player
+plantsRoutes.post("/", async (req, res) => {
+  console.log('requested latest score')
+  
+  const user = req.session["user"]
+  
+
+  const lastScoreRecord = await client.query(
+    `SELECT score FROM game_farm_data where user_id = $1`, [user.id]
+  );
+
+  //add last score record to json before send to user
+  let latestScore = lastScoreRecord.rows[0] 
+
+  res.json(latestScore)
+
+});
+
+
 //provide JSON record to player
 plantsRoutes.get("/", async (req, res) => {
   console.log('login !received by get! Test');

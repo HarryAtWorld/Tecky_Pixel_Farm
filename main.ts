@@ -80,7 +80,8 @@ app.use("/password", edit_password);
 import { logoutRoute } from "./routers/logoutRoutes";
 app.use("/logout", logoutRoute);
 import { plantsRoutes } from "./routers/plantsRoutes";
-app.use("/requestRecord", plantsRoutes);
+app.use("/record", plantsRoutes);
+app.use("/score", plantsRoutes);
 app.use("/updateItem", plantsRoutes);
 // go to friend farm routes
 import { goToFriendFarm } from "./routers/goToFriendFarmRoutes";

@@ -152,7 +152,7 @@ mapTiles.src = './gameImages/map/island.png';
 async function requestRecordAndDrawWorld() {
 
     // fetch record from server
-    const requestRecord = await fetch(`/requestRecord/`);
+    const requestRecord = await fetch(`/record`);
     const result = await requestRecord.json();
 
     // fill in data to this js
@@ -170,6 +170,25 @@ async function requestRecordAndDrawWorld() {
     drawWorld();
     loginMessage();
     startCalculateScore()
+}
+
+async function updateLatestScore() {
+
+    // fetch record from server
+    const requestScore = await fetch(`/score`,
+        {
+            method: "post"
+
+        }
+    );
+    const result = await requestScore.json();
+
+
+    gameScore = result.score
+    
+
+    displayScore.innerHTML = `${playerName} &emsp;&emsp; Score:${gameScore}`
+
 }
 
 
@@ -1281,6 +1300,7 @@ playerInfoButton.addEventListener("click", () => {
 // button for popUP of world ranking page
 let rankingButton = document.querySelector('#rankingButton');
 rankingButton.addEventListener("click", () => {
+    updateLatestScore()
 
     let popUpFrame = document.querySelector('#popUpFrame')
     popUpFrame.style = 'left: 40px; top:-40px;'
@@ -1298,6 +1318,8 @@ rankingButton.addEventListener("click", () => {
 // button for popUP of fdRanking page
 let fdRankingButton = document.querySelector('#fdRankingButton');
 fdRankingButton.addEventListener("click", () => {
+
+    updateLatestScore()
 
     let popUpFrame = document.querySelector('#popUpFrame')
     popUpFrame.style = 'left: 40px; top:-40px;'
@@ -1729,7 +1751,7 @@ function askForSave() {
 
     let continueButton = document.querySelector('#continueButton');
     continueButton.addEventListener("click", () => {
-    
+
 
         popUpFrame.innerHTML = ''
     })
@@ -1765,7 +1787,7 @@ function askForSave() {
 
 
 function okSave() {
-    console.log('changed save?')
+    // console.log('changed save?')
 
 
     //reduce score according to the added land list
@@ -1804,6 +1826,7 @@ function okSave() {
     displayScore.innerHTML = `${playerName} &emsp;&emsp; Score:${gameScore}`
 
     saveToServer()
+    updateLatestScore()
 
 }
 
