@@ -254,7 +254,7 @@ body{
 }
 
 #landEditButtonArea{
-    height: 120px;
+    height: 185px;
     width: 75px;
     /* border: solid 1px rgb(33, 36, 221); */
     display: flexbox;
@@ -265,7 +265,7 @@ body{
 
 }
 #plantEditButtonArea{
-    height: 515px;
+    height: 450px;
     width: 75px;
     /* border: solid 1px rgb(33, 36, 221); */
     display: flexbox;
@@ -274,8 +274,21 @@ body{
     margin-right: -4px;
     margin-top: 10px;
     /* margin-top: 10px; */
+    image-rendering: pixelated;
 
 }
+
+#plantEditButtonArea img{
+    height: 22px; 
+
+}
+
+#plantEditButtonArea #xplant{
+    height: 30px;
+ 
+
+}
+
 
 #rightControlPanel{
     height: 645px;
@@ -381,8 +394,9 @@ body{
 #leftControlPanel button{
     min-height: 30px;
     width: 65px;
-    margin: 10px 5px 5px 5px;   
+    margin: 5px 5px 0px 5px;   
     border-radius: 10px;
+    font-size:xx-small;
 }
 
 #rightControlPanel button{
