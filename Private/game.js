@@ -185,12 +185,13 @@ function drawWorld() {
 function loginMessage() {
     let popUpFrame = document.querySelector('#popUpFrame')
 
-    popUpFrame.style = 'left: 560px; top:150px;'
+    popUpFrame.style = 'left: 450px; top:80px;'
 
     popUpFrame.innerHTML = ` 
      <div id="loginPopUp"> 
      <div id="closeButtonArea"><button id="closeButton">Close</button></div>
      <div><h1>Welcome to Pixel Farm </h1></div>
+     <a href="https://www.facebook.com/tecky.io/photos/a.1224811677657893/2423654917773557/"><img src="./gameImages/ad.png" width="500" height="395"/></a>
      </div>`
 
     let closeButton = document.querySelector('#closeButton');
