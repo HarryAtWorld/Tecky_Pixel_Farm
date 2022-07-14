@@ -1826,7 +1826,7 @@ function okSave() {
     displayScore.innerHTML = `${playerName} &emsp;&emsp; Score:${gameScore}`
 
     saveToServer()
-    updateLatestScore()
+    // updateLatestScore()
 
 }
 
