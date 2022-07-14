@@ -47,14 +47,6 @@ CREATE TABLE user_status (
     last_score_update_time TIMESTAMP
 );
 ----------------------------------------------------------------
---
--- insert into user_info (login_account, login_password, user_name)
--- values ('alex@gmail.com', 'aaa111', 'alex');
--- insert into user_info (login_account, login_password, user_name)
--- values ('harry@gmail.com', 'harry', 'harry');
--- insert into user_info (login_account, login_password, user_name)
--- values ('jacky@gmail.com', 'jacky', 'jacky');
---
 INSERT into plant_score_data (
         items_name,
         stage_0_score,
@@ -158,25 +150,7 @@ INSERT into plant_score_data (items_name, stage_0_score)
 VALUES ('small_house', -5);
 INSERT into plant_score_data (items_name, stage_0_score)
 VALUES ('big_house', -15);
-
-
-
-
 --
-Insert into game_farm_data (user_id)
-VALUES (1);
-Insert into game_farm_data (user_id)
-VALUES (2);
-Insert into game_farm_data (user_id)
-VALUES (3);
-insert into game_farm_data (user_id)
-values (4);
-insert into relationship (user_id_a, user_id_b)
-VALUES (1, 2);
-insert into relationship (user_id_a, user_id_b)
-VALUES (1, 3);
-insert into relationship (user_id_a, user_id_b)
-VALUES (2, 3);
 ----------------------------------------------------------------
 -- DROP TABLE relationship;
 -- DROP TABLE game_farm_data;
