@@ -38,11 +38,11 @@ async function loadSgFriends() {
 
   for (const data of datas) {
     htmlStr += /*html*/ `
-      <div id=${data.id} class="suggest-friends">
+      <tr id=${data.id} class="suggest-friends">
       <td class="ID">${data.id}</td>
       <td class="name">${data.user_name}</td>
       <td></td>
-      </div>
+      </tr>
       `;
   }
   document.querySelector("#SgFriendsTable").innerHTML = htmlStr;
@@ -51,7 +51,7 @@ async function loadSgFriends() {
 
 
 async function addTRClickEvent() {
-  document.querySelectorAll("tr").forEach(
+  document.querySelectorAll("tr.friends").forEach(
     elem => {
       elem.addEventListener("click", async (e) => {
         e.preventDefault();
