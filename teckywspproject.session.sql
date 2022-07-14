@@ -142,7 +142,7 @@ INSERT into plant_score_data (
         stage_2_life,
         stage_3_score
     )
-VALUES ('green_trees', 2, 60, 3, 600, 5, 6000, 0);
+VALUES ('green_trees', 2, 60, 3, 60, 5, 120, 0);
 INSERT into plant_score_data (
         items_name,
         stage_0_score,
@@ -158,6 +158,10 @@ INSERT into plant_score_data (items_name, stage_0_score)
 VALUES ('small_house', -5);
 INSERT into plant_score_data (items_name, stage_0_score)
 VALUES ('big_house', -15);
+
+
+
+
 --
 Insert into game_farm_data (user_id)
 VALUES (1);

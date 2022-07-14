@@ -253,7 +253,7 @@ const red_flower = new cutPlantTile('red_flower', 1, 18, 3, 18, 4, 18, 0, 33, 16
 const blue_flower = new cutPlantTile('blue_flower', 1, 16, 3, 16, 4, 16, 0, 33, 16)
 const pumpkin = new cutPlantTile('pumpkin', 1, 3, 3, 3, 5, 3, 0, 33, 16)
 const lettuce = new cutPlantTile('lettuce', 1, 8, 3, 8, 5, 8, 0, 33, 16)
-
+const tree = new cutPlantTile('green_trees', 0, 5, 0, 6, 0, 7, 0, 10, 32)
 
 class plantingBox {
     constructor(plantType, timeNow, stage, locationX, locationY) {
@@ -266,23 +266,23 @@ class plantingBox {
 }
 
 
-class cutTreeFrames {
-    constructor(name, f0X, f0Y, f1X, f1Y, f2X, f2Y, f3X, f3Y, size) {
-        this.name = name
-        this.frame0cutX = f0X;
-        this.frame0cutY = f0Y;
-        this.frame1cutX = f1X;
-        this.frame1cutY = f1Y;
-        this.frame2cutX = f2X;
-        this.frame2cutY = f2Y;
-        this.frame3cutX = f3X;
-        this.frame3cutY = f3Y;
-        this.size = size
-    }
-}
+// class cutTreeFrames {
+//     constructor(name, f0X, f0Y, f1X, f1Y, f2X, f2Y, f3X, f3Y, size) {
+//         this.name = name
+//         this.frame0cutX = f0X;
+//         this.frame0cutY = f0Y;
+//         this.frame1cutX = f1X;
+//         this.frame1cutY = f1Y;
+//         this.frame2cutX = f2X;
+//         this.frame2cutY = f2Y;
+//         this.frame3cutX = f3X;
+//         this.frame3cutY = f3Y;
+//         this.size = size
+//     }
+// }
 
-const green_trees = new cutTreeFrames('green_trees', 0, 3, 1, 3, 2, 3, 3, 3, 32)
-const brown_trees = new cutTreeFrames('brown_trees', 0, 5, 1, 5, 2, 5, 3, 5, 32)
+// const green_trees = new cutTreeFrames('green_trees', 0, 3, 1, 3, 2, 3, 3, 3, 32)
+// const brown_trees = new cutTreeFrames('brown_trees', 0, 5, 1, 5, 2, 5, 3, 5, 32)
 
 
 class cutHouseTile {
@@ -344,6 +344,8 @@ function drawPlantingBox(plant, stageNumber, displayGridX, displayGridY) {
     ctxLayer10.drawImage(plantTiles, plant[`stage${stageNumber}cutX`] * plant.size, plant[`stage${stageNumber}cutY`] * plant.size, plant.size, plant.size, displayGridX * 16, displayGridY * 16, plant.size, plant.size);
 }
 
+
+
 //for edit mode
 function temp_drawPlantingBox(plant, stageNumber, displayGridX, displayGridY) {
     // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
@@ -351,11 +353,24 @@ function temp_drawPlantingBox(plant, stageNumber, displayGridX, displayGridY) {
     ctxLayer16.drawImage(plantTiles, plant[`stage${stageNumber}cutX`] * plant.size, plant[`stage${stageNumber}cutY`] * plant.size, plant.size, plant.size, displayGridX * 16, displayGridY * 16, plant.size, plant.size);
 }
 
-function drawTree(treeType, frameNumber, displayGridX, displayGridY) {
+function drawTreeBox(plant, stageNumber, displayGridX, displayGridY) {
     // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
     //grid to be 32px X 32px
-    ctxLayer10.drawImage(trees, treeType[`frame${frameNumber}cutX`] * treeType.size, treeType[`frame${frameNumber}cutY`] * treeType.size, treeType.size, treeType.size, (displayGridX * treeType.size) - (treeType.size * 0.25), (displayGridY * treeType.size) - (treeType.size / 2), treeType.size, treeType.size);
+    ctxLayer10.drawImage(plantTiles, plant[`stage${stageNumber}cutX`] * plant.size, plant[`stage${stageNumber}cutY`] * plant.size, plant.size, plant.size, displayGridX * 16, displayGridY * 16, plant.size, plant.size);
 }
+
+//for edit mode
+function temp_drawTreeBox(plant, stageNumber, displayGridX, displayGridY) {
+    // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+    //grid to be 32px X 32px
+    ctxLayer16.drawImage(plantTiles, plant[`stage${stageNumber}cutX`] * plant.size, plant[`stage${stageNumber}cutY`] * plant.size, plant.size, plant.size, displayGridX * 16, displayGridY * 16, plant.size, plant.size);
+}
+
+// function drawTree(treeType, frameNumber, displayGridX, displayGridY) {
+//     // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+//     //grid to be 32px X 32px
+//     ctxLayer10.drawImage(trees, plant[`stage${stageNumber}cutX`] * plant.size, plant[`stage${stageNumber}cutY`] * plant.size, plant.size, plant.size, displayGridX * 16, displayGridY * 16, plant.size, plant.size);
+// }
 
 
 // display the grid by specified size
@@ -439,7 +454,13 @@ function drawPlants() {
     })
 
     for (let key of sortedKeys) {
-        drawPlantingBox(gameItemList[key].plantType, gameItemList[key].stage, gameItemList[key].x, gameItemList[key].y)
+
+        if (gameItemList[key].plantType.name == 'green_trees') {
+            drawTreeBox(gameItemList[key].plantType, gameItemList[key].stage, (gameItemList[key].x) - 0.5, (gameItemList[key].y) - 1)
+        } else {
+            drawPlantingBox(gameItemList[key].plantType, gameItemList[key].stage, gameItemList[key].x, gameItemList[key].y)
+        }
+
 
     }
 }
@@ -459,7 +480,12 @@ function temp_drawPlants() {
     })
 
     for (let key of sortedKeys) {
-        temp_drawPlantingBox(temp_gameItemList[key].plantType, temp_gameItemList[key].stage, temp_gameItemList[key].x, temp_gameItemList[key].y)
+
+        if (temp_gameItemList[key].plantType.name == 'green_trees') {
+            temp_drawTreeBox(temp_gameItemList[key].plantType, temp_gameItemList[key].stage, (temp_gameItemList[key].x) - 0.5, (temp_gameItemList[key].y) - 1)
+        } else {
+            temp_drawPlantingBox(temp_gameItemList[key].plantType, temp_gameItemList[key].stage, temp_gameItemList[key].x, temp_gameItemList[key].y)
+        }
 
     }
 }
@@ -928,9 +954,7 @@ function addLand(event) {
         temp_drawGround()    //drawGround will recount the lands
         temp_drawGroundEdge()
 
-        // gameScore -= 100
 
-        // displayScore.innerText = `Score:${gameScore}`
 
     }
 }
@@ -1150,7 +1174,7 @@ function startCalculateScore() {
                 gameScore += scoreFactorList[itemName][`stage_${itemStage}_score`]
             }
             showTextToItems(checkingGroup)
-            displayScore.innerText = `${playerName}   Score:${gameScore}`
+            displayScore.innerHTML = `${playerName} &emsp;&emsp; Score:${gameScore}`
 
 
             // set up regular 10s checking for score and stage
@@ -1182,7 +1206,7 @@ function startCalculateScore() {
                     gameScore += scoreFactorList[itemName][`stage_${itemStage}_score`]
                 }
                 showTextToItems(checkingGroup)
-                displayScore.innerText =`${playerName}   Score:${gameScore}`
+                displayScore.innerHTML = `${playerName} &emsp;&emsp; Score:${gameScore}`
 
             }, 10000)
 
@@ -1293,7 +1317,7 @@ let fdFarmButton = document.querySelector('#fdFarmButton');
 fdFarmButton.addEventListener("click", () => {
 
     let popUpFrame = document.querySelector('#popUpFrame')
-    popUpFrame.style = 'left: 10px; top:-40px;'
+    popUpFrame.style = 'left: 30px; top:-40px;'
 
     popUpFrame.innerHTML = ` 
      <div id="innerFrame_fdFarm"> <iframe id="innerFrameContent_fdFarm" src="./fdFarm.html"></iframe><div id="closeButtonArea_fdFarm"><button id="closeButton">X</button> </div> </div>`
@@ -1319,23 +1343,20 @@ fdFarmButton.addEventListener("click", () => {
 let addLandButton = document.querySelector('#addLand');
 addLandButton.addEventListener("click", () => {
     clearAllMouseListener()
-    clearLayer(ctxLayer30)
+
 
     stopActionsExceptThis('isStopAddLand')
-    clearButtonHighLight('addLandButton')
+    clearButtonHighLight()
 
     actionStopList.isStopAddLand = !actionStopList.isStopAddLand;
 
     showGridSize = 32
 
     if (actionStopList.isStopAddLand) {
-        clearAllMouseListener()
-        clearLayer(ctxLayer30)
-        isEditModeOn = false
-        addLandButton.style = 'background-color:rgb(240,240,240);'
-        gameDisplayLayer15.style = 'background-color: ;'
+
         askForSave()
     } else {
+        clearLayer(ctxLayer30)
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         addLandButton.style = 'background-color:rgb(220,50,50);'
         showGrid(showGridSize)
@@ -1355,23 +1376,20 @@ addLandButton.addEventListener("click", () => {
 let removeLandButton = document.querySelector('#removeLand');
 removeLandButton.addEventListener("click", () => {
     clearAllMouseListener()
-    clearLayer(ctxLayer30)
+
 
     stopActionsExceptThis('isStopRemoveLand')
-    clearButtonHighLight('removeLandButton')
+    clearButtonHighLight()
 
     actionStopList.isStopRemoveLand = !actionStopList.isStopRemoveLand;
 
     showGridSize = 32
 
     if (actionStopList.isStopRemoveLand) {
-        clearAllMouseListener()
-        clearLayer(ctxLayer30)
-        isEditModeOn = false
-        removeLandButton.style = 'background-color:rgb(240,240,240);'
-        gameDisplayLayer15.style = 'background-color: ;'
+
         askForSave()
     } else {
+        clearLayer(ctxLayer30)
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         removeLandButton.style = 'background-color:rgb(220,50,50);'
         showGrid(showGridSize)
@@ -1392,7 +1410,7 @@ let selectCarrotButton = document.querySelector('#addCarrot');
 selectCarrotButton.addEventListener("click", () => {
     currentSelectedPlant = carrot
     clearAllMouseListener()
-    clearLayer(ctxLayer30)
+
 
     stopActionsExceptThis('isStopAddCarrot')
     clearButtonHighLight()
@@ -1401,13 +1419,10 @@ selectCarrotButton.addEventListener("click", () => {
     actionStopList.isStopAddCarrot = !actionStopList.isStopAddCarrot;
 
     if (actionStopList.isStopAddCarrot) {
-        clearAllMouseListener()
-        clearLayer(ctxLayer30)
-        isEditModeOn = false
-        selectCarrotButton.style = 'background-color:rgb(240,240,240);'
-        gameDisplayLayer15.style = 'background-color: ;'
+
         askForSave()
     } else {
+        clearLayer(ctxLayer30)
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         selectCarrotButton.style = 'background-color:rgb(220,50,50);'
         showGrid(showGridSize)
@@ -1427,7 +1442,7 @@ let selectCornButton = document.querySelector('#addCorn');
 selectCornButton.addEventListener("click", () => {
     currentSelectedPlant = corn
     clearAllMouseListener()
-    clearLayer(ctxLayer30)
+
 
     stopActionsExceptThis('isStopAddCorn')
     clearButtonHighLight()
@@ -1436,13 +1451,10 @@ selectCornButton.addEventListener("click", () => {
     actionStopList.isStopAddCorn = !actionStopList.isStopAddCorn;
 
     if (actionStopList.isStopAddCorn) {
-        clearAllMouseListener()
-        clearLayer(ctxLayer30)
-        isEditModeOn = false
-        selectCornButton.style = 'background-color:rgb(240,240,240);'
-        gameDisplayLayer15.style = 'background-color: ;'
+
         askForSave()
     } else {
+        clearLayer(ctxLayer30)
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         selectCornButton.style = 'background-color:rgb(220,50,50);'
         showGrid(showGridSize)
@@ -1462,7 +1474,7 @@ let selectPumpkinButton = document.querySelector('#addPumpkin');
 selectPumpkinButton.addEventListener("click", () => {
     currentSelectedPlant = pumpkin
     clearAllMouseListener()
-    clearLayer(ctxLayer30)
+
 
     stopActionsExceptThis('isStopAddPumpkin')
     clearButtonHighLight()
@@ -1471,13 +1483,10 @@ selectPumpkinButton.addEventListener("click", () => {
     actionStopList.isStopAddPumpkin = !actionStopList.isStopAddPumpkin;
 
     if (actionStopList.isStopAddPumpkin) {
-        clearAllMouseListener()
-        clearLayer(ctxLayer30)
-        isEditModeOn = false
-        selectPumpkinButton.style = 'background-color:rgb(240,240,240);'
-        gameDisplayLayer15.style = 'background-color: ;'
+
         askForSave()
     } else {
+        clearLayer(ctxLayer30)
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         selectPumpkinButton.style = 'background-color:rgb(220,50,50);'
         showGrid(showGridSize)
@@ -1497,7 +1506,7 @@ let selectLettuceButton = document.querySelector('#addLettuce');
 selectLettuceButton.addEventListener("click", () => {
     currentSelectedPlant = lettuce
     clearAllMouseListener()
-    clearLayer(ctxLayer30)
+
 
     stopActionsExceptThis('isStopAddLettuce')
     clearButtonHighLight()
@@ -1506,13 +1515,10 @@ selectLettuceButton.addEventListener("click", () => {
     actionStopList.isStopAddLettuce = !actionStopList.isStopAddLettuce;
 
     if (actionStopList.isStopAddLettuce) {
-        clearAllMouseListener()
-        clearLayer(ctxLayer30)
-        isEditModeOn = false
-        selectLettuceButton.style = 'background-color:rgb(240,240,240);'
-        gameDisplayLayer15.style = 'background-color: ;'
+
         askForSave()
     } else {
+        clearLayer(ctxLayer30)
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         selectLettuceButton.style = 'background-color:rgb(220,50,50);'
         showGrid(showGridSize)
@@ -1533,7 +1539,7 @@ let selectYellowFlowerButton = document.querySelector('#addYellowFlower');
 selectYellowFlowerButton.addEventListener("click", () => {
     currentSelectedPlant = yellow_flower
     clearAllMouseListener()
-    clearLayer(ctxLayer30)
+
 
     stopActionsExceptThis('isStopAddYellowFlower')
     clearButtonHighLight()
@@ -1542,13 +1548,10 @@ selectYellowFlowerButton.addEventListener("click", () => {
     actionStopList.isStopAddYellowFlower = !actionStopList.isStopAddYellowFlower;
 
     if (actionStopList.isStopAddYellowFlower) {
-        clearAllMouseListener()
-        clearLayer(ctxLayer30)
-        isEditModeOn = false
-        selectYellowFlowerButton.style = 'background-color:rgb(240,240,240);'
-        gameDisplayLayer15.style = 'background-color: ;'
+
         askForSave()
     } else {
+        clearLayer(ctxLayer30)
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         selectYellowFlowerButton.style = 'background-color:rgb(220,50,50);'
         showGrid(showGridSize)
@@ -1568,7 +1571,7 @@ let selectRedFlowerButton = document.querySelector('#addRedFlower');
 selectRedFlowerButton.addEventListener("click", () => {
     currentSelectedPlant = red_flower
     clearAllMouseListener()
-    clearLayer(ctxLayer30)
+
 
     stopActionsExceptThis('isStopAddRedFlower')
     clearButtonHighLight()
@@ -1577,13 +1580,10 @@ selectRedFlowerButton.addEventListener("click", () => {
     actionStopList.isStopAddRedFlower = !actionStopList.isStopAddRedFlower;
 
     if (actionStopList.isStopAddRedFlower) {
-        clearAllMouseListener()
-        clearLayer(ctxLayer30)
-        isEditModeOn = false
-        selectRedFlowerButton.style = 'background-color:rgb(240,240,240);'
-        gameDisplayLayer15.style = 'background-color: ;'
+
         askForSave()
     } else {
+        clearLayer(ctxLayer30)
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         selectRedFlowerButton.style = 'background-color:rgb(220,50,50);'
         showGrid(showGridSize)
@@ -1603,7 +1603,7 @@ let selectBlueFlowerButton = document.querySelector('#addBlueFlower');
 selectBlueFlowerButton.addEventListener("click", () => {
     currentSelectedPlant = blue_flower
     clearAllMouseListener()
-    clearLayer(ctxLayer30)
+
 
     stopActionsExceptThis('isStopAddBlueFlower')
     clearButtonHighLight()
@@ -1612,13 +1612,10 @@ selectBlueFlowerButton.addEventListener("click", () => {
     actionStopList.isStopAddBlueFlower = !actionStopList.isStopAddBlueFlower;
 
     if (actionStopList.isStopAddBlueFlower) {
-        clearAllMouseListener()
-        clearLayer(ctxLayer30)
-        isEditModeOn = false
-        selectBlueFlowerButton.style = 'background-color:rgb(240,240,240);'
-        gameDisplayLayer15.style = 'background-color: ;'
+
         askForSave()
     } else {
+        clearLayer(ctxLayer30)
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         selectBlueFlowerButton.style = 'background-color:rgb(220,50,50);'
         showGrid(showGridSize)
@@ -1636,9 +1633,9 @@ selectBlueFlowerButton.addEventListener("click", () => {
 // button for add tree
 let selectTreeButton = document.querySelector('#addTree');
 selectTreeButton.addEventListener("click", () => {
-    currentSelectedPlant = green_trees
+    currentSelectedPlant = tree
     clearAllMouseListener()
-    clearLayer(ctxLayer30)
+
 
     stopActionsExceptThis('isStopAddTree')
     clearButtonHighLight()
@@ -1647,13 +1644,10 @@ selectTreeButton.addEventListener("click", () => {
     actionStopList.isStopAddTree = !actionStopList.isStopAddTree;
 
     if (actionStopList.isStopAddTree) {
-        clearAllMouseListener()
-        clearLayer(ctxLayer30)
-        isEditModeOn = false
-        selectTreeButton.style = 'background-color:rgb(240,240,240);'
-        gameDisplayLayer15.style = 'background-color: ;'
+
         askForSave()
     } else {
+        clearLayer(ctxLayer30)
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         selectTreeButton.style = 'background-color:rgb(220,50,50);'
         showGrid(showGridSize)
@@ -1673,23 +1667,20 @@ let removePlantButton = document.querySelector('#removePlant');
 removePlantButton.addEventListener("click", () => {
 
     clearAllMouseListener()
-    clearLayer(ctxLayer30)
+
 
     stopActionsExceptThis('isStopRemovePlant')
-    clearButtonHighLight('removePlantButton')
+    clearButtonHighLight()
 
     actionStopList.isStopRemovePlant = !actionStopList.isStopRemovePlant;
 
     showGridSize = 16
 
     if (actionStopList.isStopRemovePlant) {
-        clearAllMouseListener()
-        clearLayer(ctxLayer30)
-        isEditModeOn = false
-        removePlantButton.style = 'background-color:rgb(240,240,240);'
-        gameDisplayLayer15.style = 'background-color: ;'
+
         askForSave()
     } else {
+        clearLayer(ctxLayer30)
         gameDisplayLayer15.style = 'background-color: rgb(144,195, 216);'
         removePlantButton.style = 'background-color:rgb(220,50,50);'
         showGrid(showGridSize)
@@ -1715,18 +1706,45 @@ function askForSave() {
     popUpFrame.innerHTML = ` 
      <div id="saveEditPopUp"> 
      <div><h1> Save Change?</h1></div>
-     <div id="YesNoButtonArea"><button id="yesButton">YES</button><button id="noButton">NO</button></div>
+     <div id="YesNoButtonArea"><button id="yesButton">YES</button><button id="continueButton">Continue Farming</button><button id="noButton">NO</button></div>
      
-     </div>`
+    </div>`
+
+
 
     let yesButton = document.querySelector('#yesButton');
     yesButton.addEventListener("click", () => {
         okSave()
+
+        isEditModeOn = false
+        clearButtonHighLight()
+        gameDisplayLayer15.style = 'background-color: ;'
+        clearAllMouseListener()
+        clearLayer(ctxLayer30)
+        clearLayer(ctxLayer20)
+
         popUpFrame.innerHTML = ''
     })
 
+
+    let continueButton = document.querySelector('#continueButton');
+    continueButton.addEventListener("click", () => {
+    
+
+        popUpFrame.innerHTML = ''
+    })
+
+
     let noButton = document.querySelector('#noButton');
     noButton.addEventListener("click", () => {
+
+        isEditModeOn = false
+        clearButtonHighLight()
+        gameDisplayLayer15.style = 'background-color: ;'
+        clearAllMouseListener()
+        clearLayer(ctxLayer30)
+        clearLayer(ctxLayer20)
+
 
         temp_mapTileList = []
         temp_gameItemList = {}
@@ -1734,6 +1752,7 @@ function askForSave() {
         temp_scoreCheckingGroups = {}
         temp_addedPlantList = []
         temp_addedLandList = []
+
 
         clearLayer(ctxLayer15)
         clearLayer(ctxLayer16)
@@ -1782,13 +1801,9 @@ function okSave() {
     drawGround()
     drawGroundEdge()
     drawPlants()
-    displayScore.innerText = `${playerName}   Score:${gameScore}`
+    displayScore.innerHTML = `${playerName} &emsp;&emsp; Score:${gameScore}`
 
     saveToServer()
-
-
-
-
 
 }
 

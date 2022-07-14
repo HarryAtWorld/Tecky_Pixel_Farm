@@ -157,7 +157,7 @@ async function requestRecordAndDrawWorld() {
     for (let factor in result.scoreFactorList) {
         scoreFactorList[factor] = result.scoreFactorList[`${factor}`]
     }
-    displayScore.innerText = `${playerName}   Score:${gameScore}`
+    displayScore.innerHTML = `${playerName} &emsp;&emsp; Score:${gameScore}`
 
 
     drawWorld();

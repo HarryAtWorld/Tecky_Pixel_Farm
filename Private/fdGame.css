@@ -2,7 +2,15 @@
 body{
     /* background-color: rgb(144,195, 216);  */
     font-family: Arial, Helvetica, sans-serif;
+    margin: 4px;
+    font-weight: 600;
 
+}
+
+#gameScore{
+    margin: 0;
+    width: 500px;
+    height: ;
 }
 
 #topPanel{
