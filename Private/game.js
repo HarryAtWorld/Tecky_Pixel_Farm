@@ -1,4 +1,5 @@
 
+
 const recordTime = Date.now()
 
 // map grid to be 32X32 as 1 unit
@@ -966,8 +967,9 @@ function addLand(event) {
     if (temp_mapTileList[mouseXGrid][mouseYGrid].tileType !== 'ground' && isNextToGround(mouseXGrid, mouseYGrid)) {
 
         temp_mapTileList[mouseXGrid][mouseYGrid] = ground
-        temp_addedLandList.push([mouseXGrid, mouseYGrid])
+        temp_addedLandList.push([mouseXGrid,mouseYGrid])
 
+      
 
         temp_landCount = 0   //reset the counter
         temp_drawGround()    //drawGround will recount the lands
@@ -994,7 +996,12 @@ function removeLand(event) {
     if (temp_mapTileList[mouseXGrid][mouseYGrid].tileType === 'ground' && temp_landCount > 1) {
         if (!temp_gameItemList[`x${mouseXGrid * 2}y${mouseYGrid * 2}`] && !temp_gameItemList[`x${mouseXGrid * 2 + 1}y${mouseYGrid * 2}`] && !temp_gameItemList[`x${mouseXGrid * 2}y${mouseYGrid * 2 + 1}`] && !temp_gameItemList[`x${mouseXGrid * 2 + 1}y${mouseYGrid * 2 + 1}`]) {
             temp_mapTileList[mouseXGrid][mouseYGrid] = sea
-            temp_addedLandList = temp_addedLandList.filter(e => e !== [mouseXGrid, mouseYGrid])
+            
+            
+            temp_addedLandList = temp_addedLandList.filter(e => e.toString() !== [mouseXGrid,mouseYGrid].toString())
+            
+            
+            
 
             temp_landCount = 0  //reset the counter
             temp_drawGround()    //drawGround will recount the lands
@@ -1055,9 +1062,9 @@ function removePlant(event) {
         delete temp_gameItemList[`x${mouseXGrid}y${mouseYGrid}`]
 
         for (let group in temp_scoreCheckingGroups) {
-            console.log(group)
+            // console.log(group)
             if (temp_scoreCheckingGroups[group].includes(`x${mouseXGrid}y${mouseYGrid}`)) {
-                console.log('had')
+                // console.log('had')
                 temp_scoreCheckingGroups[group] = temp_scoreCheckingGroups[group].filter(e => e !== `x${mouseXGrid}y${mouseYGrid}`)
                 temp_addedPlantList = temp_addedPlantList.filter(e => e !== `x${mouseXGrid}y${mouseYGrid}`)
                 break
