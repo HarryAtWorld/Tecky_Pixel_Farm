@@ -46,7 +46,10 @@ CREATE TABLE user_status (
     logout_time TIMESTAMP,
     last_score_update_time TIMESTAMP
 );
-----------------------------------------------------------------
+
+
+
+-------------------insert data---------------------------------------------
 INSERT into plant_score_data (
         items_name,
         stage_0_score,
