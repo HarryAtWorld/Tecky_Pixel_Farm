@@ -5,8 +5,6 @@ window.onload = () => {
     
   };
  
-
-
  async function loadRanking() {
     const resp = await fetch("/allPlayerRank");
     console.log(`passed fetch, ${resp}`);

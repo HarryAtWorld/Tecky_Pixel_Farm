@@ -1,7 +1,3 @@
-// window.onload = async () => {
-//     await getUserInfo();
-//     initLoginForm();
-// }
 
 async function getUserInfo() {
     const resp = await fetch("/users/info");

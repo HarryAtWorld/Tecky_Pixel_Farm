@@ -1,21 +1,13 @@
 
 window.onload = () => {
-
   loadRanking();
-
 };
-
-
 
 async function loadRanking() {
   const resp = await fetch("/friendRank");
   console.log(`passed fetch, ${resp}`);
   const datas = await resp.json();
-  // console.log(datas)
-  // datas.sort((a, b) => {
-  //   b.score - a.score
-  // })
-  // console.log(datas)
+
   function compare(a, b) {
     if (a.score < b.score) {
       return 1;

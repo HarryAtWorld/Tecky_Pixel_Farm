@@ -53,14 +53,6 @@ let actionStopList = {
 
 let isEditModeOn = false
 
-// let editButtonList = {
-//     addLandButton: "background-color:rgb(240,240,240);",
-//     removeLandButton: "background-color:rgb(240,240,240);",
-//     addPlantButton: "background-color:rgb(240,240,240);",
-//     removePlantButton: "background-color:rgb(240,240,240);"
-// }
-
-
 //==========================================Mouse Press Detect================================
 let mouseIsDown = false
 let mouseIsUp = false
@@ -160,16 +152,14 @@ async function requestRecordAndDrawWorld() {
     displayScore.innerHTML = `&emsp;${playerName} &emsp;&emsp; Score:${gameScore}`
 
 
-    drawWorld();
-    
+    drawWorld();    
   
 }
 
 function drawWorld() {
     drawGround()
     drawGroundEdge()
-    drawPlants()
-   
+    drawPlants()  
 
 }
 
@@ -244,25 +234,6 @@ class plantingBox {
 }
 
 
-// class cutTreeFrames {
-//     constructor(name, f0X, f0Y, f1X, f1Y, f2X, f2Y, f3X, f3Y, size) {
-//         this.name = name
-//         this.frame0cutX = f0X;
-//         this.frame0cutY = f0Y;
-//         this.frame1cutX = f1X;
-//         this.frame1cutY = f1Y;
-//         this.frame2cutX = f2X;
-//         this.frame2cutY = f2Y;
-//         this.frame3cutX = f3X;
-//         this.frame3cutY = f3Y;
-//         this.size = size
-//     }
-// }
-
-// const green_trees = new cutTreeFrames('green_trees', 0, 3, 1, 3, 2, 3, 3, 3, 32)
-// const brown_trees = new cutTreeFrames('brown_trees', 0, 5, 1, 5, 2, 5, 3, 5, 32)
-
-
 class cutHouseTile {
     constructor(name, X, Y, size) {
         this.name = name
@@ -274,12 +245,6 @@ class cutHouseTile {
 
 const small_house = new cutHouseTile(0, 0, 94)
 const big_house = new cutHouseTile(1, 0, 94)
-
-
-
-
-
-
 
 // Input displayX,displayY number to grid number. Not actual X,Y.
 function drawMapTile(tileType, displayGridX, displayGridY) {
@@ -299,13 +264,6 @@ function drawTreeBox(plant, stageNumber, displayGridX, displayGridY) {
     //grid to be 32px X 32px
     ctxLayer10.drawImage(plantTiles, plant[`stage${stageNumber}cutX`] * plant.size, plant[`stage${stageNumber}cutY`] * plant.size, plant.size, plant.size, displayGridX * 16, displayGridY * 16, plant.size, plant.size);
 }
-
-
-// function drawTree(treeType, frameNumber, displayGridX, displayGridY) {
-//     // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
-//     //grid to be 32px X 32px
-//     ctxLayer10.drawImage(trees, treeType[`frame${frameNumber}cutX`] * treeType.size, treeType[`frame${frameNumber}cutY`] * treeType.size, treeType.size, treeType.size, (displayGridX * treeType.size) - (treeType.size * 0.25), (displayGridY * treeType.size) - (treeType.size / 2), treeType.size, treeType.size);
-// }
 
 // draw the ground tile according the mapTileList
 function drawGround() {
