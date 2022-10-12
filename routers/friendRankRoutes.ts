@@ -1,5 +1,6 @@
 import express from "express";
 import type { Request, Response } from "express";
+import { logger } from "../main";
 import { client } from "../main";
 import { friendRow } from "../interfaceModels";
 
@@ -9,9 +10,8 @@ friendRankRoutes.get("/", friends_ranking);
 
 export async function friends_ranking(req: Request, res: Response) {
   const user = req.session["user"];
-  console.log(`passed friends_ranking my i97867d : ${user.id}`);
+  logger.info(`passed friends_ranking my i97867d : ${user.id}`);
   const fd_result = await findAllFriend(user.id);
-  console.log(fd_result);
   res.json(fd_result);
 }
 
@@ -26,7 +26,7 @@ async function findAllFriend(my_id: number) {
     [my_id]
   );
   const fd_b = myFriends_rowB.rows;
-  console.log(`My fd in row_a : ${fd_b}`);
+  logger.info(`My fd in row_a : ${fd_b}`);
 
   if (fd_b !== undefined) {
     for (let row of fd_b) {
@@ -43,7 +43,7 @@ async function findAllFriend(my_id: number) {
         [row.user_id_a]
       );
       friends_result.push(result.rows[0]);
-      // console.log(friends_result);
+      
     }
   }
 
@@ -53,9 +53,9 @@ async function findAllFriend(my_id: number) {
   where user_id_a = $1`,
     [my_id]
   );
-  ////////////////////////////////
+
   const fd_a = myFriends_rowA.rows;
-  console.log(`My fd in row_b : ${fd_a}`);
+  logger.info(`My fd in row_b : ${fd_a}`);
 
   if (fd_a !== undefined) {
     for (let row of fd_a) {
@@ -72,13 +72,8 @@ async function findAllFriend(my_id: number) {
         [row.user_id_b]
       );
       friends_result.push(result.rows[0]);
-      // console.log(friends_result);
+      
     }
   }
-  // friends_result.sort((a,b) => b.score - a.score);
-  // console.log(`Sorting`);
-  // friends_result.sort();
-  // console.log(friends_result);
-  // console.log(`End sorting`);
   return friends_result;
 }

@@ -1,16 +1,11 @@
 import express from "express";
-//@ts-ignore
-import type { Request, Response, NextFunction } from "express";
 import expressSession from "express-session";
 import path from "path";
-// @ts-ignore
+import winston from 'winston';
 import { isLoggedInStatic } from "./guards";
 import pg from "pg";
-//@ts-ignore
-import fetch from "cross-fetch";
 import dotenv from "dotenv";
 dotenv.config();
-// import grant from "grant";
 
 import { calculateScore } from "./scoreCalculation";
 
@@ -22,8 +17,24 @@ export const client = new pg.Client({
 });
 client.connect();
 
+
+export const logFormat = winston.format.printf(function(info) {
+  let date = new Date().toISOString();
+  return `${date}[${info.level}]: ${info.message}\n`;
+});
+export const logger = winston.createLogger({
+  level:"info",
+  format:winston.format.combine(
+      winston.format.colorize(),
+      logFormat
+    ),
+  transports:[
+      new winston.transports.Console()
+  ]
+});
+
 const app = express();
-// For json
+// For json size
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: "50mb" }));
 
@@ -36,26 +47,12 @@ app.use(
     name: "Cookie for Pixel Farm",
   })
 );
+
 // print the access massage
 app.use((req, res, next) => {
-  console.log(`ip: ${req.ip} accessed the path: ${req.path} by method: ${req.method}`);
+  logger.info(`ip: ${req.ip} accessed the path: ${req.path} by method: ${req.method}`);
   next();
 });
-
-// const grantExpress = grant.express({
-//   defaults: {
-//     origin: "http://localhost:8080",
-//     transport: "session",
-//     state: true,
-//   },
-//   google: {
-//     key: process.env.GOOGLE_CLIENT_ID || "",
-//     secret: process.env.GOOGLE_CLIENT_SECRET || "",
-//     scope: ["profile", "email"],
-//     callback: "/login/google",
-//   },
-// });
-// app.use(grantExpress as express.RequestHandler);
 
 // Router handler
 // login, register
@@ -72,7 +69,7 @@ app.use("/userInfo", userinfoRoutes);
 // FriendRank and show friend routers
 import { friendRankRoutes } from "./routers/friendRankRoutes";
 app.use("/friendRank", friendRankRoutes);
-//  edit_name
+// edit_name
 import { edit_name } from "./routers/editNameRoutes";
 app.use("/name", edit_name);
 import { edit_password } from "./routers/editPasswordRoutes";
@@ -97,9 +94,10 @@ app.use((req, res) => {
   res.sendFile(path.join(__dirname, "Public", "404.html"));
 });
 
+//regular calculate the score.
 setInterval(calculateScore, 10000);
 
 const port = 8080;
 app.listen(port, () => {
-  console.log(`server started, http://localhost:${port}`);
+  logger.info(`server started, http://localhost:${port}`);
 });

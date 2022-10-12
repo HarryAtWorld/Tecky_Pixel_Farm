@@ -1,6 +1,7 @@
 import express from "express";
 import type { Request, Response } from "express";
 import { isLoggedInAPI } from "../guards";
+import { logger } from "../main";
 import { client } from "../main";
 import console from "console";
 import { hashingPassword, checkPassword } from "../hashing";
@@ -23,7 +24,7 @@ function loginPage(req: Request, res: Response) {
 async function login(req: Request, res: Response) {
   // getting user login input
   const { login_account, login_password } = req.body;
-  console.log(login_account);
+
   // empty checking
   if (!login_account || !login_password) {
     res.status(400).json({ success: false, message: "invalid username/password" });
@@ -49,7 +50,7 @@ async function login(req: Request, res: Response) {
   // checking hashed password
   const match = await checkPassword(login_password, user.login_password);
   if (match) {
-    console.log(`password matched`);
+    logger.info(`password matched`);
     // temp_data_id -> for go to fd_farm -> defaults undefined
     let temp_data_id;
     req.session["user"] = {
@@ -58,7 +59,7 @@ async function login(req: Request, res: Response) {
       login_account: user.login_account,
       fd_farm: temp_data_id,
     };
-    console.log(req.session["user"]);
+
     res.json({ success: true, message: "Login successful, Welcome" });
   } else {
     // password not match -> return
@@ -69,27 +70,27 @@ async function login(req: Request, res: Response) {
 async function register(req: Request, res: Response) {
   // getting input from user
   const { user_name, login_account, login_password } = req.body;
-  console.log(user_name, login_account);
+
 
   // empty checking
   if (!user_name || !login_account || !login_password) {
     res.status(400).json({ success: false, message: "Missing Information" });
     return;
   }
-  console.log(`passed check empty`);
+  logger.info(`passed check empty`);
 
   // same username or login_account checking
   const checkAccount = await client.query(
     `SELECT * FROM user_info WHERE user_name = $1 OR login_account = $2`,
     [user_name, login_account]
   );
-  console.log(`passed checkAccount, result: ${checkAccount.rows[0]}`);
+  logger.info(`passed checkAccount, result: ${checkAccount.rows[0]}`);
 
   // if passed guards -> insert data into database -> create new account
   if (checkAccount.rows[0] === undefined) {
     // hashing password
     const hashedPassword = await hashingPassword(login_password);
-    // console.log(hashedPassword);
+
     const data = await client.query(
       `INSERT INTO user_info (user_name, login_account, login_password) VALUES ($1, $2, $3) RETURNING id`,
       [user_name, login_account, hashedPassword]
@@ -106,15 +107,14 @@ async function register(req: Request, res: Response) {
       fs.writeFileSync(`./gameJson/${temp_ac}.json`, JSON.stringify(templateJson), { flag: "w" });
     }
 
-    // console.log(`passed temp_ac, result: ${temp_ac}`);
-    //@ts-ignore
+
+
     const createPlayerData = await client.query(
       `Insert into game_farm_data (user_id)
       VALUES ($1) RETURNING *`,
       [temp_ac]
     );
-    console.log(`created playerData`);
-    console.log(createPlayerData.rows);
+    logger.info(`created playerData ${createPlayerData.rows}`);
 
     res.status(200).json({ success: true, message: "Account created successfully" });
   } else {
@@ -123,39 +123,6 @@ async function register(req: Request, res: Response) {
       .json({ success: false, message: "username or email already existed, Try Again" });
   }
 }
-
-// google login function
-// async function loginGoogle(req: express.Request, res: express.Response) {
-//   const accessToken = req.session?.["grant"].response.access_token;
-//   const fetchRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
-//     method: "get",
-//     headers: {
-//       Authorization: `Bearer ${accessToken}`,
-//     },
-//   });
-//   const result = await fetchRes.json();
-//   console.log(result);
-//   const users = (
-//     await client.query(`SELECT * FROM user_info WHERE login_account = $1`, [result.email])
-//   ).rows;
-//   let user = users[0];
-//   if (!user) {
-//     // Create the user when the user does not exist
-//     user = (
-//       await client.query(
-//         `INSERT INTO user_info (login_account,login_password)
-//                 VALUES ($1,$2) RETURNING *`,
-//         [result.email, 1234]
-//       )
-//     ).rows[0];
-//   }
-//   if (req.session) {
-//     req.session["user"] = {
-//       id: user.id,
-//     };
-//   }
-//   return res.redirect("/");
-// }
 
 export async function getUserInfo(req: Request, res: Response) {
   try {

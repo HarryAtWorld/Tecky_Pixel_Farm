@@ -1,5 +1,6 @@
 import express from "express";
 import type { Request, Response } from "express";
+import { logger } from "../main";
 import { client } from "../main";
 
 export const rankingRoutes = express.Router();
@@ -11,7 +12,7 @@ const allPlayerShowUpNumbers: number = 10;
 // response all player Rank
 async function allPlayerRank(req: Request, res: Response) {
   const all_player_ranking_list = await findAllPlayerRanking();
-  console.log(all_player_ranking_list);
+  logger.info(`${all_player_ranking_list}`);
   res.json(all_player_ranking_list);
 }
 

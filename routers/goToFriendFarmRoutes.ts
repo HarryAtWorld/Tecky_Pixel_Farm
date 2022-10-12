@@ -1,9 +1,8 @@
 import express from "express";
 import type { Request, Response } from "express";
-//@ts-ignore
 import fs from "fs";
 import path from "path";
-//@ts-ignore
+import { logger } from "../main";
 import { client } from "../main";
 
 export const goToFriendFarm = express.Router();
@@ -12,23 +11,18 @@ goToFriendFarm.post("/", goFarm);
 
 async function goFarm(req: Request, res: Response) {
   const { user_id } = req.body;
-  console.log(`Ready to Fd Farm`);
-  console.log(user_id);
+  logger.info(`Ready to friend's Farm`);
+  
   // insert target id into session
   req.session["user"].fd_farm = user_id;
-  console.log(req.session["user"]);
 
   res.status(200).json({message:'ok'});
 }
 
 
-
-
-
-
 //provide JSON record to player
 goToFriendFarm.get("/", async (req, res) => {
-  console.log('login !received by get! Test');
+  
   const user = req.session["user"]
 
   let playerGameItemRecord = JSON.parse(fs.readFileSync(path.join(__dirname, `../gameJson/${user.fd_farm}.json`), { encoding: 'utf8' }))

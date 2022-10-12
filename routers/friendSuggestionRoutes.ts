@@ -28,9 +28,7 @@ async function getFDSuggestion(req: Request, res: Response) {
     limit 5;`,
     [user.id]
   );
-  console.log(`This is data of fd suggestion`);
-  console.log(data_suggestion.rows);
-
+ 
   const resp = data_suggestion.rows;
   res.json(resp);
 }
