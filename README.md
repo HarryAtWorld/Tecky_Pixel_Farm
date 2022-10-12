@@ -4,6 +4,9 @@ for 1st WSP group project
 
 Member : Harry, Alex, Jacky.
 
+-wire frame and ERD:
+inside 'wireframe_and_ERD' folder
+
 - setup:
 
 1. 'npm install' to install the packages
@@ -20,6 +23,8 @@ Member : Harry, Alex, Jacky.
 4. click the plants at left side panel to add plants,click again this button to finish edit mode.
 5. to visit friend's farm, you need add your friends at 'Player Info' first. (you may register another account to test this function if the game only has 1 player)
 6. to edit player's information, click 'Player Info'
+
+
 
 
 
