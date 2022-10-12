@@ -1,5 +1,7 @@
 Tecky_Pixel_Farm
+
 for 1st WSP group project
+
 Member : Harry, Alex, Jacky.
 
 - setup:
