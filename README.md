@@ -4,7 +4,7 @@ for 1st WSP group project
 
 Member : Harry, Alex, Jacky.
 
--wire frame and ERD:
+- wire frame and ERD:
 inside 'wireframe_and_ERD' folder
 
 - setup:
