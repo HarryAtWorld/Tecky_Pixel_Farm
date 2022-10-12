@@ -5,9 +5,10 @@ Member : Harry, Alex, Jacky.
 - setup:
 
 1. 'npm install' to install the packages
-2. create a local database with name 'pixel_farm'
-3. connect to the database and follow the 'teckywspproject.session.sql' file to create tables and insert data.
-4. 'npm start' to start the server
+2. create '.env' file base on '.env.sample' for database connection
+3. create a local database with name 'pixel_farm'
+4. connect to the database and follow the 'teckywspproject.session.sql' file to create tables and insert data.
+5. 'npm start' to start the server
 
 - play:
 
