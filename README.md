@@ -28,7 +28,9 @@ inside 'wireframe_and_ERD' folder
 - directory:
 
 gameJson: for player's game record
+
 Read_Me: for project discussion
+
 Private/Public/Routers: for application
 
 
